@@ -98,17 +98,10 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             binding.toolbar.setTitle(R.string.scan_result_valid_title)
         }
         val testResultAttributes = args.validData.verifiedQr.testResultAttributes
-        val personalDetails = personalDetailsUtil.getPersonalDetails(
-            testResultAttributes.firstNameInitial,
-            testResultAttributes.lastNameInitial,
-            testResultAttributes.birthDay,
-            testResultAttributes.birthMonth,
-            includeBirthMonthNumber = true
-        )
-        binding.personalDetails.lastNameInitial.text = personalDetails.lastNameInitial
-        binding.personalDetails.firstNameInitial.text = personalDetails.firstNameInitial
-        binding.personalDetails.birthMonth.text = personalDetails.birthMonth
-        binding.personalDetails.birthDay.text = personalDetails.birthDay
+        binding.personalDetails.lastNameInitial.text = testResultAttributes.lastNameInitial
+        binding.personalDetails.firstNameInitial.text = testResultAttributes.firstNameInitial
+        binding.personalDetails.birthMonth.text = testResultAttributes.birthMonth
+        binding.personalDetails.birthDay.text = testResultAttributes.birthDay
     }
 
     override fun onResume() {
