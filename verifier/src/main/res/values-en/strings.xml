@@ -23,8 +23,6 @@
     <string name="dialog_error_message">Sorry, there was a technical error</string>
     <string name="ok">OK</string>
     <string name="scan_qr_title">Scan QR code</string>
-    <string name="support">Support</string>
-    <string name="give_us_feedback">Give us feedback</string>
     <string name="scan_qr_header">Get started</string>
     <string name="scan_qr_description"><![CDATA[Now scan the QR codes of your visitors. But please note: you\'re only allowed to give access to visitors with a valid QR code. <a href="#">How scanning works</a>]]></string>
     <string name="scan_qr_button">Start scanning</string>

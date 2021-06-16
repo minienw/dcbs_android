@@ -11,17 +11,6 @@
     <group
         android:id="@+id/info"
         android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_support"
-            android:checkable="false"
-            android:title="@string/support" />
-
-        <!-- TODO: Implement give us feedback -->
-        <item
-            android:id="@+id/nav_give_us_feedback"
-            android:checkable="false"
-            android:title="@string/give_us_feedback"
-            android:visible="false" />
 
         <item
             android:id="@+id/nav_close_menu"

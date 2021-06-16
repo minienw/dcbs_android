@@ -19,7 +19,6 @@ import androidx.navigation.ui.setupWithNavController
 import nl.rijksoverheid.ctr.design.BaseMainFragment
 import nl.rijksoverheid.ctr.design.ext.isScreenReaderOn
 import nl.rijksoverheid.ctr.design.ext.styleTitle
-import nl.rijksoverheid.ctr.shared.ext.launchUrl
 import nl.rijksoverheid.ctr.verifier.databinding.FragmentMainBinding
 
 class VerifierMainFragment :
@@ -49,9 +48,6 @@ class VerifierMainFragment :
 
         binding.navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_support -> {
-                    getString(R.string.url_faq).launchUrl(requireActivity())
-                }
                 R.id.nav_close_menu -> {
                     binding.navView.menu.close()
                 }
@@ -90,10 +86,6 @@ class VerifierMainFragment :
         val context = binding.navView.context
         binding.navView.menu.findItem(R.id.nav_scan_qr)
             .styleTitle(context, R.attr.textAppearanceHeadline6)
-        binding.navView.menu.findItem(R.id.nav_support)
-            .styleTitle(context, R.attr.textAppearanceBody1)
-        binding.navView.menu.findItem(R.id.nav_give_us_feedback)
-            .styleTitle(context, R.attr.textAppearanceBody1)
         binding.navView.menu.findItem(R.id.nav_close_menu)
             .styleTitle(context, R.attr.textAppearanceBody1)
     }
