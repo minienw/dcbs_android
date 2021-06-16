@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
-import nl.rijksoverheid.ctr.shared.utils.PersonalDetailsUtil
 import nl.rijksoverheid.ctr.verifier.BuildConfig
 import nl.rijksoverheid.ctr.verifier.R
 import nl.rijksoverheid.ctr.verifier.databinding.FragmentScanResultValidBinding
@@ -26,7 +25,6 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
 
     private val args: ScanResultValidFragmentArgs by navArgs()
     private val scannerUtil: ScannerUtil by inject()
-    private val personalDetailsUtil: PersonalDetailsUtil by inject()
 
     private val transitionPersonalDetailsHandler = Handler(Looper.getMainLooper())
     private val transitionPersonalDetailsRunnable = Runnable {
@@ -97,11 +95,8 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         } else {
             binding.toolbar.setTitle(R.string.scan_result_valid_title)
         }
-        val testResultAttributes = args.validData.verifiedQr.testResultAttributes
-        binding.personalDetails.lastNameInitial.text = testResultAttributes.lastNameInitial
-        binding.personalDetails.firstNameInitial.text = testResultAttributes.firstNameInitial
-        binding.personalDetails.birthMonth.text = testResultAttributes.birthMonth
-        binding.personalDetails.birthDay.text = testResultAttributes.birthDay
+        val verifiedQr = args.validData.verifiedQr
+        binding.personalDetails.data.text = verifiedQr.data
     }
 
     override fun onResume() {

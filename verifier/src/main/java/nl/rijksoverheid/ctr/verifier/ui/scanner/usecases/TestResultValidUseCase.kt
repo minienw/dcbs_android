@@ -24,10 +24,8 @@ class TestResultValidUseCaseImpl(
             when (val verifyQrResult = verifyQrUseCase.get(qrContent)) {
                 is VerifyQrUseCase.VerifyQrResult.Success -> {
                     val verifiedQr = verifyQrResult.verifiedQr
-                    val europeanQrCodeInNL = verifiedQr.testResultAttributes.isNLDCC == "1"
                     when {
                         verifiedQr.testResultAttributes.isSpecimen == "1" -> VerifiedQrResultState.Demo(verifiedQr)
-                        europeanQrCodeInNL -> VerifiedQrResultState.Invalid(verifiedQr)
                         else -> VerifiedQrResultState.Valid(verifiedQr)
                     }
                 }

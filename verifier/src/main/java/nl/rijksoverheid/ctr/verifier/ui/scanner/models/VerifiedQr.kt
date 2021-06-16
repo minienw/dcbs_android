@@ -15,6 +15,7 @@ import java.time.ZonedDateTime
 @Parcelize
 data class VerifiedQr(
     val creationDateSeconds: Long,
+    val data: String = "",
     val testResultAttributes: TestResultAttributes
 ) : Parcelable {
 
@@ -22,7 +23,6 @@ data class VerifiedQr(
         return "<ul>" +
                 "<li>Current date: ${ZonedDateTime.now()}</li>" +
                 "<li>Creation date: ${creationDateSeconds}</li>" +
-                "<li>isPaperProof: ${testResultAttributes.isNLDCC}</li>" +
                 "<li>isSpecimen: ${testResultAttributes.isSpecimen}</li>" +
                 "</ul>"
     }

@@ -19,7 +19,6 @@ data class TestResultAttributes(
     val credentialVersion: String,
     val firstNameInitial: String,
     val lastNameInitial: String,
-    val isNLDCC: String?,
     val isSpecimen: String,
     val stripType: String?,
     val validForHours: String?,

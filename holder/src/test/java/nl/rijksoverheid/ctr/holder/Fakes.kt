@@ -282,7 +282,6 @@ fun fakeTestResultAttributesUseCase(
                 firstNameInitial = firstNameInitial,
                 lastNameInitial = lastNameInitial,
                 isSpecimen = isSpecimen,
-                isNLDCC = "1",
                 credentialVersion = "1",
                 stripType = "0",
                 validForHours = "24",

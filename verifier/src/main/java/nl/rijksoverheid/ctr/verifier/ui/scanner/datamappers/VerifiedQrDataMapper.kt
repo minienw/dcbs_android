@@ -23,6 +23,13 @@ class VerifiedQrDataMapperImpl(private val moshi: Moshi, private val mobileCoreW
         qrContent: String
     ): VerifiedQr {
 
+        val data = try {
+            mobileCoreWrapper.readEuropeanCredential(qrContent.toByteArray()).toString()
+        } catch (exc: Exception) {
+            exc.printStackTrace()
+            exc.message ?: "error"
+        }
+
         val result =
             mobileCoreWrapper.verify(
                 qrContent.toByteArray()
@@ -30,6 +37,7 @@ class VerifiedQrDataMapperImpl(private val moshi: Moshi, private val mobileCoreW
 
         return VerifiedQr(
             creationDateSeconds = 0,
+            data = data,
             testResultAttributes = result.decodeToString().toObject(moshi))
     }
 }

@@ -41,15 +41,6 @@ class TestResultValidUseCaseImplTest {
         }
 
     @Test
-    fun `Validate returns Invalid if code has isNLDCC 1`() =
-        runBlocking {
-            val usecase = TestResultValidUseCaseImpl(
-                verifyQrUseCase = fakeVerifyQrUseCase(isNLDCC = "1"),
-            )
-            assertTrue(usecase.validate("") is VerifiedQrResultState.Invalid)
-        }
-
-    @Test
     fun `Validate returns Demo if code has Specimen 1`() =
         runBlocking {
             val usecase = TestResultValidUseCaseImpl(
