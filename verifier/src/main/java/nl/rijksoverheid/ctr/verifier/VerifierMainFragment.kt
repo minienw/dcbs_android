@@ -19,13 +19,11 @@ import androidx.navigation.ui.setupWithNavController
 import nl.rijksoverheid.ctr.design.BaseMainFragment
 import nl.rijksoverheid.ctr.design.ext.isScreenReaderOn
 import nl.rijksoverheid.ctr.design.ext.styleTitle
-import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppData
-import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppFragment
 import nl.rijksoverheid.ctr.shared.ext.launchUrl
 import nl.rijksoverheid.ctr.verifier.databinding.FragmentMainBinding
 
 class VerifierMainFragment :
-    BaseMainFragment(R.layout.fragment_main, setOf(R.id.nav_scan_qr, R.id.nav_about_this_app)) {
+    BaseMainFragment(R.layout.fragment_main, setOf(R.id.nav_scan_qr)) {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
@@ -53,26 +51,6 @@ class VerifierMainFragment :
             when (item.itemId) {
                 R.id.nav_support -> {
                     getString(R.string.url_faq).launchUrl(requireActivity())
-                }
-                R.id.nav_about_this_app -> {
-                    navController.navigate(
-                        R.id.action_about_this_app, AboutThisAppFragment.getBundle(
-                            data = AboutThisAppData(
-                                versionName = BuildConfig.VERSION_NAME,
-                                versionCode = BuildConfig.VERSION_CODE.toString(),
-                                readMoreItems = listOf(
-                                    AboutThisAppData.ReadMoreItem(
-                                        text = getString(R.string.privacy_statement),
-                                        url = getString(R.string.url_terms_of_use),
-                                    ),
-                                    AboutThisAppData.ReadMoreItem(
-                                        text = getString(R.string.about_this_app_accessibility),
-                                        url = getString(R.string.url_accessibility),
-                                    )
-                                )
-                            )
-                        )
-                    )
                 }
                 R.id.nav_close_menu -> {
                     binding.navView.menu.close()
@@ -113,8 +91,6 @@ class VerifierMainFragment :
         binding.navView.menu.findItem(R.id.nav_scan_qr)
             .styleTitle(context, R.attr.textAppearanceHeadline6)
         binding.navView.menu.findItem(R.id.nav_support)
-            .styleTitle(context, R.attr.textAppearanceBody1)
-        binding.navView.menu.findItem(R.id.nav_about_this_app)
             .styleTitle(context, R.attr.textAppearanceBody1)
         binding.navView.menu.findItem(R.id.nav_give_us_feedback)
             .styleTitle(context, R.attr.textAppearanceBody1)
