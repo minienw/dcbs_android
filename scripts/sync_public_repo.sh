@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Config
-BASE_REPONAME=nl-covid19-coronacheck-app-android
+BASE_REPONAME=INSERT HERE YOUR REPO NAME
 
 # Helpers
 TIMESTAMP=`date '+%Y%m%d-%H%M%S'`

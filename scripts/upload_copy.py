@@ -4,7 +4,7 @@ import hashlib
 import os
 
 if os.getenv('CORONACHECK_ONESKY_SECRET') is not None:
-	publickey = "dyCXIZ0qBOqSaGiyqHJkcXdiDO7LPAJS"
+	publickey = "INSERT HERE YOUR PUBLIC KEY"
 	secretkey = os.getenv('CORONACHECK_ONESKY_SECRET')
 	timestamp = time.time()
 	devhash = hashlib.md5((str(timestamp) + secretkey).encode('utf-8')).hexdigest()
