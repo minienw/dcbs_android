@@ -28,16 +28,9 @@ class ScanQrFragment : Fragment(R.layout.fragment_scan_qr) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentScanQrBinding.bind(view)
-        binding.description.enableCustomLinks {
-            findNavControllerSafety(R.id.nav_scan_qr)?.navigate(ScanQrFragmentDirections.actionScanInstructions())
-        }
 
         binding.bottom.setButtonClick {
-            if (!scanQrViewModel.scanInstructionsSeen()) {
-                findNavController().navigate(ScanQrFragmentDirections.actionScanInstructions())
-            } else {
-                scannerUtil.launchScanner(requireActivity())
-            }
+            scannerUtil.launchScanner(requireActivity())
         }
     }
 }

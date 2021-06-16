@@ -59,9 +59,7 @@ fun fakeIntroductionViewModel(
 fun fakeScanQrViewModel(
     scanInstructionsSeen: Boolean
 ) = object : ScanQrViewModel() {
-    override fun scanInstructionsSeen(): Boolean {
-        return scanInstructionsSeen
-    }
+
 }
 
 fun fakeScannerViewModel(

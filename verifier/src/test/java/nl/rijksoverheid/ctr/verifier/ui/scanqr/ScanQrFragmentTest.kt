@@ -41,22 +41,6 @@ class ScanQrFragmentTest : AutoCloseKoinTest() {
         it.setCurrentDestination(R.id.nav_scan_qr)
     }
 
-    @Test
-    fun `Clicking description navigates to scan instructions`() {
-        launchScanQrFragment()
-        clickOn(R.id.description)
-        assertEquals(navController.currentDestination?.id, R.id.nav_scan_instructions)
-    }
-
-    @Test
-    fun `First time clicking start scan first opens scan instructions`() {
-        launchScanQrFragment(
-            hasSeenScanInstructions = false
-        )
-        clickOn(R.id.button)
-        assertEquals(navController.currentDestination?.id, R.id.nav_scan_instructions)
-    }
-
     /**
      * Camera qr code scanner is bypassed in test
      */
