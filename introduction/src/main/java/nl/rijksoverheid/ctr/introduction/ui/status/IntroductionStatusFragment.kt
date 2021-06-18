@@ -16,12 +16,14 @@ class IntroductionStatusFragment : Fragment() {
 
     companion object {
         private const val EXTRA_INTRODUCTION_STATUS = "EXTRA_INTRODUCTION_STATUS"
+        private const val EXTRA_INTRODUCTION_VERSION = "EXTRA_INTRODUCTION_VERSION"
 
         fun getBundle(
-            introductionStatus: IntroductionStatus
+            introductionStatus: IntroductionStatus, versionString: String
         ): Bundle {
             val bundle = Bundle()
             bundle.putParcelable(EXTRA_INTRODUCTION_STATUS, introductionStatus)
+            bundle.putString(EXTRA_INTRODUCTION_VERSION, versionString)
             return bundle
         }
     }
@@ -37,7 +39,8 @@ class IntroductionStatusFragment : Fragment() {
             is IntroductionStatus.IntroductionNotFinished -> {
                 findNavController().navigate(
                     IntroductionStatusFragmentDirections.actionSetup(
-                        introductionStatus.introductionData
+                        introductionStatus.introductionData,
+                        arguments?.getString(EXTRA_INTRODUCTION_VERSION) ?: ""
                     )
                 )
             }

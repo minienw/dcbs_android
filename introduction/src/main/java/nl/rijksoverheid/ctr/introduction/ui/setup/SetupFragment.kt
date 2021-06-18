@@ -10,6 +10,7 @@ import nl.rijksoverheid.ctr.appconfig.AppConfigViewModel
 import nl.rijksoverheid.ctr.appconfig.AppStatusFragment
 import nl.rijksoverheid.ctr.appconfig.models.AppStatus
 import nl.rijksoverheid.ctr.introduction.R
+import nl.rijksoverheid.ctr.introduction.databinding.FragmentSetupBinding
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
 import nl.rijksoverheid.ctr.shared.utils.Accessibility
 import org.koin.android.ext.android.inject
@@ -31,6 +32,8 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val binding = FragmentSetupBinding.bind(view)
+        binding.appVersion.text = args.version
         Accessibility.announce(requireContext(), getString(R.string.app_setup_text))
 
         appStatusViewModel.appStatusLiveData.observe(viewLifecycleOwner, {
@@ -43,5 +46,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         })
 
         appStatusViewModel.refresh(mobileCoreWrapper)
+
+
     }
 }

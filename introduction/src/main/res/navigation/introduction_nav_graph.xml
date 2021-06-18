@@ -32,6 +32,10 @@
             android:name="introduction_data"
             app:argType="nl.rijksoverheid.ctr.introduction.IntroductionData" />
 
+        <argument
+            android:name="version"
+            app:argType="string" />
+
         <action
             android:id="@+id/action_onboarding"
             app:destination="@id/nav_onboarding"

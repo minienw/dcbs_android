@@ -50,7 +50,11 @@ class VerifierMainActivity : AppCompatActivity() {
 
         if (introductionStatus !is IntroductionStatus.IntroductionFinished.NoActionRequired) {
             navController.navigate(
-                R.id.action_introduction, IntroductionFragment.getBundle(introductionStatus)
+                R.id.action_introduction,
+                IntroductionFragment.getBundle(
+                    introductionStatus,
+                    getString(R.string.app_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE.toString())
+                )
             )
         }
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Palette -->
-    <color name="primary_blue">#1540eb</color>
+    <color name="primary_blue">#154273</color>
     <color name="secondary_blue">#69dbff</color>
     <color name="secondary_green">#3dec94</color>
     <color name="red">#FF745F</color>

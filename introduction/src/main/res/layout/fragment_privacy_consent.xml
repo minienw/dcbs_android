@@ -11,11 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
-        app:navigationContentDescription="@string/back"
         app:layout_constraintBottom_toTopOf="@+id/scroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/back"
         app:navigationIcon="@drawable/ic_back" />
 
     <ScrollView
@@ -85,11 +85,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/items"
                 app:layout_constraintVertical_bias="1">
 
-                <CheckBox
+                <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_privacy_policy_checkbox_background"
+                    app:buttonCompat="@drawable/bg_checkbox"
                     android:paddingHorizontal="16dp"
                     android:text="@string/privacy_policy_checkbox_text"
                     android:textAppearance="?attr/textAppearanceBody1" />
