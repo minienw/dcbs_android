@@ -10,15 +10,12 @@ package nl.rijksoverheid.ctr.verifier
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
-import androidx.core.view.GravityCompat
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import nl.rijksoverheid.ctr.design.BaseMainFragment
-import nl.rijksoverheid.ctr.design.ext.isScreenReaderOn
-import nl.rijksoverheid.ctr.design.ext.styleTitle
+import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppData
+import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppFragment
 import nl.rijksoverheid.ctr.verifier.databinding.FragmentMainBinding
 
 class VerifierMainFragment :
@@ -29,52 +26,28 @@ class VerifierMainFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         _binding = FragmentMainBinding.bind(view)
 
         val navHostFragment =
             childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val appBarConfiguration = AppBarConfiguration(
-            topLevelDestinations,
-            binding.drawerLayout
-        )
+        val appBarConfiguration = AppBarConfiguration(topLevelDestinations)
 
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)
-        binding.navView.setupWithNavController(navController)
-
-        navigationDrawerStyling()
-
-        binding.navView.setNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_close_menu -> {
-                    binding.navView.menu.close()
-                }
-                else -> {
-                    NavigationUI.onNavDestinationSelected(item, navController)
-                }
+        binding.toolbar.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.about) {
+                navigateToAbout()
             }
-            binding.drawerLayout.closeDrawer(GravityCompat.START)
-            true
+            return@setOnMenuItemClickListener true
         }
 
-        // Add close button to menu if user has screenreader enabled
-        binding.navView.menu.findItem(R.id.nav_close_menu).isVisible =
-            requireActivity().isScreenReaderOn()
-
-        // Close Navigation Drawer when pressing back if it's open
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object :
-            OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerLayout.close()
-                    return
-                } else {
-                    requireActivity().finishAndRemoveTask()
-                }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.nav_about_this_app -> binding.toolbar.menu.findItem(R.id.about)?.isVisible = false
+                else -> binding.toolbar.menu.findItem(R.id.about)?.isVisible = true
             }
-        })
+        }
     }
 
     override fun onDestroyView() {
@@ -82,11 +55,27 @@ class VerifierMainFragment :
         _binding = null
     }
 
-    private fun navigationDrawerStyling() {
-        val context = binding.navView.context
-        binding.navView.menu.findItem(R.id.nav_scan_qr)
-            .styleTitle(context, R.attr.textAppearanceHeadline6)
-        binding.navView.menu.findItem(R.id.nav_close_menu)
-            .styleTitle(context, R.attr.textAppearanceBody1)
+    private fun navigateToAbout() {
+        val navHostFragment =
+            childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.navigate(
+            R.id.action_about_this_app, AboutThisAppFragment.getBundle(
+                data = AboutThisAppData(
+                    versionName = BuildConfig.VERSION_NAME,
+                    versionCode = BuildConfig.VERSION_CODE.toString(),
+                    readMoreItems = listOf(
+                        AboutThisAppData.ReadMoreItem(
+                            text = getString(R.string.privacy_statement),
+                            url = getString(R.string.url_terms_of_use),
+                        ),
+                        AboutThisAppData.ReadMoreItem(
+                            text = getString(R.string.about_this_app_accessibility),
+                            url = getString(R.string.url_accessibility),
+                        )
+                    )
+                )
+            )
+        )
     }
 }
