@@ -44,7 +44,7 @@ class VerifierMainFragment :
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.nav_about_this_app -> binding.toolbar.menu.findItem(R.id.about)?.isVisible = false
+                R.id.nav_about_this_app, R.id.nav_scan_instructions -> binding.toolbar.menu.findItem(R.id.about)?.isVisible = false
                 else -> binding.toolbar.menu.findItem(R.id.about)?.isVisible = true
             }
         }

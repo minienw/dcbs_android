@@ -24,7 +24,7 @@
     <string name="ok">Ok</string>
     <string name="scan_qr_title">Scan QR-code</string>
     <string name="scan_qr_header">Let\'s get started</string>
-    <string name="scan_qr_description"><![CDATA[Scan QR-codes (DCC) of travelers.]]></string>
+    <string name="scan_qr_description"><![CDATA[Scan nu de QR-codes van jouw bezoekers. Maar let op: je mag alleen bezoekers met een geldige QR-code toegang geven. <a href="#">Zo werkt scannen</a>]]></string>
     <string name="scan_qr_button">Start scannen</string>
     <string name="scan_result_demo_title">Demo QR-code gescand</string>
     <string name="scan_result_valid_title">Geldige QR-code</string>
