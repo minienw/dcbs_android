@@ -62,14 +62,4 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
             aboutThisAppData.versionCode
         )
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.clear()
-        super.onPrepareOptionsMenu(menu)
-    }
 }
