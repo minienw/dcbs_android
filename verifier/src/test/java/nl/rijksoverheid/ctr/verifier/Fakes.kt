@@ -96,19 +96,7 @@ fun fakeVerifiedQr(
     lastNameInitial: String = "dummy",
     isPaperProof: String = "0"
 ) = VerifiedQr(
-    creationDateSeconds = 0,
-    testResultAttributes = TestResultAttributes(
-        birthDay = birthDay,
-        birthMonth = birthMonth,
-        firstNameInitial = firstNameInitial,
-        lastNameInitial = lastNameInitial,
-        isSpecimen = isSpecimen,
-        isNLDCC = "1",
-        credentialVersion = "1",
-        stripType = "0",
-        validForHours = "24",
-        validFrom = "1622633766",
-    )
+    data = "",
 )
 
 fun fakeVerifyQrUseCase(
@@ -116,19 +104,7 @@ fun fakeVerifyQrUseCase(
     isSpecimen: String = "0",
     result: VerifyQrUseCase.VerifyQrResult = VerifyQrUseCase.VerifyQrResult.Success(
         verifiedQr = VerifiedQr(
-            creationDateSeconds = 0,
-            testResultAttributes = TestResultAttributes(
-                birthDay = "dummy",
-                birthMonth = "dummy",
-                firstNameInitial = "dummy",
-                lastNameInitial = "dummy",
-                isSpecimen = isSpecimen,
-                isNLDCC = isNLDCC,
-                credentialVersion = "1",
-                stripType = "0",
-                validForHours = "24",
-                validFrom = "1622633766",
-            )
+            data = "",
         )
     )
 ) = object : VerifyQrUseCase {
@@ -189,55 +165,11 @@ fun fakeCachedAppConfigUseCase(
 
 fun fakeMobileCoreWrapper(): MobileCoreWrapper {
     return object : MobileCoreWrapper {
-        override fun loadDomesticIssuerPks(bytes: ByteArray) {
-        }
-
-        override fun createCredentials(body: ByteArray): String {
-            return ""
-        }
-
-        override fun readCredential(credentials: ByteArray): ByteArray {
-            return ByteArray(0)
-        }
-
-        override fun createCommitmentMessage(secretKey: ByteArray, nonce: ByteArray): String {
-            return ""
-        }
-
-        override fun disclose(secretKey: ByteArray, credential: ByteArray): String {
-            return ""
-        }
-
-        override fun generateHolderSk(): String {
-            return ""
-        }
-
-        override fun createDomesticCredentials(createCredentials: ByteArray): List<DomesticCredential> {
-            return listOf()
-        }
-
-        override fun readEuropeanCredential(credential: ByteArray): JSONObject {
-            return JSONObject()
-        }
 
         override fun initializeVerifier(configFilesPath: String) = ""
 
         override fun verify(credential: ByteArray): Result {
             TODO("Not yet implemented")
-        }
-
-        override fun readDomesticCredential(credential: ByteArray): ReadDomesticCredential {
-            return ReadDomesticCredential(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                ""
-            )
         }
     }
 }

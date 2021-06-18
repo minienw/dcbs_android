@@ -21,74 +21,12 @@ import org.json.JSONObject
 import java.lang.reflect.Type
 
 interface MobileCoreWrapper {
-    fun loadDomesticIssuerPks(bytes: ByteArray)
-    fun createCredentials(body: ByteArray): String
-    fun readDomesticCredential(credential: ByteArray): ReadDomesticCredential
-    fun readCredential(credentials: ByteArray): ByteArray
-    fun createCommitmentMessage(secretKey: ByteArray, prepareIssueMessage: ByteArray): String
-    fun disclose(secretKey: ByteArray, credential: ByteArray): String
-    fun generateHolderSk(): String
-    fun createDomesticCredentials(createCredentials: ByteArray): List<DomesticCredential>
-    fun readEuropeanCredential(credential: ByteArray): JSONObject
     // returns error message, if initializing failed
     fun initializeVerifier(configFilesPath: String): String?
     fun verify(credential: ByteArray): Result
 }
 
 class MobileCoreWrapperImpl(private val moshi: Moshi) : MobileCoreWrapper {
-    override fun loadDomesticIssuerPks(bytes: ByteArray) {
-        Mobilecore.loadDomesticIssuerPks(bytes)
-    }
-
-    override fun createCredentials(body: ByteArray): String {
-        return Mobilecore.createCredentials(
-            body
-        ).successString()
-    }
-
-    override fun readDomesticCredential(credential: ByteArray): ReadDomesticCredential {
-        return Mobilecore.readDomesticCredential(credential).successString().toObject(moshi)
-    }
-
-    override fun readCredential(credentials: ByteArray): ByteArray {
-        return Mobilecore.readDomesticCredential(credentials).verify()
-    }
-
-    override fun createCommitmentMessage(secretKey: ByteArray, prepareIssueMessage: ByteArray): String {
-        return Mobilecore.createCommitmentMessage(
-            secretKey,
-            prepareIssueMessage
-        ).successString()
-    }
-
-    override fun disclose(secretKey: ByteArray, credential: ByteArray): String {
-        return Mobilecore.disclose(
-            secretKey,
-            credential
-        ).successString()
-    }
-
-    override fun generateHolderSk(): String {
-        return Mobilecore.generateHolderSk().successString()
-    }
-
-    override fun createDomesticCredentials(createCredentials: ByteArray): List<DomesticCredential> {
-        val createCredentialsResult =
-            Mobilecore.createCredentials(createCredentials).successString()
-
-        val type: Type = Types.newParameterizedType(
-            List::class.java,
-            DomesticCredential::class.java
-        )
-
-        val adapter: JsonAdapter<List<DomesticCredential>> = moshi.adapter(type)
-        return adapter.fromJson(createCredentialsResult)
-            ?: throw IllegalStateException("Could not create domestic credentials")
-    }
-
-    override fun readEuropeanCredential(credential: ByteArray): JSONObject {
-        return Mobilecore.readEuropeanCredential(credential).successJsonObject()
-    }
 
     override fun initializeVerifier(configFilesPath: String): String? {
         return try {
