@@ -87,5 +87,25 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
+
+    <style name="Montserrat_Bold">
+        <item name="android:fontFamily">@font/montserrat_bold</item>
+    </style>
+
+    <style name="Montserrat_SemiBold">
+        <item name="android:fontFamily">@font/montserrat_semibold</item>
+    </style>
+
+    <style name="Montserrat_Bold_Black" parent="Montserrat_Bold">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="Montserrat_Bold_White" parent="Montserrat_Bold">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Montserrat_SemiBold_White" parent="Montserrat_SemiBold">
+        <item name="android:textColor">@color/white</item>
+    </style>
     
 </resources>

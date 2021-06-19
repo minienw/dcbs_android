@@ -9,10 +9,12 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.gson.Gson
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.ctr.verifier.BuildConfig
 import nl.rijksoverheid.ctr.verifier.R
 import nl.rijksoverheid.ctr.verifier.databinding.FragmentScanResultValidBinding
+import nl.rijksoverheid.ctr.verifier.models.DCCQR
 import nl.rijksoverheid.ctr.verifier.ui.scanner.models.ScanResultValidData
 import nl.rijksoverheid.ctr.verifier.ui.scanner.utils.ScannerUtil
 import org.koin.android.ext.android.inject
@@ -26,13 +28,6 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
     private val args: ScanResultValidFragmentArgs by navArgs()
     private val scannerUtil: ScannerUtil by inject()
 
-    private val transitionPersonalDetailsHandler = Handler(Looper.getMainLooper())
-    private val transitionPersonalDetailsRunnable = Runnable {
-        binding.personalDetails.root.alpha = 0f
-        binding.personalDetails.root.animate().alpha(1f).setDuration(500).start()
-        presentPersonalDetails()
-    }
-
     private val autoCloseHandler = Handler(Looper.getMainLooper())
     private val autoCloseRunnable = Runnable {
         findNavControllerSafety(R.id.nav_scan_result_valid)?.navigate(
@@ -40,6 +35,7 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         )
     }
 
+    @ExperimentalStdlibApi
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,41 +58,23 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             }
             is ScanResultValidData.Valid -> {
                 binding.title.text = getString(R.string.scan_result_valid_title)
-                binding.root.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.secondary_green
-                    )
-                )
             }
         }
 
-        binding.personalDetails.icon.setOnClickListener {
-            findNavController().navigate(ScanResultValidFragmentDirections.actionShowValidExplanation())
-        }
-
-        binding.personalDetails.bottom.setButtonClick {
+        binding.button.setOnClickListener {
             scannerUtil.launchScanner(requireActivity())
         }
 
-        // If you touch the screen before personal details screen animation started, immediately show personal details screen without animating
-        binding.root.setOnClickListener {
-            binding.personalDetails.root.alpha = 1f
-            binding.personalDetails.root.animate().cancel()
-            transitionPersonalDetailsHandler.removeCallbacks(transitionPersonalDetailsRunnable)
-            presentPersonalDetails()
-        }
+        presentPersonalDetails()
     }
 
+    @ExperimentalStdlibApi
     private fun presentPersonalDetails() {
-        binding.personalDetails.root.visibility = View.VISIBLE
-        if (args.validData is ScanResultValidData.Demo) {
-            binding.toolbar.setTitle(R.string.scan_result_demo_title)
-        } else {
-            binding.toolbar.setTitle(R.string.scan_result_valid_title)
-        }
         val verifiedQr = args.validData.verifiedQr
-        binding.personalDetails.data.text = verifiedQr.data
+        val dccQR = Gson().fromJson(verifiedQr.data, DCCQR::class.java)
+        binding.name.text = dccQR.getName()
+        binding.destination.text = getString(R.string.destination_country, dccQR.getIssuer()?.getDisplayName())
+        binding.dateOfBirth.text = getString(R.string.date_of_birth, dccQR.getBirthDate())
     }
 
     override fun onResume() {
@@ -106,16 +84,11 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
                 3
             )
         autoCloseHandler.postDelayed(autoCloseRunnable, autoCloseDuration)
-        transitionPersonalDetailsHandler.postDelayed(
-            transitionPersonalDetailsRunnable,
-            TimeUnit.MILLISECONDS.toMillis(800)
-        )
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         autoCloseHandler.removeCallbacks(autoCloseRunnable)
-        transitionPersonalDetailsHandler.removeCallbacks(transitionPersonalDetailsRunnable)
     }
 }
