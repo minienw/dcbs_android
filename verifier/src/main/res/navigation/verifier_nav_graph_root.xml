@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_main"
-        android:name="nl.rijksoverheid.ctr.verifier.VerifierMainFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.VerifierMainFragment"
         tools:layout="@layout/fragment_main" />
 
     <action

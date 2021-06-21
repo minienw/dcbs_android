@@ -22,7 +22,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "nl.rijksoverheid.ctr.verifier"
+        applicationId "nl.rijksoverheid.dcbs.verifier"
         versionCode appVersionCode
         versionName version
         vectorDrawables.useSupportLibrary = true

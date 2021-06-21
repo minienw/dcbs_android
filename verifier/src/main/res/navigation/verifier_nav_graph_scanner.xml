@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_qr_scanner"
-        android:name="nl.rijksoverheid.ctr.verifier.ui.scanner.VerifierQrScannerFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.VerifierQrScannerFragment"
         tools:layout="@layout/fragment_scanner">
 
         <action
@@ -30,12 +30,12 @@
 
     <fragment
         android:id="@+id/nav_scan_result_invalid"
-        android:name="nl.rijksoverheid.ctr.verifier.ui.scanner.ScanResultInvalidFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultInvalidFragment"
         tools:layout="@layout/fragment_scan_result_invalid">
 
         <argument
             android:name="invalidData"
-            app:argType="nl.rijksoverheid.ctr.verifier.ui.scanner.models.ScanResultInvalidData" />
+            app:argType="nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData" />
 
         <action
             android:id="@+id/action_nav_main"
@@ -55,12 +55,12 @@
 
     <fragment
         android:id="@+id/nav_scan_result_valid"
-        android:name="nl.rijksoverheid.ctr.verifier.ui.scanner.ScanResultValidFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultValidFragment"
         tools:layout="@layout/fragment_scan_result_valid">
 
         <argument
             android:name="validData"
-            app:argType="nl.rijksoverheid.ctr.verifier.ui.scanner.models.ScanResultValidData" />
+            app:argType="nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData" />
 
         <action
             android:id="@+id/action_nav_main"
@@ -80,13 +80,13 @@
 
     <dialog
         android:id="@+id/valid_explanation_bottomsheet"
-        android:name="nl.rijksoverheid.ctr.verifier.ui.scanner.ScanResultValidExplanationDialogFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultValidExplanationDialogFragment"
         android:label="ScanResultValidExplanationDialogFragment"
         tools:layout="@layout/fragment_scan_result_valid_reason"/>
 
     <dialog
         android:id="@+id/invalid_explanation_bottomsheet"
-        android:name="nl.rijksoverheid.ctr.verifier.ui.scanner.ScanResultInvalidExplanationDialogFragment"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultInvalidExplanationDialogFragment"
         android:label="ScanResultInvalidExplanationDialogFragment"
         tools:layout="@layout/fragment_scan_result_invalid_reason" />
 
