@@ -20,7 +20,7 @@ class DCCQR(
 
     @ExperimentalStdlibApi
     fun getName(): String {
-        return (dcc?.name?.lastName ?: "").uppercase() + " " + (dcc?.name?.firstName ?: "").uppercase()
+        return (dcc?.name?.lastName ?: "").capitalize() + " " + (dcc?.name?.firstName ?: "").capitalize()
 
     }
 

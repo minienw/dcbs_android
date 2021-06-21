@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.Gson
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
-import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
 import nl.rijksoverheid.dcbs.verifier.models.DCCQR
@@ -31,11 +30,10 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
     private val args: ScanResultValidFragmentArgs by navArgs()
     private val scannerUtil: ScannerUtil by inject()
 
+    private var countDownTime = COUNTDOWN_TIME
     private val autoCloseHandler = Handler(Looper.getMainLooper())
     private val autoCloseRunnable = Runnable {
-        findNavControllerSafety(R.id.nav_scan_result_valid)?.navigate(
-            ScanResultValidFragmentDirections.actionNavMain()
-        )
+        setPauseTimer()
     }
 
     @ExperimentalStdlibApi
@@ -69,6 +67,16 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         }
 
         presentPersonalDetails()
+        setPauseTimer()
+        binding.btnPause.setOnClickListener {
+            if (binding.pauseLabel.text == getString(R.string.pause)) {
+                binding.pauseLabel.text = getString(R.string.resume)
+                autoCloseHandler.removeCallbacks(autoCloseRunnable)
+            } else {
+                binding.pauseLabel.text = getString(R.string.pause)
+                setPauseTimer()
+            }
+        }
     }
 
     @ExperimentalStdlibApi
@@ -84,22 +92,30 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
     }
 
     private fun initVaccinations(items: List<DCCVaccine>?) {
+        binding.dose1TableTitle.text = getString(R.string.item_dose_x, 1)
+        binding.dose2TableTitle.text = getString(R.string.item_dose_x, 2)
         items?.let { vaccines ->
             binding.vaccineLayout.visibility = View.VISIBLE
+            binding.dose1BoxTitle.text = getString(R.string.item_dose_x_x, 1, 2)
             binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: ""
             binding.dose1BoxDate.text = vaccines[0].dateOfVaccination ?: ""
             binding.dose1TableDiseaseVaccineValue.text = vaccines[0].getVaccine()?.getDisplayName() ?: ""
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
+            binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
             binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
             if (vaccines.size == 2) {
+                binding.dose1TableTitle.visibility = View.VISIBLE
                 binding.dose2BoxLayout.visibility = View.VISIBLE
                 binding.dose2TableLayout.visibility = View.VISIBLE
+                binding.dose2BoxTitle.text = getString(R.string.item_dose_x_x, 2, 2)
                 binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: ""
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination ?: ""
                 binding.dose2TableDiseaseVaccineValue.text = vaccines[1].getVaccine()?.getDisplayName() ?: ""
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
+                binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
                 binding.dose2TableCertificateIdentifierValue.text = vaccines[1].certificateIdentifier
             } else {
+                binding.dose1TableTitle.visibility = View.GONE
                 binding.dose2BoxLayout.visibility = View.GONE
                 binding.dose2TableLayout.visibility = View.GONE
             }
@@ -135,26 +151,33 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             binding.recoveryTableFirstDateValue.text = recoveries[0].dateOfFirstPositiveTest
             binding.recoveryTableValidFromValue.text = recoveries[0].certificateValidFrom
             binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo
-            binding.testTableIssuerValue.text = recoveries[0].certificateIssuer
-            binding.testTableIdentifierValue.text = recoveries[0].certificateIdentifier
+            binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
+            binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
+            binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
 
         } ?: run {
             binding.recoveryLayout.visibility = View.GONE
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val autoCloseDuration =
-            if (BuildConfig.FLAVOR == "tst") TimeUnit.SECONDS.toMillis(10) else TimeUnit.MINUTES.toMillis(
-                3
+    private fun setPauseTimer() {
+        countDownTime -= 1
+        binding.pauseValue.text = countDownTime.toString()
+        if (countDownTime <= 0) {
+            findNavControllerSafety(R.id.nav_scan_result_valid)?.navigate(
+                ScanResultValidFragmentDirections.actionNavMain()
             )
-        autoCloseHandler.postDelayed(autoCloseRunnable, autoCloseDuration)
+        }
+        autoCloseHandler.postDelayed(autoCloseRunnable, TimeUnit.SECONDS.toMillis(1))
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         autoCloseHandler.removeCallbacks(autoCloseRunnable)
+    }
+
+    companion object {
+        const val COUNTDOWN_TIME = 60
     }
 }

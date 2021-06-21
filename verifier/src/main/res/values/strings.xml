@@ -112,8 +112,8 @@
     <string name="certificates_outdated_button">Update</string>
     <string name="certificates_outdated_desc">Maak verbinding met internet en probeer het opnieuw</string>
     <string name="certificates_outdated_title">Uw certificaten zijn oud.</string>
-    <string name="item_dose_x">Vaccin dosis %i</string>
-    <string name="item_dose_x_x">Vaccin dosis %i / %i</string>
+    <string name="item_dose_x">Vaccin dosis %d</string>
+    <string name="item_dose_x_x">Vaccin dosis %d / %d</string>
     <string name="item_disease">Ziekte / Vaccin</string>
     <string name="item_country">Lidstaat</string>
     <string name="item_identifier">Certificaat nummer</string>

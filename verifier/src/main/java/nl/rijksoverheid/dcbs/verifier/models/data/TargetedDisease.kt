@@ -5,7 +5,7 @@ enum class TargetedDisease(val value: String) {
 
     fun getDisplayName(): String {
         return when (this) {
-            Covid19 -> "Covid19"
+            Covid19 -> "Covid-19"
         }
     }
 

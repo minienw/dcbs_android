@@ -111,5 +111,32 @@
     <style name="Montserrat_SemiBold_Black" parent="Montserrat_SemiBold">
         <item name="android:textColor">@color/black</item>
     </style>
+
+    <style name="ValidQrLabel" parent="Montserrat_SemiBold_Black">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="layout_constraintHorizontal_weight">2</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+    </style>
+
+    <style name="ValidQrValue" parent="Montserrat_Bold_Black">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="layout_constraintHorizontal_weight">3</item>
+        <item name="android:gravity">end</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+    </style>
+
+    <style name="ValidQrSeparator">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/grey_3</item>
+        <item name="android:layout_marginTop">12dp</item>
+        <item name="layout_constraintStart_toStartOf">parent</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+    </style>
     
 </resources>
