@@ -20,4 +20,5 @@
     <color name="grey_5">#F2F2F7</color>
     <color name="darkened_blue">#002D88</color>
     <color name="expired_red">#ff7254</color>
+    <color name="primary_blue_opacity10">#1a154273</color>
 </resources>

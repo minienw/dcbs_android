@@ -42,10 +42,6 @@ class DCCVaccine(
         return VaccineProduct.fromValue(vaccineMedicalProduct)
     }
 
-    fun getCountryOfVaccination(): CountryCode? {
-        return CountryCode.fromValue(countryOfVaccination)
-    }
-
     fun getTargetedDisease(): TargetedDisease? {
         return TargetedDisease.fromValue(targetedDisease)
     }

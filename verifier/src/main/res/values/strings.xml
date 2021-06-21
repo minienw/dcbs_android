@@ -108,9 +108,32 @@
     <string name="scan_instructions_4_description"><![CDATA[Rood scherm? Dat betekent niet dat de bezoeker corona heeft. Het betekent alleen dat de QR-code ongeldig is. Er is dus geen bewijs van een vaccinatie of een negatieve testuitslag. Dit kun je doen:<br\><br\><ul><li>Controleer of de bezoeker de QR-code vanuit de CoronaCheck-app laat zien. Een schermafbeelding of kopie van een QR-code uit de app geeft altijd een rood scherm.</li><li>Controleer of de bezoeker een Nederlandse QR-code laat zien. Een internationale QR-code geeft in Nederland een rood scherm.</li><li>Vraag de bezoeker de app volledig af te sluiten en opnieuw op te starten. Scan daarna opnieuw de QR-code.</li><li>Blijft er een rood scherm komen, terwijl de bezoeker wel een vaccinatie of negatieve testuitslag heeft? Stuur de bezoeker naar onze helpdesk, telefoonnummer: 0800-1421.</li></ul> <br\>Er is altijd een groen scherm nodig voor toegang.</a> Heeft de bezoeker geen (geldige) QR-code? Dan kun je de bezoeker niet binnenlaten. Kijk <a href="https://www.coronacheck.nl/nl/scanner">hier</a> voor meer informatie.
 ]]></string>
     <string name="contact">Contact</string>
-    <string name="destination_country">Destination Country: %s</string>
-    <string name="date_of_birth">Date Of Birth: %s</string>
-    <string name="certificate_expired_title">Uw certificaten zijn oud.</string>
-    <string name="certificate_expired_description">Maak verbinding met internet en probeer het opnieuw</string>
-    <string name="update">Update</string>
+
+    <string name="certificates_outdated_button">Update</string>
+    <string name="certificates_outdated_desc">Maak verbinding met internet en probeer het opnieuw</string>
+    <string name="certificates_outdated_title">Uw certificaten zijn oud.</string>
+    <string name="item_dose_x">Vaccin dosis %i</string>
+    <string name="item_dose_x_x">Vaccin dosis %i / %i</string>
+    <string name="item_disease">Ziekte / Vaccin</string>
+    <string name="item_country">Lidstaat</string>
+    <string name="item_identifier">Certificaat nummer</string>
+    <string name="item_date_of_birth_x">Geboortedatum %s</string>
+    <string name="item_test_header">Test</string>
+    <string name="item_test_target">Ziekte</string>
+    <string name="item_test_type">Test type</string>
+    <string name="item_test_name">Test naam</string>
+    <string name="item_test_manufacturer">Fabrikant</string>
+    <string name="item_test_location">Test locatie</string>
+    <string name="item_test_country">Test land</string>
+    <string name="item_recovery_header">Herstel</string>
+    <string name="item_recovery_type">Ziekte</string>
+    <string name="item_recovery_first_date">1e positieve test</string>
+    <string name="item_recovery_from">Geldig van</string>
+    <string name="item_recovery_to">Geldig tot</string>
+    <string name="item_recovery_country">Test land</string>
+    <string name="item_certificate_issuer">Certificaat uitgever</string>
+    <string name="item_unknown">Onbekend</string>
+    <string name="resume">Verder</string>
+    <string name="pause">Pauze</string>
+    <string name="destination_x">Bestemmingsland: %s</string>
 </resources>

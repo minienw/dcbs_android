@@ -107,5 +107,9 @@
     <style name="Montserrat_SemiBold_White" parent="Montserrat_SemiBold">
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="Montserrat_SemiBold_Black" parent="Montserrat_SemiBold">
+        <item name="android:textColor">@color/black</item>
+    </style>
     
 </resources>

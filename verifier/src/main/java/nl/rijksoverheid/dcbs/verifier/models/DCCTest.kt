@@ -34,10 +34,6 @@ class DCCTest(
     val certificateIdentifier: String?
 ) {
 
-    fun getCountryOfTest(): CountryCode? {
-        return CountryCode.fromValue(countryOfTest)
-    }
-
     fun getTargetedDisease(): TargetedDisease? {
         return TargetedDisease.fromValue(targetedDisease)
     }

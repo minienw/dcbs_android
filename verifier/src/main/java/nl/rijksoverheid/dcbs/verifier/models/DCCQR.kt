@@ -1,6 +1,5 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
-import nl.rijksoverheid.dcbs.verifier.models.data.CountryCode
 import java.util.*
 
 /*
@@ -18,10 +17,6 @@ class DCCQR(
     val expirationTime: Long?, // When does this QR expire in seconds
     val dcc: DCC?
 ) {
-
-    fun getIssuer(): CountryCode? {
-        return CountryCode.fromValue(issuer)
-    }
 
     @ExperimentalStdlibApi
     fun getName(): String {

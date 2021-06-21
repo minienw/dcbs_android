@@ -1,7 +1,6 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
-import nl.rijksoverheid.dcbs.verifier.models.data.CountryCode
 import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
 
 /*
@@ -28,10 +27,6 @@ class DCCRecovery(
     @SerializedName("ci")
     val certificateIdentifier: String?
 ) {
-
-    fun getCountryOfTest(): CountryCode? {
-        return CountryCode.fromValue(countryOfTest)
-    }
 
     fun getTargetedDisease(): TargetedDisease? {
         return TargetedDisease.fromValue(targetedDisease)
