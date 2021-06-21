@@ -10,6 +10,7 @@ package nl.rijksoverheid.ctr.appconfig.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import nl.rijksoverheid.ctr.appconfig.models.AppStatus
 import nl.rijksoverheid.ctr.appconfig.persistence.AppConfigPersistenceManager
 import nl.rijksoverheid.ctr.appconfig.models.ConfigResult
 import nl.rijksoverheid.ctr.appconfig.repositories.ConfigRepository
@@ -28,6 +29,7 @@ import java.time.OffsetDateTime
 
 interface AppConfigUseCase {
     suspend fun get(): ConfigResult
+    fun checkLastConfigFetchExpired(time: Long) : Boolean
 }
 
 class AppConfigUseCaseImpl(
@@ -50,5 +52,9 @@ class AppConfigUseCaseImpl(
         } catch (e: HttpException) {
             ConfigResult.Error
         }
+    }
+
+    override fun checkLastConfigFetchExpired(time: Long) : Boolean {
+        return appConfigPersistenceManager.getAppConfigLastFetchedSeconds() + time < OffsetDateTime.now(clock).toEpochSecond()
     }
 }

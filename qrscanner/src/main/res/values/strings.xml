@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="certificate_expired_title">Uw certificaten zijn oud.</string>
+    <string name="certificate_expired_description">Maak verbinding met internet en probeer het opnieuw</string>
+    <string name="update">Update</string>
+</resources>

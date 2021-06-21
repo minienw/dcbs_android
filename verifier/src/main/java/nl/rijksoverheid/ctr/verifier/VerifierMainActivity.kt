@@ -70,7 +70,15 @@ class VerifierMainActivity : AppCompatActivity() {
         super.onStart()
         // Only get app config on every app foreground when introduction is finished
         if (introductionViewModel.getIntroductionStatus() is IntroductionStatus.IntroductionFinished) {
-            appStatusViewModel.refresh(mobileCoreWrapper)
+            updateConfig()
         }
+    }
+
+    fun updateConfig() {
+        appStatusViewModel.refresh(mobileCoreWrapper)
+    }
+
+    fun checkLastConfigFetchExpired(time: Long) : Boolean {
+        return appStatusViewModel.checkLastConfigFetchExpired(time)
     }
 }
