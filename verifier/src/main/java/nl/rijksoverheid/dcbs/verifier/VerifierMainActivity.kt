@@ -35,12 +35,12 @@ class VerifierMainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (BuildConfig.FLAVOR == "prod") {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
-        }
+        //if (BuildConfig.FLAVOR == "prod") {
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+        //}
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
@@ -78,7 +78,7 @@ class VerifierMainActivity : AppCompatActivity() {
         appStatusViewModel.refresh(mobileCoreWrapper)
     }
 
-    fun checkLastConfigFetchExpired(time: Long) : Boolean {
+    fun checkLastConfigFetchExpired(time: Long): Boolean {
         return appStatusViewModel.checkLastConfigFetchExpired(time)
     }
 }

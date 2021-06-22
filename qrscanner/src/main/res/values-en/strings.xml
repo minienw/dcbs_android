@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="certificates_outdated_button">Update</string>
-    <string name="certificates_outdated_desc">Maak verbinding met internet en probeer het opnieuw</string>
-    <string name="certificates_outdated_title">Uw certificaten zijn oud.</string>
+    <string name="certificates_outdated_button">Update lists</string>
+    <string name="certificates_outdated_desc">You can continue to use the app. However, connect to the internet and try again using the “Update lists” button.</string>
+    <string name="certificates_outdated_title">Trust list was not updated</string>
 </resources>

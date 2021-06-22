@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="certificates_outdated_button">Update</string>
-    <string name="certificates_outdated_desc">Maak verbinding met internet en probeer het opnieuw</string>
-    <string name="certificates_outdated_title">Uw certificaten zijn oud.</string>
+    <string name="certificates_outdated_button">Bijwerken</string>
+    <string name="certificates_outdated_desc">U kunt de app blijven gebruiken, maar maak verbinding met internet en probeer het nog eens via de knop “Bijwerken”.</string>
+    <string name="certificates_outdated_title">De certificatenlijst is niet bijgewerkt!</string>
 </resources>

@@ -44,10 +44,6 @@ val verifierIntroductionModule = module {
                 PrivacyPolicyItem(
                     R.drawable.ic_shield,
                     R.string.privacy_policy_2
-                ),
-                PrivacyPolicyItem(
-                    R.drawable.ic_shield,
-                    R.string.privacy_policy_3
                 )
             ),
             newTerms = NewTerms(

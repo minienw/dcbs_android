@@ -40,12 +40,11 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
                             description = getString(R.string.scan_instructions_1_description),
                         ),
                         ScanInstructionAdapterItem(
+                            image = R.drawable.ic_scan_success,
                             title = R.string.scan_instructions_2_title,
                             description = getString(R.string.scan_instructions_2_description),
                         ),
                         ScanInstructionAdapterItem(
-                            image = R.drawable.ic_scan_success,
-                            imageDescription = getString(R.string.scan_instructions_3_image),
                             title = R.string.scan_instructions_3_title,
                             description = getString(R.string.scan_instructions_3_description),
                         ),
@@ -54,7 +53,15 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
                             imageDescription = getString(R.string.scan_instructions_4_image),
                             title = R.string.scan_instructions_4_title,
                             description = appConfigUtil.getStringWithTestValidity(R.string.scan_instructions_4_description)
-                        )
+                        ),
+                        ScanInstructionAdapterItem(
+                            title = R.string.scan_instructions_5_title,
+                            description = getString(R.string.scan_instructions_5_description),
+                        ),
+                        ScanInstructionAdapterItem(
+                            title = R.string.scan_instructions_6_title,
+                            description = getString(R.string.scan_instructions_6_description),
+                        ),
                     )
                 )
                 binding.recyclerView.adapter = this

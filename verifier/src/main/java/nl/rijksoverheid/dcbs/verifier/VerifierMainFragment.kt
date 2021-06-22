@@ -85,17 +85,21 @@ class VerifierMainFragment :
                     versionCode = BuildConfig.VERSION_CODE.toString(),
                     readMoreItems = listOf(
                         AboutThisAppData.ReadMoreItem(
-                            text = getString(R.string.contact),
-                            url = getString(R.string.url_faq),
-                        ),
-                        AboutThisAppData.ReadMoreItem(
-                            text = getString(R.string.privacy_statement),
+                            text = getString(R.string.terms_of_use),
                             url = getString(R.string.url_terms_of_use),
                         ),
                         AboutThisAppData.ReadMoreItem(
                             text = getString(R.string.about_this_app_accessibility),
                             url = getString(R.string.url_accessibility),
-                        )
+                        ),
+                        AboutThisAppData.ReadMoreItem(
+                            text = getString(R.string.privacy_statement),
+                            url = getString(R.string.url_privacy_statement),
+                        ),
+                        AboutThisAppData.ReadMoreItem(
+                            text = getString(R.string.contact),
+                            url = getString(R.string.url_faq),
+                        ),
                     )
                 )
             )

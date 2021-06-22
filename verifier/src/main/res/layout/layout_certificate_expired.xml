@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/expired_red"
-    app:cardCornerRadius="10dp"
-    >
+    app:cardCornerRadius="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,39 +16,41 @@
             style="@style/Montserrat_Bold_White"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/certificates_outdated_title"
             android:textSize="15sp"
-            android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@id/btn_update"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/certificate_expired_description"
             style="@style/Montserrat_SemiBold_White"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp"
             android:text="@string/certificates_outdated_desc"
             android:textSize="13sp"
-            app:layout_constraintTop_toBottomOf="@id/certificate_expired_title"
-            app:layout_constraintStart_toStartOf="@id/certificate_expired_title"
-            app:layout_constraintEnd_toStartOf="@id/btn_update"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_update" />
 
         <Button
             android:id="@+id/btn_update"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
             android:background="@drawable/bg_parliament_rounded"
             android:text="@string/certificates_outdated_button"
-            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@id/certificate_expired_title"
+            app:layout_constraintTop_toTopOf="@id/certificate_expired_title" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

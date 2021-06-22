@@ -99,7 +99,8 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             binding.dose1BoxTitle.text = getString(R.string.item_dose_x_x, 1, 2)
             binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: ""
             binding.dose1BoxDate.text = vaccines[0].dateOfVaccination ?: ""
-            binding.dose1TableDiseaseVaccineValue.text = vaccines[0].getVaccine()?.getDisplayName() ?: ""
+            binding.dose1TableDiseaseVaccineValue.text = vaccines[0].getTargetedDisease()?.getDisplayName() ?: "" + " | " +
+                    vaccines[0].getVaccine()?.getDisplayName()
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
             binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
             binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
@@ -110,7 +111,8 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
                 binding.dose2BoxTitle.text = getString(R.string.item_dose_x_x, 2, 2)
                 binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: ""
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination ?: ""
-                binding.dose2TableDiseaseVaccineValue.text = vaccines[1].getVaccine()?.getDisplayName() ?: ""
+                binding.dose2TableDiseaseVaccineValue.text = vaccines[1].getTargetedDisease()?.getDisplayName() ?: "" + " | " +
+                        vaccines[1].getVaccine()?.getDisplayName()
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
                 binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
                 binding.dose2TableCertificateIdentifierValue.text = vaccines[1].certificateIdentifier
