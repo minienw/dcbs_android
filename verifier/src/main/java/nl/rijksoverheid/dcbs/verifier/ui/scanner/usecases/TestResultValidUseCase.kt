@@ -24,10 +24,7 @@ class TestResultValidUseCaseImpl(
             when (val verifyQrResult = verifyQrUseCase.get(qrContent)) {
                 is VerifyQrUseCase.VerifyQrResult.Success -> {
                     val verifiedQr = verifyQrResult.verifiedQr
-                    when {
-                        verifiedQr.testResultAttributes.isSpecimen == "1" -> VerifiedQrResultState.Demo(verifiedQr)
-                        else -> VerifiedQrResultState.Valid(verifiedQr)
-                    }
+                    VerifiedQrResultState.Valid(verifiedQr)
                 }
                 is VerifyQrUseCase.VerifyQrResult.Failed -> {
                     VerifiedQrResultState.Error(verifyQrResult.error)

@@ -28,28 +28,6 @@ class TestResultValidUseCaseImplTest {
         }
 
     @Test
-    fun `Validate returns Demo if code can be validated with valid test result, valid qr code and isSpecimen is set to 1`() =
-        runBlocking {
-            val usecase = TestResultValidUseCaseImpl(
-                verifyQrUseCase = fakeVerifyQrUseCase(
-                    result = VerifyQrUseCase.VerifyQrResult.Success(
-                        verifiedQr = fakeVerifiedQr(isSpecimen = "1")
-                    )
-                ),
-            )
-            assertTrue(usecase.validate("") is VerifiedQrResultState.Demo)
-        }
-
-    @Test
-    fun `Validate returns Demo if code has Specimen 1`() =
-        runBlocking {
-            val usecase = TestResultValidUseCaseImpl(
-                verifyQrUseCase = fakeVerifyQrUseCase(isSpecimen = "1"),
-            )
-            assertTrue(usecase.validate("") is VerifiedQrResultState.Demo)
-        }
-
-    @Test
     fun `Validate returns Error if code cannot be validated`() = runBlocking {
         val fakeVerifiedQrDataMapper: VerifiedQrDataMapper = mockk()
         coEvery { fakeVerifiedQrDataMapper.transform(any()) } throws Exception("Crash")
