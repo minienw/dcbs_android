@@ -12,6 +12,7 @@ import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultInvalidBinding
+import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import org.koin.android.ext.android.inject
@@ -25,14 +26,17 @@ import java.util.concurrent.TimeUnit
  *
  */
 class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid) {
+
+    private var _binding: FragmentScanResultInvalidBinding? = null
+    private val binding get() = _binding!!
     
     private val scannerUtil: ScannerUtil by inject()
 
+
+    private var countDownTime = COUNTDOWN_TIME
     private val autoCloseHandler = Handler(Looper.getMainLooper())
     private val autoCloseRunnable = Runnable {
-        findNavControllerSafety(R.id.nav_scan_result_invalid)?.navigate(
-            ScanResultInvalidFragmentDirections.actionNavMain()
-        )
+        setPauseTimer()
     }
 
     private val args: ScanResultInvalidFragmentArgs by navArgs()
@@ -40,7 +44,7 @@ class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = FragmentScanResultInvalidBinding.bind(view)
+        _binding = FragmentScanResultInvalidBinding.bind(view)
 
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigate(ScanResultInvalidFragmentDirections.actionNavMain())
@@ -62,19 +66,37 @@ class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid
             scannerUtil.launchScanner(requireActivity())
         }
 
+        setPauseTimer()
+        binding.btnPause.setOnClickListener {
+            if (binding.pauseLabel.text == getString(R.string.pause)) {
+                binding.pauseLabel.text = getString(R.string.resume)
+                autoCloseHandler.removeCallbacks(autoCloseRunnable)
+            } else {
+                binding.pauseLabel.text = getString(R.string.pause)
+                setPauseTimer()
+            }
+        }
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        val autoCloseDuration =
-            if (BuildConfig.FLAVOR == "tst") TimeUnit.SECONDS.toMillis(10) else TimeUnit.MINUTES.toMillis(
-                3
+    private fun setPauseTimer() {
+        countDownTime -= 1
+        binding.pauseValue.text = countDownTime.toString()
+        if (countDownTime <= 0) {
+            findNavControllerSafety(R.id.nav_scan_result_invalid)?.navigate(
+                ScanResultInvalidFragmentDirections.actionNavMain()
             )
-        autoCloseHandler.postDelayed(autoCloseRunnable, autoCloseDuration)
+        }
+        autoCloseHandler.postDelayed(autoCloseRunnable, TimeUnit.SECONDS.toMillis(1))
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        _binding = null
         autoCloseHandler.removeCallbacks(autoCloseRunnable)
+    }
+
+    companion object {
+        const val COUNTDOWN_TIME = 60
     }
 }

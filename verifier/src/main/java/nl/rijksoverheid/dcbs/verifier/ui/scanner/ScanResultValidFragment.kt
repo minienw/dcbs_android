@@ -84,7 +84,6 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         val verifiedQr = args.validData.verifiedQr
         val dccQR = Gson().fromJson(verifiedQr.data, DCCQR::class.java)
         binding.name.text = dccQR.getName()
-        binding.destination.text = getString(R.string.destination_x, dccQR.issuer)
         binding.dateOfBirth.text = getString(R.string.item_date_of_birth_x, dccQR.getBirthDate())
         initVaccinations(dccQR.dcc?.vaccines)
         initTest(dccQR.dcc?.tests)

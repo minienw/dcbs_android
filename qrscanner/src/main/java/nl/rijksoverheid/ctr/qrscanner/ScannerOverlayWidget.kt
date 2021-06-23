@@ -35,7 +35,7 @@ class ScannerOverlayWidget @JvmOverloads constructor(
         // Determine center
         val centerOfWindow = Point(w / 2, h / 2)
         // Offset center by 1/8th of screen height
-        centerOfWindow.offset(0, -h / 8)
+        centerOfWindow.offset(0, -h / 16)
 
         // Calculate width of cutout based on width or height depending on orientation
         val rectW = if (w < h) {

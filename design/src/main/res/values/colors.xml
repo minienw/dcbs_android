@@ -4,7 +4,7 @@
     <color name="primary_blue">#154273</color>
     <color name="secondary_blue">#69dbff</color>
     <color name="secondary_green">#3dec94</color>
-    <color name="red">#FF745F</color>
+    <color name="red">#FF735F</color>
     <color name="error">#b30900</color>
     <color name="link">#007AFF</color>
     <color name="black">#383836</color>
@@ -21,4 +21,5 @@
     <color name="darkened_blue">#002D88</color>
     <color name="expired_red">#ff7254</color>
     <color name="primary_blue_opacity10">#1a154273</color>
+    <color name="white_opacity70">#b3ffffff</color>
 </resources>
