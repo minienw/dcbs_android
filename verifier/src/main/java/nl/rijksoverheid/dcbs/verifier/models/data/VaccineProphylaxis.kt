@@ -8,7 +8,7 @@ enum class VaccineProphylaxis(val value: String) {
     fun getDisplayName(): String {
         return when (this) {
             MRNA -> "mRNA vaccine"
-            Antigen -> "antigen vaccine"
+            Antigen -> "Antigen vaccine"
             Covid19Vaccines -> "covid-19 vaccines"
         }
     }
