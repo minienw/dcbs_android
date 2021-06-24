@@ -1,10 +1,9 @@
 package nl.rijksoverheid.dcbs.verifier.ui.scanner.datamappers
 
-import com.squareup.moshi.Moshi
+import com.google.gson.GsonBuilder
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
-import nl.rijksoverheid.ctr.shared.ext.toObject
 import nl.rijksoverheid.ctr.shared.ext.verify
-import nl.rijksoverheid.ctr.shared.models.TestResultAttributes
+import nl.rijksoverheid.dcbs.verifier.models.DCCQR
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 
 /*
@@ -18,7 +17,7 @@ interface VerifiedQrDataMapper {
     fun transform(qrContent: String): VerifiedQr
 }
 
-class VerifiedQrDataMapperImpl(private val moshi: Moshi, private val mobileCoreWrapper: MobileCoreWrapper) : VerifiedQrDataMapper {
+class VerifiedQrDataMapperImpl(private val mobileCoreWrapper: MobileCoreWrapper) : VerifiedQrDataMapper {
     override fun transform(
         qrContent: String
     ): VerifiedQr {
@@ -28,7 +27,17 @@ class VerifiedQrDataMapperImpl(private val moshi: Moshi, private val mobileCoreW
                 qrContent.toByteArray()
             ).verify()
 
-        return VerifiedQr(
-            data = result.decodeToString())
+        val data = result.decodeToString()
+
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+        val dccQR = gson.fromJson(data, DCCQR::class.java)
+        val hasVaccine = dccQR.dcc?.vaccines?.isNotEmpty() == true
+        val hasTest = dccQR.dcc?.tests?.isNotEmpty() == true
+        val hasRecovery = dccQR.dcc?.recoveries?.isNotEmpty() == true
+        if (!hasVaccine && !hasTest && !hasRecovery) {
+            throw Exception("no vaccine, test or recovery data")
+        }
+
+        return VerifiedQr(data = data)
     }
 }

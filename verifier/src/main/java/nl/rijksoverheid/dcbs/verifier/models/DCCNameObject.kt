@@ -15,4 +15,12 @@ class DCCNameObject(
     val firstName: String?,
     @SerializedName("gn")
     val lastName: String?,
-)
+    @SerializedName("gnt")
+    val lastNameStandardised: String
+) {
+
+    @ExperimentalStdlibApi
+    fun retrieveLastName(): String {
+        return lastName ?: lastNameStandardised.lowercase().capitalize()
+    }
+}

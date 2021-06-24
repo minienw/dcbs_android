@@ -13,19 +13,19 @@ import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
 
 class DCCRecovery(
     @SerializedName("tg")
-    val targetedDisease: String?,
+    val targetedDisease: String,
     @SerializedName("fr")
-    val dateOfFirstPositiveTest: String?,
+    val dateOfFirstPositiveTest: String,
     @SerializedName("co")
-    val countryOfTest: String?,
+    val countryOfTest: String,
     @SerializedName("is")
-    val certificateIssuer: String?,
+    val certificateIssuer: String,
     @SerializedName("df")
-    val certificateValidFrom: String?,
+    val certificateValidFrom: String,
     @SerializedName("du")
-    val certificateValidTo: String?,
+    val certificateValidTo: String,
     @SerializedName("ci")
-    val certificateIdentifier: String?
+    val certificateIdentifier: String
 ) {
 
     fun getTargetedDisease(): TargetedDisease? {

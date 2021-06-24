@@ -1,5 +1,6 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 /*
@@ -20,11 +21,11 @@ class DCCQR(
 
     @ExperimentalStdlibApi
     fun getName(): String {
-        return (dcc?.name?.lastName ?: "").capitalize() + " " + (dcc?.name?.firstName ?: "").capitalize()
-
+        return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName ?: "").capitalize()
     }
 
     fun getBirthDate(): String {
+
         return dcc?.dateOfBirth ?: ""
     }
 

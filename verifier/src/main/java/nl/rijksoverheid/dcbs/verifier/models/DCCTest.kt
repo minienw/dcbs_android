@@ -13,25 +13,25 @@ import nl.rijksoverheid.dcbs.verifier.models.data.*
 
 class DCCTest(
     @SerializedName("tg")
-    val targetedDisease: String?,
+    val targetedDisease: String,
     @SerializedName("tt")
-    val typeOfTest: String?,
+    val typeOfTest: String,
     @SerializedName("nm")
     val NAATestName: String?,
     @SerializedName("ma")
     val RATTestNameAndManufac: String?,
     @SerializedName("sc")
-    val dateOfSampleCollection: String?,
+    val dateOfSampleCollection: String,
     @SerializedName("tr")
-    val testResult: String?,
+    val testResult: String,
     @SerializedName("tc")
     val testingCentre: String?,
     @SerializedName("co")
-    val countryOfTest: String?,
+    val countryOfTest: String,
     @SerializedName("is")
-    val certificateIssuer: String?,
+    val certificateIssuer: String,
     @SerializedName("ci")
-    val certificateIdentifier: String?
+    val certificateIdentifier: String
 ) {
 
     fun getTargetedDisease(): TargetedDisease? {

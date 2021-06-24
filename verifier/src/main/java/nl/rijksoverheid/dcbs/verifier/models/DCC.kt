@@ -12,11 +12,11 @@ import com.google.gson.annotations.SerializedName
 
 class DCC(
     @SerializedName("ver")
-    val version: String?, // DCC version
+    val version: String, // DCC version
     @SerializedName("dob")
-    val dateOfBirth: String?, // Date of birth 1962-07-01
+    val dateOfBirth: String, // Date of birth 1962-07-01
     @SerializedName("nam")
-    val name: DCCNameObject?,
+    val name: DCCNameObject,
     @SerializedName("v")
     val vaccines: List<DCCVaccine>?,
     @SerializedName("t")

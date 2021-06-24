@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
@@ -17,6 +17,7 @@ import nl.rijksoverheid.dcbs.verifier.models.*
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
+import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
@@ -82,9 +83,10 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
     @ExperimentalStdlibApi
     private fun presentPersonalDetails() {
         val verifiedQr = args.validData.verifiedQr
-        val dccQR = Gson().fromJson(verifiedQr.data, DCCQR::class.java)
+        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+        val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
         binding.name.text = dccQR.getName()
-        binding.dateOfBirth.text = getString(R.string.item_date_of_birth_x, dccQR.getBirthDate())
+        binding.dateOfBirth.text = getString(R.string.item_date_of_birth_x, dccQR.getBirthDate().formatDate())
         initVaccinations(dccQR.dcc?.vaccines)
         initTest(dccQR.dcc?.tests)
         initRecovery(dccQR.dcc?.recoveries)
@@ -92,13 +94,14 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
 
     @SuppressLint("SetTextI18n")
     private fun initVaccinations(items: List<DCCVaccine>?) {
+
         binding.dose1TableTitle.text = getString(R.string.item_dose_x, 1)
         binding.dose2TableTitle.text = getString(R.string.item_dose_x, 2)
         items?.let { vaccines ->
             binding.vaccineLayout.visibility = View.VISIBLE
             binding.dose1BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[0].doseNumber, vaccines[0].totalSeriesOfDoses)
             binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: ""
-            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination ?: ""
+            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination.formatDate()
             binding.dose1TableDiseaseVaccineValue.text =
                 "${vaccines[0].getTargetedDisease()?.getDisplayName() ?: ""} | ${vaccines[0].getVaccine()?.getDisplayName() ?: ""}"
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
@@ -110,7 +113,7 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
                 binding.dose2TableLayout.visibility = View.VISIBLE
                 binding.dose2BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[1].doseNumber, vaccines[1].totalSeriesOfDoses)
                 binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: ""
-                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination ?: ""
+                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
                     "${vaccines[1].getTargetedDisease()?.getDisplayName() ?: ""} | ${vaccines[1].getVaccine()?.getDisplayName() ?: ""}"
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
@@ -131,7 +134,7 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         items?.let { tests ->
             binding.testLayout.visibility = View.VISIBLE
             binding.testBoxName.text = tests[0].getTestResult()?.getDisplayName() ?: ""
-            binding.testBoxDate.text = tests[0].dateOfSampleCollection ?: ""
+            binding.testBoxDate.text = tests[0].dateOfSampleCollection.formatDate()
             binding.testTableTargetValue.text = tests[0].getTargetedDisease()?.getDisplayName() ?: ""
             binding.testTableTypeValue.text = tests[0].getTestType()?.getDisplayName() ?: ""
             binding.testTableNameValue.text = tests[0].NAATestName
@@ -150,9 +153,9 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         items?.let { recoveries ->
             binding.recoveryLayout.visibility = View.VISIBLE
             binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName() ?: ""
-            binding.recoveryTableFirstDateValue.text = recoveries[0].dateOfFirstPositiveTest
-            binding.recoveryTableValidFromValue.text = recoveries[0].certificateValidFrom
-            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo
+            binding.recoveryTableFirstDateValue.text = recoveries[0].dateOfFirstPositiveTest.formatDate()
+            binding.recoveryTableValidFromValue.text = recoveries[0].certificateValidFrom.formatDate()
+            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo.formatDate()
             binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
             binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
             binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
@@ -174,8 +177,10 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
     }
 
     private fun initCountries() {
-        val departureCountry = Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
-        val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val departureCountry =
+            Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val destinationCountry =
+            Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
