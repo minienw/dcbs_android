@@ -14,6 +14,7 @@ import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
 import nl.rijksoverheid.dcbs.verifier.models.*
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
@@ -64,7 +65,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
             if (failedItems.isEmpty()) {
                 setScreenValid()
+                binding.businessErrorLayout.visibility = View.GONE
             } else {
+                binding.businessErrorLayout.visibility = View.VISIBLE
+                setBusinessErrorMessages(failedItems)
                 setScreenInvalid()
             }
             binding.informationLayout.visibility = View.VISIBLE
@@ -94,6 +98,21 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 binding.pauseLabel.text = getString(R.string.pause)
                 setPauseTimer()
             }
+        }
+    }
+
+    private fun setBusinessErrorMessages(failedItems : List<DCCFailableItem>) {
+
+        binding.errorTestRequiredLayout.visibility = if (failedItems.contains(DCCFailableItem.MissingRequiredTest))  View.VISIBLE else View.GONE
+        binding.errorTestNegativeLayout.visibility = if (failedItems.contains(DCCFailableItem.TestMustBeNegative))  View.VISIBLE else View.GONE
+        if (failedItems.contains(DCCFailableItem.TestDateExpired48)) {
+            binding.errorTestOutdatedLayout.visibility = View.VISIBLE
+            binding.errorTestOutdated.text = getString(R.string.rule_test_outdated, 48)
+        } else if (failedItems.contains(DCCFailableItem.TestDateExpired72)) {
+            binding.errorTestOutdatedLayout.visibility = View.VISIBLE
+            binding.errorTestOutdated.text = getString(R.string.rule_test_outdated, 72)
+        } else {
+            binding.errorTestOutdatedLayout.visibility = View.GONE
         }
     }
 

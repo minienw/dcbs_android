@@ -142,5 +142,22 @@
         <item name="layout_constraintStart_toStartOf">parent</item>
         <item name="layout_constraintEnd_toEndOf">parent</item>
     </style>
+
+    <style name="BusinessError" parent="Montserrat_SemiBold">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">8sp</item>
+        <item name="android:layout_marginVertical">32dp</item>
+        <item name="android:layout_marginHorizontal">32dp</item>
+    </style>
+
+    <style name="BusinessErrorSeparator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/grey_3</item>
+    </style>
     
 </resources>
