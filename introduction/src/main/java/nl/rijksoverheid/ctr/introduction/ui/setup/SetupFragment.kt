@@ -40,8 +40,10 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             if (it is AppStatus.NoActionRequired) {
                 findNavController().navigate(SetupFragmentDirections.actionOnboarding(args.introductionData))
             } else {
-                val bundle = bundleOf(AppStatusFragment.EXTRA_APP_STATUS to it)
-                findNavController().navigate(R.id.action_app_status, bundle)
+                // TODO: disabling for now
+//                val bundle = bundleOf(AppStatusFragment.EXTRA_APP_STATUS to it)
+//                findNavController().navigate(R.id.action_app_status, bundle)
+                findNavController().navigate(SetupFragmentDirections.actionOnboarding(args.introductionData))
             }
         })
 

@@ -6,8 +6,8 @@ plugins {
     id "androidx.navigation.safeargs.kotlin"
 }
 
-def appVersionCode = System.getenv("GITHUB_RUN_NUMBER") != null ? System.getenv("GITHUB_RUN_NUMBER").toInteger() : 1000000
-version = "2.0"
+def appVersionCode = 4
+version = "1.0"
 archivesBaseName = "verifier-v${version}-${appVersionCode}"
 
 android {
