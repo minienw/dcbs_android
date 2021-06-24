@@ -1,4 +1,4 @@
-package nl.rijksoverheid.dcbs.verifier.ui.country_picker
+package nl.rijksoverheid.dcbs.verifier.ui.pickers
 
 import android.view.View
 import androidx.annotation.StringRes
@@ -13,11 +13,11 @@ import nl.rijksoverheid.dcbs.verifier.databinding.ItemCountryPickerBinding
  *   SPDX-License-Identifier: EUPL-1.2
  *
  */
-class CountryPickerAdapterItem(
-    @StringRes val title: Int
+class PickerAdapterItem(
+    val title: String
 ) : BindableItem<ItemCountryPickerBinding>() {
     override fun bind(viewBinding: ItemCountryPickerBinding, position: Int) {
-        viewBinding.title.setText(title)
+        viewBinding.title.text = title
     }
 
     override fun getLayout(): Int {

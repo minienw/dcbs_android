@@ -182,4 +182,12 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="departure_country">Departure Country</string>
     <string name="destination_country">Destination Country</string>
     <string name="pick_country">Pick a country</string>
+    <string name="color_code_title">Selecteer de kleurcode van het land</string>
+    <string name="color_code_description">Welke landen hebben welke kleurcode?</string>
+    <string name="color_code_button_text">Bekijk</string>
+    <string name="url_color_code">https://www.nederlandwereldwijd.nl/documenten/vragen-en-antwoorden/welke-landen-hebben-welke-kleurcode</string>
+    <string name="rule_test_required">Negatieve Covid-19 test is nodig bij vertrek uit orange of rode landen</string>
+    <string name="rule_test_must_be_negative">Negatieve Covid-19 test is nodig bij vertrek uit orange of rode landen</string>
+    <string name="rule_test_outdated">De Covid-19 test is te oud. De test mag maximaal %i uur oud zijn</string>
+
 </resources>

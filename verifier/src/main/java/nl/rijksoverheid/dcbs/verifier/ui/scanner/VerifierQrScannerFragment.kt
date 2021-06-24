@@ -12,6 +12,7 @@ import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
 import nl.rijksoverheid.dcbs.verifier.models.Countries
+import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
@@ -118,17 +119,17 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         }
 
 
-        val departureCountry = Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val departureCountry = CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName()?.let { it } ?: getString(R.string.pick_country)
         val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(true))
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionColorCodePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(false))
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
         }
 
     }

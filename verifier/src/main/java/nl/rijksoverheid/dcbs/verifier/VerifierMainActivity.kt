@@ -59,10 +59,10 @@ class VerifierMainActivity : AppCompatActivity() {
         }
 
         appStatusViewModel.appStatusLiveData.observe(this, {
-            if (it !is AppStatus.NoActionRequired) {
-                val bundle = bundleOf(AppStatusFragment.EXTRA_APP_STATUS to it)
-                navController.navigate(R.id.action_app_status, bundle)
-            }
+//            if (it !is AppStatus.NoActionRequired) {
+//                val bundle = bundleOf(AppStatusFragment.EXTRA_APP_STATUS to it)
+//                navController.navigate(R.id.action_app_status, bundle)
+//            }
         })
     }
 

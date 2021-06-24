@@ -1,0 +1,42 @@
+package nl.rijksoverheid.dcbs.verifier.ui.pickers
+
+import android.os.Bundle
+import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import nl.rijksoverheid.ctr.shared.ext.launchUrl
+import nl.rijksoverheid.dcbs.verifier.R
+import nl.rijksoverheid.dcbs.verifier.databinding.FragmentColorCodePickerBinding
+import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
+import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
+import org.koin.android.ext.android.inject
+
+class ColorCodePickerFragment : Fragment(R.layout.fragment_color_code_picker) {
+
+    private val persistenceManager: PersistenceManager by inject()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val binding = FragmentColorCodePickerBinding.bind(view)
+        GroupAdapter<GroupieViewHolder>()
+            .run {
+                addAll(CountryColorCode.values().map { PickerAdapterItem(it.getDisplayName()) })
+                binding.recyclerView.adapter = this
+                setOnItemClickListener { item, view ->
+
+                    CountryColorCode.fromDisplayName((item as? PickerAdapterItem)?.title)?.value?.let { colorCodeValue ->
+                        persistenceManager.saveDepartureValue(colorCodeValue)
+                    }
+
+                    findNavController().popBackStack()
+                }
+            }
+
+        binding.button.setOnClickListener {
+            getString(R.string.url_color_code).launchUrl(requireContext())
+        }
+    }
+}

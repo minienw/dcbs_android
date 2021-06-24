@@ -178,18 +178,18 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
 
     private fun initCountries() {
         val departureCountry =
-            Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+            CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName()?.let { it } ?: getString(R.string.pick_country)
         val destinationCountry =
             Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(true))
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionColorCodePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(false))
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
         }
     }
 
