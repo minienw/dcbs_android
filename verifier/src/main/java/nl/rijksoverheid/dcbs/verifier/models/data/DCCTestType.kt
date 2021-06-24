@@ -11,6 +11,14 @@ enum class DCCTestType(val value: String) {
         }
     }
 
+    fun validFor(country: String): Int? {
+        if (country != "nl") return null
+        return when (this) {
+            NucleidAcid -> 72
+            RapidImmune -> 48
+        }
+    }
+
     companion object {
         fun fromValue(value: String?): DCCTestType? {
             return values().firstOrNull { it.value == value }

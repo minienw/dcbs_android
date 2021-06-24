@@ -5,28 +5,34 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.GsonBuilder
+import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
-import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
+import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
 import nl.rijksoverheid.dcbs.verifier.models.*
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
-import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
+import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
-class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
+/*
+ *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
+ *   Licensed under the EUROPEAN UNION PUBLIC LICENCE v. 1.2
+ *
+ *   SPDX-License-Identifier: EUPL-1.2
+ *
+ */
+class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
-    private var _binding: FragmentScanResultValidBinding? = null
+    private var _binding: FragmentScanResultBinding? = null
     private val binding get() = _binding!!
 
-    private val args: ScanResultValidFragmentArgs by navArgs()
     private val scannerUtil: ScannerUtil by inject()
     private val persistenceManager: PersistenceManager by inject()
 
@@ -36,29 +42,41 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         setPauseTimer()
     }
 
-    @ExperimentalStdlibApi
-    @SuppressLint("ClickableViewAccessibility")
+    private val args: ScanResultFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        _binding = FragmentScanResultValidBinding.bind(view)
+        _binding = FragmentScanResultBinding.bind(view)
 
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().navigate(ScanResultValidFragmentDirections.actionNavMain())
+            findNavController().navigate(ScanResultFragmentDirections.actionNavMain())
         }
 
-        when (args.validData) {
-            is ScanResultValidData.Demo -> {
-                binding.title.text = getString(R.string.scan_result_demo_title)
-                binding.root.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.grey_2
-                    )
-                )
+        args.data.verifiedQr?.let { verifiedQr ->
+
+
+            val colorCode = CountryColorCode.fromValue(persistenceManager.getDepartureValue())
+            val toCode = persistenceManager.getDestinationValue() ?: ""
+            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+            val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+            val failedItems = dccQR.processBusinessRules(colorCode, toCode)
+
+            if (failedItems.isEmpty()) {
+                setScreenValid()
+            } else {
+                setScreenInvalid()
             }
-            is ScanResultValidData.Valid -> {
-                binding.title.text = getString(R.string.scan_result_valid_title)
+            binding.informationLayout.visibility = View.VISIBLE
+            binding.descriptionLayout.visibility = View.GONE
+            presentPersonalDetails(verifiedQr)
+
+        } ?: run {
+            setScreenInvalid()
+            binding.descriptionLayout.visibility = View.VISIBLE
+            binding.informationLayout.visibility = View.GONE
+            binding.subtitle.enableCustomLinks {
+                findNavController().navigate(ScanResultFragmentDirections.actionInvalidScreenToScanInstructions(true))
             }
         }
 
@@ -66,7 +84,6 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             scannerUtil.launchScanner(requireActivity())
         }
 
-        presentPersonalDetails()
         initCountries()
         setPauseTimer()
         binding.btnPause.setOnClickListener {
@@ -80,13 +97,24 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         }
     }
 
-    @ExperimentalStdlibApi
-    private fun presentPersonalDetails() {
-        val verifiedQr = args.validData.verifiedQr
+    private fun setScreenValid() {
+        binding.root.setBackgroundResource(R.color.secondary_green)
+        binding.title.text = getString(R.string.scan_result_valid_title)
+        binding.image.setImageResource(R.drawable.ic_valid_qr_code)
+    }
+
+    private fun setScreenInvalid() {
+        binding.root.setBackgroundResource(R.color.red)
+        binding.title.text = getString(R.string.scan_result_invalid_title)
+        binding.image.setImageResource(R.drawable.ic_invalid_qr_code)
+    }
+
+    private fun presentPersonalDetails(verifiedQr: VerifiedQr) {
+
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
         val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
         binding.name.text = dccQR.getName()
-        binding.dateOfBirth.text = getString(R.string.item_date_of_birth_x, dccQR.getBirthDate().formatDate())
+        binding.dateOfBirth.text = getString(R.string.item_date_of_birth_x, dccQR.getBirthDate())
         initVaccinations(dccQR.dcc?.vaccines)
         initTest(dccQR.dcc?.tests)
         initRecovery(dccQR.dcc?.recoveries)
@@ -165,16 +193,6 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         }
     }
 
-    private fun setPauseTimer() {
-        countDownTime -= 1
-        binding.pauseValue.text = countDownTime.toString()
-        if (countDownTime <= 0) {
-            findNavControllerSafety(R.id.nav_scan_result_valid)?.navigate(
-                ScanResultValidFragmentDirections.actionNavMain()
-            )
-        }
-        autoCloseHandler.postDelayed(autoCloseRunnable, TimeUnit.SECONDS.toMillis(1))
-    }
 
     private fun initCountries() {
         val departureCountry =
@@ -191,6 +209,17 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
             findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
         }
+    }
+
+    private fun setPauseTimer() {
+        countDownTime -= 1
+        binding.pauseValue.text = countDownTime.toString()
+        if (countDownTime <= 0) {
+            findNavControllerSafety(R.id.nav_scan_result)?.navigate(
+                ScanResultFragmentDirections.actionNavMain()
+            )
+        }
+        autoCloseHandler.postDelayed(autoCloseRunnable, TimeUnit.SECONDS.toMillis(1))
     }
 
     override fun onDestroyView() {

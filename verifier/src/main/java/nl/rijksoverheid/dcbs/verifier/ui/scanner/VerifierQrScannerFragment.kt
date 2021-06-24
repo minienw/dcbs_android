@@ -14,8 +14,7 @@ import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
 import nl.rijksoverheid.dcbs.verifier.models.Countries
 import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
-import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
-import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
+import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQrResultState
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,42 +72,19 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         })
 
         scannerViewModel.verifiedQrResultStateLiveData.observe(viewLifecycleOwner, EventObserver {
+
             when (it) {
-                is VerifiedQrResultState.Valid -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultValid(
-                            validData = ScanResultValidData.Valid(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
+                is VerifiedQrResultState.Error -> {
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(null)))
                 }
                 is VerifiedQrResultState.Demo -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultValid(
-                            validData = ScanResultValidData.Demo(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
+                }
+                is VerifiedQrResultState.Valid -> {
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
                 }
                 is VerifiedQrResultState.Invalid -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultInvalid(
-                            invalidData = ScanResultInvalidData.Invalid(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
-                }
-                is VerifiedQrResultState.Error -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultInvalid(
-                            invalidData = ScanResultInvalidData.Error(
-                                error = it.error
-                            )
-                        )
-                    )
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
                 }
             }
         })

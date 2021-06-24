@@ -1,7 +1,11 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
-import nl.rijksoverheid.dcbs.verifier.models.data.*
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestManufacturer
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
+import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
+import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.

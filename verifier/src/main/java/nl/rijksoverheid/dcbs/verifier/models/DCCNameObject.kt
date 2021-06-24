@@ -1,6 +1,7 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -19,8 +20,7 @@ class DCCNameObject(
     val lastNameStandardised: String
 ) {
 
-    @ExperimentalStdlibApi
     fun retrieveLastName(): String {
-        return lastName ?: lastNameStandardised.lowercase().capitalize()
+        return lastName ?: lastNameStandardised.toLowerCase(Locale.getDefault()).capitalize(Locale.getDefault())
     }
 }
