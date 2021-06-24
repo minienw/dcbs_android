@@ -1,5 +1,6 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
+import androidx.annotation.StringRes
 import nl.rijksoverheid.dcbs.verifier.R
 
 object Countries {
@@ -36,4 +37,9 @@ object Countries {
         Country("is", R.string.country_is),
         Country("no", R.string.country_no),
     )
+
+    @StringRes
+    fun getCountryNameResId(code: String?):  Int? {
+        return countries.find { it.code == code}?.name
+    }
 }

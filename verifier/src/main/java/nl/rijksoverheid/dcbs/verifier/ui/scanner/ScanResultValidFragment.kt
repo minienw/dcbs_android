@@ -13,10 +13,8 @@ import com.google.gson.Gson
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
-import nl.rijksoverheid.dcbs.verifier.models.DCCQR
-import nl.rijksoverheid.dcbs.verifier.models.DCCRecovery
-import nl.rijksoverheid.dcbs.verifier.models.DCCTest
-import nl.rijksoverheid.dcbs.verifier.models.DCCVaccine
+import nl.rijksoverheid.dcbs.verifier.models.*
+import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import org.koin.android.ext.android.inject
@@ -29,6 +27,7 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
 
     private val args: ScanResultValidFragmentArgs by navArgs()
     private val scannerUtil: ScannerUtil by inject()
+    private val persistenceManager: PersistenceManager by inject()
 
     private var countDownTime = COUNTDOWN_TIME
     private val autoCloseHandler = Handler(Looper.getMainLooper())
@@ -67,6 +66,7 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
         }
 
         presentPersonalDetails()
+        initCountries()
         setPauseTimer()
         binding.btnPause.setOnClickListener {
             if (binding.pauseLabel.text == getString(R.string.pause)) {
@@ -171,6 +171,21 @@ class ScanResultValidFragment : Fragment(R.layout.fragment_scan_result_valid) {
             )
         }
         autoCloseHandler.postDelayed(autoCloseRunnable, TimeUnit.SECONDS.toMillis(1))
+    }
+
+    private fun initCountries() {
+        val departureCountry = Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        binding.layoutCountryPicker.departureValue.text = departureCountry
+        binding.layoutCountryPicker.destinationValue.text = destinationCountry
+
+        binding.layoutCountryPicker.departureCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(true))
+        }
+
+        binding.layoutCountryPicker.destinationCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(false))
+        }
     }
 
     override fun onDestroyView() {

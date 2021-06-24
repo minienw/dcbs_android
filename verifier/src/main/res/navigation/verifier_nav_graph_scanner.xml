@@ -26,6 +26,14 @@
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
 
+        <action
+            android:id="@+id/action_country_picker"
+            app:destination="@id/nav_country_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
     </fragment>
 
     <fragment
@@ -47,6 +55,14 @@
             app:popUpTo="@id/nav_main"
             app:popUpToInclusive="true" />
 
+        <action
+            android:id="@+id/action_country_picker"
+            app:destination="@id/nav_country_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
     </fragment>
 
     <fragment
@@ -67,6 +83,25 @@
             app:popExitAnim="@anim/fragment_close_exit"
             app:popUpTo="@id/nav_main"
             app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_country_picker"
+            app:destination="@id/nav_country_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_country_picker"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.country_picker.CountryPickerFragment"
+        tools:layout="@layout/fragment_country_picker">
+
+        <argument
+            android:name="isDeparture"
+            app:argType="boolean" />
 
     </fragment>
 

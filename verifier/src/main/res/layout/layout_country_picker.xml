@@ -10,9 +10,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/departure_card"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:padding="10dp"
+        android:layout_marginStart="32dp"
         android:background="@drawable/bg_white_opacity70" >
 
         <TextView
@@ -30,7 +32,7 @@
         <TextView
             android:id="@+id/departure_value"
             style="@style/Montserrat_Bold_Parliament"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/pick_country"
             android:textSize="14sp"
@@ -60,8 +62,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/destination_card"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="32dp"
         android:padding="10dp"
         android:background="@drawable/bg_white_opacity70">
 
@@ -80,7 +84,7 @@
         <TextView
             android:id="@+id/destination_value"
             style="@style/Montserrat_Bold_Parliament"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/pick_country"
             android:textSize="14sp"

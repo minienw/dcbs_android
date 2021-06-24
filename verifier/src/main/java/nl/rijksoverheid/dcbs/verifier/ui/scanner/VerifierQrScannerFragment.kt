@@ -11,9 +11,12 @@ import nl.rijksoverheid.ctr.shared.livedata.EventObserver
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
+import nl.rijksoverheid.dcbs.verifier.models.Countries
+import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQrResultState
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -27,6 +30,7 @@ import java.util.concurrent.TimeUnit
 class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
     private val scannerViewModel: ScannerViewModel by viewModel()
+    private val persistenceManager: PersistenceManager by inject()
 
     private val autoConfigCheckHandler = Handler(Looper.getMainLooper())
     private val autoConfigCheckRunnable = Runnable {
@@ -112,6 +116,21 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             (activity as? VerifierMainActivity)?.updateConfig()
             binding.layoutCertificateExpired.root.visibility = View.GONE
         }
+
+
+        val departureCountry = Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        binding.layoutCountryPicker.departureValue.text = departureCountry
+        binding.layoutCountryPicker.destinationValue.text = destinationCountry
+
+        binding.layoutCountryPicker.departureCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(true))
+        }
+
+        binding.layoutCountryPicker.destinationCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker(false))
+        }
+
     }
 
     override fun onResume() {
