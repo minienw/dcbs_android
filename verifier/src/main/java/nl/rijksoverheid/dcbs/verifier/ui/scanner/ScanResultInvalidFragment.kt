@@ -9,10 +9,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
-import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultInvalidBinding
-import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultValidBinding
 import nl.rijksoverheid.dcbs.verifier.models.Countries
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
@@ -31,7 +29,7 @@ class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid
 
     private var _binding: FragmentScanResultInvalidBinding? = null
     private val binding get() = _binding!!
-    
+
     private val scannerUtil: ScannerUtil by inject()
     private val persistenceManager: PersistenceManager by inject()
 
@@ -58,9 +56,9 @@ class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid
                 binding.subtitle.text = getString(R.string.scan_result_european_nl_invalid_subtitle)
             }
             is ScanResultInvalidData.Error -> {
-//                binding.subtitle.enableCustomLinks {
-//                    findNavController().navigate(ScanResultInvalidFragmentDirections.actionShowInvalidExplanation())
-//                }
+                binding.subtitle.enableCustomLinks {
+                    findNavController().navigate(ScanResultInvalidFragmentDirections.actionInvalidScreenToScanInstructions(true))
+                }
             }
         }
 
@@ -82,8 +80,10 @@ class ScanResultInvalidFragment : Fragment(R.layout.fragment_scan_result_invalid
     }
 
     private fun initCountries() {
-        val departureCountry = Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
-        val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val departureCountry =
+            Countries.getCountryNameResId(persistenceManager.getDepartureValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+        val destinationCountry =
+            Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
