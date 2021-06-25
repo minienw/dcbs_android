@@ -2,6 +2,7 @@ package nl.rijksoverheid.dcbs.verifier.ui.pickers
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.xwray.groupie.GroupAdapter
@@ -34,7 +35,7 @@ class ColorCodePickerFragment : Fragment(R.layout.fragment_color_code_picker) {
                     findNavController().popBackStack()
                 }
             }
-
+        ViewCompat.setNestedScrollingEnabled(binding.recyclerView, false)
         binding.button.setOnClickListener {
             getString(R.string.url_color_code).launchUrl(requireContext())
         }

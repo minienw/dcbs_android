@@ -49,4 +49,8 @@ class DCCVaccine(
     fun getMarketingHolder(): VaccineHolder? {
         return VaccineHolder.fromValue(marketingAuthorizationHolder)
     }
+
+    fun isFullyVaccinated() : Boolean {
+        return doseNumber == totalSeriesOfDoses
+    }
 }

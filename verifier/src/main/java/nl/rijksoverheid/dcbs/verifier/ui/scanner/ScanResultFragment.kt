@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.gson.GsonBuilder
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
@@ -65,9 +67,9 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
             if (failedItems.isEmpty()) {
                 setScreenValid()
-                binding.businessErrorLayout.visibility = View.GONE
+                binding.recyclerViewBusinessError.visibility = View.GONE
             } else {
-                binding.businessErrorLayout.visibility = View.VISIBLE
+                binding.recyclerViewBusinessError.visibility = View.VISIBLE
                 setBusinessErrorMessages(failedItems)
                 setScreenInvalid()
             }
@@ -79,6 +81,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             setScreenInvalid()
             binding.descriptionLayout.visibility = View.VISIBLE
             binding.informationLayout.visibility = View.GONE
+            binding.recyclerViewBusinessError.visibility = View.GONE
             binding.subtitle.enableCustomLinks {
                 findNavController().navigate(ScanResultFragmentDirections.actionInvalidScreenToScanInstructions(true))
             }
@@ -103,16 +106,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
     private fun setBusinessErrorMessages(failedItems : List<DCCFailableItem>) {
 
-        binding.errorTestRequiredLayout.visibility = if (failedItems.contains(DCCFailableItem.MissingRequiredTest))  View.VISIBLE else View.GONE
-        binding.errorTestNegativeLayout.visibility = if (failedItems.contains(DCCFailableItem.TestMustBeNegative))  View.VISIBLE else View.GONE
-        if (failedItems.contains(DCCFailableItem.TestDateExpired48)) {
-            binding.errorTestOutdatedLayout.visibility = View.VISIBLE
-            binding.errorTestOutdated.text = getString(R.string.rule_test_outdated, 48)
-        } else if (failedItems.contains(DCCFailableItem.TestDateExpired72)) {
-            binding.errorTestOutdatedLayout.visibility = View.VISIBLE
-            binding.errorTestOutdated.text = getString(R.string.rule_test_outdated, 72)
-        } else {
-            binding.errorTestOutdatedLayout.visibility = View.GONE
+        context?.let { c ->
+            GroupAdapter<GroupieViewHolder>()
+                .run {
+                    addAll(failedItems.map { BusinessErrorAdapterItem(it.getDisplayName(c)) })
+                    binding.recyclerViewBusinessError.adapter = this
+                }
         }
     }
 

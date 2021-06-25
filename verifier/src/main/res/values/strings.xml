@@ -189,5 +189,9 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="rule_test_required">Negatieve Covid-19 test is nodig bij vertrek uit orange of rode landen</string>
     <string name="rule_test_must_be_negative">Negatieve Covid-19 test is nodig bij vertrek uit orange of rode landen</string>
     <string name="rule_test_outdated">De Covid-19 test is te oud. De test mag maximaal %d uur oud zijn</string>
+    <string name="rule_red_not_allowed">Reizen uit rode gebieden zijn verboden.</string>
+    <string name="rule_full_vaccination_required">Een volledige vaccinatie is nodig bij vertrek uit oranje landen</string>
+    <string name="rule_recovery_not_valid">Een valide herstel is nodig bij vertrek uit oranje landen</string>
+    <string name="rule_require_second_test">Een tweede %s test van maximaal %d uur oud is nodig</string>
 
 </resources>

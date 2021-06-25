@@ -1,11 +1,9 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestManufacturer
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
-import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
-import nl.rijksoverheid.dcbs.verifier.utils.formatDate
+import nl.rijksoverheid.dcbs.verifier.models.data.*
+import nl.rijksoverheid.dcbs.verifier.utils.hourDifference
+import nl.rijksoverheid.dcbs.verifier.utils.toDate
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -52,5 +50,28 @@ class DCCTest(
 
     fun getTestManufacturer(): DCCTestManufacturer? {
         return DCCTestManufacturer.fromValue(RATTestNameAndManufac)
+    }
+
+    fun getTestDateExpiredIssue(to: String): DCCFailableItem? {
+
+        getTestType()?.let { testType ->
+            testType.validFor(to)?.let { maxHours ->
+                dateOfSampleCollection.toDate()?.let { date ->
+                    if (date.hourDifference() > maxHours) {
+                        return if (maxHours == 48) {
+                            DCCFailableItem(DCCFailableType.TestDateExpired, 48)
+                        } else {
+                            DCCFailableItem(DCCFailableType.TestDateExpired, 72)
+                        }
+                    }
+                } ?: run {
+                    return DCCFailableItem(DCCFailableType.TestDateExpired, 72)
+                }
+            }
+        } ?: run {
+            return DCCFailableItem(DCCFailableType.TestDateExpired, 72)
+        }
+
+        return null
     }
 }

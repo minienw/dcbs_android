@@ -12,6 +12,8 @@ enum class CountryColorCode(val value: String) {
     GREEN("code_green"),
     YELLOW("code_yellow"),
     ORANGE("code_orange"),
+    ORANGE_HIGH_INCIDENCE("code_orange_high_incidence"),
+    ORANGE_SHIPS_FLIGHT("code_orange_ships_flight"),
     RED("code_red");
 
     fun getDisplayName(): String {
@@ -19,6 +21,8 @@ enum class CountryColorCode(val value: String) {
             GREEN -> "Groen"
             YELLOW -> "Geel"
             ORANGE -> "Oranje"
+            ORANGE_HIGH_INCIDENCE -> "Oranje hoge incidentie"
+            ORANGE_SHIPS_FLIGHT -> "Oranje erg hoog risco"
             RED -> "Rood"
         }
     }

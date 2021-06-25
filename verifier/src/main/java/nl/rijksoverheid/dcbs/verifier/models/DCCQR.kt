@@ -1,9 +1,10 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
-import nl.rijksoverheid.dcbs.verifier.utils.hourDifference
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
 import java.util.*
@@ -57,37 +58,51 @@ class DCCQR(
     }
 
     private fun processNLBusinessRules(from: CountryColorCode, to: String): List<DCCFailableItem> {
-        val failingItems = ArrayList<DCCFailableItem>()
+        if (from == CountryColorCode.GREEN || from == CountryColorCode.YELLOW) {
+            return emptyList()
+        }
+        if (from == CountryColorCode.RED) {
+            return listOf(DCCFailableItem(DCCFailableType.RedNotAllowed))
+        }
         val age = dcc?.dateOfBirth?.toDate()?.let { it.yearDifference() } ?: 99
-        if (age > 13 &&
-            (from == CountryColorCode.ORANGE || from == CountryColorCode.RED)
-        ) {
-            if (dcc?.tests == null || dcc.tests.isEmpty()) {
-                failingItems.add(DCCFailableItem.MissingRequiredTest)
-            } else {
-                for (test in dcc.tests) {
-                    if (test.getTestResult() != DCCTestResult.NotDetected) {
-                        failingItems.add(DCCFailableItem.TestMustBeNegative)
-                    }
-                    test.getTestType()?.let { testType ->
-                        testType.validFor(to)?.let { maxHours ->
-                            test.dateOfSampleCollection.toDate()?.let { date ->
-                                if (date.hourDifference() > maxHours) {
-                                    if (maxHours == 48) {
-                                        failingItems.add(DCCFailableItem.TestDateExpired48)
-                                    } else {
-                                        failingItems.add(DCCFailableItem.TestDateExpired72)
-                                    }
-                                }
-                            } ?: {
-                                failingItems.add(DCCFailableItem.TestDateExpired72)
-                            }
-                        }
-                    } ?: run {
-                        failingItems.add(DCCFailableItem.TestDateExpired72)
-                    }
+        if (age <= 11 && from != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+            return emptyList()
+        }
+
+        val failingItems = ArrayList<DCCFailableItem>()
+        if (dcc?.tests == null || dcc.tests.isEmpty()) {
+            failingItems.add(DCCFailableItem(DCCFailableType.MissingRequiredTest))
+        }
+
+        if (from == CountryColorCode.ORANGE) {
+
+            dcc?.vaccines?.forEach { vaccine ->
+                return if (vaccine.isFullyVaccinated()) {
+                    emptyList()
+                } else {
+                    listOf(DCCFailableItem(DCCFailableType.NeedFullVaccination))
                 }
             }
+
+            dcc?.recoveries?.forEach { recovery ->
+                return if (recovery.isValidRecovery()) {
+                    emptyList()
+                } else {
+                    listOf(DCCFailableItem(DCCFailableType.RecoveryNotValid))
+                }
+            }
+        }
+        dcc?.tests?.forEach { test ->
+            if (test.getTestResult() != DCCTestResult.NotDetected) {
+                failingItems.add(DCCFailableItem(DCCFailableType.TestMustBeNegative))
+            }
+            test.getTestDateExpiredIssue(to)?.let {
+                failingItems.add(it)
+            }
+        }
+
+        if (from == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+            failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24, DCCTestType.RapidImmune.getDisplayName()))
         }
         return failingItems
     }

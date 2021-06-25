@@ -24,6 +24,25 @@ fun String.toDate(): Date? {
     }
 }
 
+fun Date.setTime(hour: Int, minute: Int, second: Int): Date {
+    val calendar = Calendar.getInstance()
+    calendar.time = this
+    calendar.set(Calendar.MILLISECOND, 0)
+    calendar.set(Calendar.SECOND, second)
+    calendar.set(Calendar.MINUTE, minute)
+    calendar.set(Calendar.HOUR_OF_DAY, hour)
+
+    return calendar.time
+}
+
+fun Date.resetToMidnight(): Date {
+    return this.setTime(0, 0, 0)
+}
+
+fun Date.resetToEndOfTheDay(): Date {
+    return this.setTime(23, 59, 59)
+}
+
 fun Date.hourDifference(): Int {
     val localDateTime = this.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
     val diff: Duration = Duration.between(

@@ -2,6 +2,10 @@ package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
 import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
+import nl.rijksoverheid.dcbs.verifier.utils.resetToEndOfTheDay
+import nl.rijksoverheid.dcbs.verifier.utils.resetToMidnight
+import nl.rijksoverheid.dcbs.verifier.utils.toDate
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -30,5 +34,15 @@ class DCCRecovery(
 
     fun getTargetedDisease(): TargetedDisease? {
         return TargetedDisease.fromValue(targetedDisease)
+    }
+
+    fun isValidRecovery() : Boolean {
+        val from = certificateValidFrom.toDate()
+        val to = certificateValidTo.toDate()
+        return if (from != null && to != null) {
+            val now = Date()
+            now.after(from.resetToMidnight()) && now.before(to.resetToEndOfTheDay())
+        } else false
+
     }
 }
