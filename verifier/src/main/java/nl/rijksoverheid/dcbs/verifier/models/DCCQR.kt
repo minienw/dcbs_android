@@ -47,14 +47,17 @@ class DCCQR(
     }
 
     fun processBusinessRules(from: CountryColorCode?, to: String): List<DCCFailableItem> {
-        val toCode = to.toLowerCase()
+        val failingItems = ArrayList<DCCFailableItem>()
+        failingItems.addAll(processGeneralRules())
+
+        val toCode = to.toLowerCase(Locale.getDefault())
         from?.let {
             if (toCode == "nl") {
-                return processNLBusinessRules(from, toCode)
+                failingItems.addAll(processNLBusinessRules(from, toCode))
             }
         }
 
-        return emptyList()
+        return failingItems
     }
 
     private fun processNLBusinessRules(from: CountryColorCode, to: String): List<DCCFailableItem> {
@@ -64,7 +67,7 @@ class DCCQR(
         if (from == CountryColorCode.RED) {
             return listOf(DCCFailableItem(DCCFailableType.RedNotAllowed))
         }
-        val age = dcc?.dateOfBirth?.toDate()?.let { it.yearDifference() } ?: 99
+        val age = dcc?.getDateOfBirth()?.let { it.yearDifference() } ?: 99
         if (age <= 11 && from != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
             return emptyList()
         }
@@ -102,7 +105,70 @@ class DCCQR(
         }
 
         if (from == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
-            failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24, DCCTestType.RapidImmune.getDisplayName()))
+            failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24))
+        }
+        return failingItems
+    }
+
+    private fun processGeneralRules() : List<DCCFailableItem> {
+        val failingItems = ArrayList<DCCFailableItem>()
+        if (dcc?.getDateOfBirth() == null) {
+            failingItems.add(DCCFailableItem(DCCFailableType.InvalidDateOfBirth))
+        }
+        if (dcc?.isValidDateOfBirth() == false) {
+            failingItems.add(DCCFailableItem(DCCFailableType.DateOfBirthOutOfRange))
+        }
+        dcc?.vaccines?.forEach { vaccine ->
+            if (vaccine.getMarketingHolder() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineHolder))
+            }
+            if (vaccine.getVaccine() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineType))
+            }
+            if (vaccine.getVaccineProduct() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineProduct))
+            }
+            if (!vaccine.isCountryValid()) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
+            }
+            if (vaccine.dateOfVaccination.toDate() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineDate))
+            }
+        }
+
+        dcc?.tests?.forEach { test ->
+            if (test.getTestResult() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestResult))
+            }
+            if (test.getTestType() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestType))
+            }
+            if (test.getTargetedDisease() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
+            }
+            if (!test.isCountryValid()) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
+            }
+            if (test.dateOfSampleCollection.toDate() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestDate))
+            }
+        }
+        dcc?.recoveries?.forEach { recovery ->
+            if (recovery.getTargetedDisease() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
+            }
+            if (!recovery.isCountryValid()) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
+            }
+            if (recovery.certificateValidTo.toDate() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryToDate))
+            }
+            if (recovery.certificateValidFrom.toDate() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFromDate))
+            }
+            if (recovery.dateOfFirstPositiveTest.toDate() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFirstTestDate))
+            }
         }
         return failingItems
     }

@@ -2,25 +2,34 @@ package nl.rijksoverheid.dcbs.verifier.utils
 
 import java.text.SimpleDateFormat
 import java.time.*
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 fun String.formatDate(): String? {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
-    val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.ENGLISH)
+    val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return try {
-        val date = inputFormat.parse(this)
-        outputFormat.format(date)
+        this.toDate()?.let {
+            outputFormat.format(it)
+        } ?: run {
+            this
+        }
     } catch (e: Exception) {
-        null
+        this
     }
 }
 
 fun String.toDate(): Date? {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
     return try {
-        return inputFormat.parse(this)
+        val temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse(this)
+        val i = Instant.from(temporalAccessor)
+        Date.from(i)
     } catch (e: Exception) {
-        null
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        try {
+            inputFormat.parse(this)
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 
@@ -59,6 +68,10 @@ fun Date.yearDifference(): Int {
         LocalDate.now()
     )
     return diff.years
+}
+
+fun Date.toLocalDate(): LocalDate {
+    return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 }
 
 

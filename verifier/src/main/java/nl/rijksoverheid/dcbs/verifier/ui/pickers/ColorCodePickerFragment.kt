@@ -21,14 +21,15 @@ class ColorCodePickerFragment : Fragment(R.layout.fragment_color_code_picker) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val context = context ?: return
         val binding = FragmentColorCodePickerBinding.bind(view)
         GroupAdapter<GroupieViewHolder>()
             .run {
-                addAll(CountryColorCode.values().map { PickerAdapterItem(it.getDisplayName()) })
+                addAll(CountryColorCode.values().map { PickerAdapterItem(it.getDisplayName(context)) })
                 binding.recyclerView.adapter = this
-                setOnItemClickListener { item, view ->
+                setOnItemClickListener { item, _ ->
 
-                    CountryColorCode.fromDisplayName((item as? PickerAdapterItem)?.title)?.value?.let { colorCodeValue ->
+                    CountryColorCode.fromDisplayName(context, (item as? PickerAdapterItem)?.title)?.value?.let { colorCodeValue ->
                         persistenceManager.saveDepartureValue(colorCodeValue)
                     }
 

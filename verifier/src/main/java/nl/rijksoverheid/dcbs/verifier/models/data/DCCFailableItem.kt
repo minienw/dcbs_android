@@ -3,7 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.models.data
 import android.content.Context
 import nl.rijksoverheid.dcbs.verifier.R
 
-class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null, val param2: String? = null) {
+class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null) {
 
     fun getDisplayName(context: Context): String {
         return when (type) {
@@ -13,7 +13,21 @@ class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null, val pa
             DCCFailableType.RedNotAllowed -> context.getString(R.string.rule_red_not_allowed)
             DCCFailableType.NeedFullVaccination -> context.getString(R.string.rule_full_vaccination_required)
             DCCFailableType.RecoveryNotValid -> context.getString(R.string.rule_recovery_not_valid)
-            DCCFailableType.RequireSecondTest -> context.getString(R.string.rule_require_second_test, param2, param1)
+            DCCFailableType.RequireSecondTest -> context.getString(R.string.rule_require_second_test, param1)
+            DCCFailableType.InvalidTestResult -> context.getString(R.string.rule_invalid_test_result)
+            DCCFailableType.InvalidTestType -> context.getString(R.string.rule_invalid_test_type)
+            DCCFailableType.InvalidTargetDisease -> context.getString(R.string.rule_invalid_target_disease)
+            DCCFailableType.InvalidVaccineHolder -> context.getString(R.string.rule_invalid_vaccine_holder)
+            DCCFailableType.InvalidVaccineType -> context.getString(R.string.rule_invalid_vaccine_type)
+            DCCFailableType.InvalidVaccineProduct -> context.getString(R.string.rule_invalid_vaccine_product)
+            DCCFailableType.DateOfBirthOutOfRange -> context.getString(R.string.rule_date_of_birth_out_of_range)
+            DCCFailableType.InvalidCountryCode -> context.getString(R.string.rule_invalid_country_code)
+            DCCFailableType.InvalidDateOfBirth -> context.getString(R.string.rule_invalid_date_of_birth)
+            DCCFailableType.InvalidVaccineDate -> context.getString(R.string.rule_invalid_vaccine_date)
+            DCCFailableType.InvalidTestDate -> context.getString(R.string.rule_invalid_test_date)
+            DCCFailableType.InvalidRecoveryFirstTestDate -> context.getString(R.string.rule_invalid_recovery_first_test_date)
+            DCCFailableType.InvalidRecoveryFromDate -> context.getString(R.string.rule_invalid_recovery_from_date)
+            DCCFailableType.InvalidRecoveryToDate -> context.getString(R.string.rule_invalid_recovery_to_date)
         }
     }
 }
@@ -25,5 +39,19 @@ enum class DCCFailableType {
     RedNotAllowed,
     NeedFullVaccination,
     RecoveryNotValid,
-    RequireSecondTest
+    RequireSecondTest,
+    InvalidTestResult,
+    InvalidTestType,
+    InvalidTargetDisease,
+    InvalidVaccineHolder,
+    InvalidVaccineType,
+    InvalidVaccineProduct,
+    DateOfBirthOutOfRange,
+    InvalidCountryCode,
+    InvalidDateOfBirth,
+    InvalidVaccineDate,
+    InvalidTestDate,
+    InvalidRecoveryFirstTestDate,
+    InvalidRecoveryFromDate,
+    InvalidRecoveryToDate,
 }

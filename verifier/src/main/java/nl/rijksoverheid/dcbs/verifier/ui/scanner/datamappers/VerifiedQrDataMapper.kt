@@ -3,6 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.ui.scanner.datamappers
 import com.google.gson.GsonBuilder
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
 import nl.rijksoverheid.ctr.shared.ext.verify
+import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.models.DCCQR
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 
@@ -22,6 +23,17 @@ class VerifiedQrDataMapperImpl(private val mobileCoreWrapper: MobileCoreWrapper)
         qrContent: String
     ): VerifiedQr {
 
+        if (BuildConfig.FLAVOR == "acc") {
+            try {
+                validateDCCQR(qrContent)
+                // it is a valid test QR
+                return VerifiedQr(data = qrContent)
+            }
+            catch(e: Exception) {
+                // this is not a test qr, let's continue with normal flow.
+            }
+        }
+
         val result =
             mobileCoreWrapper.verify(
                 qrContent.toByteArray()
@@ -29,6 +41,12 @@ class VerifiedQrDataMapperImpl(private val mobileCoreWrapper: MobileCoreWrapper)
 
         val data = result.decodeToString()
 
+        validateDCCQR(data)
+
+        return VerifiedQr(data = data)
+    }
+
+    private fun validateDCCQR(data: String) {
         val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
         val dccQR = gson.fromJson(data, DCCQR::class.java)
         val hasVaccine = dccQR.dcc?.vaccines?.isNotEmpty() == true
@@ -37,7 +55,5 @@ class VerifiedQrDataMapperImpl(private val mobileCoreWrapper: MobileCoreWrapper)
         if (!hasVaccine && !hasTest && !hasRecovery) {
             throw Exception("no vaccine, test or recovery data")
         }
-
-        return VerifiedQr(data = data)
     }
 }

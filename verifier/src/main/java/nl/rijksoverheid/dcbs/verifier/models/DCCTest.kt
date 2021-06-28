@@ -1,9 +1,14 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
+import android.content.Context
 import com.google.gson.annotations.SerializedName
+import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.models.data.*
 import nl.rijksoverheid.dcbs.verifier.utils.hourDifference
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -58,20 +63,48 @@ class DCCTest(
             testType.validFor(to)?.let { maxHours ->
                 dateOfSampleCollection.toDate()?.let { date ->
                     if (date.hourDifference() > maxHours) {
-                        return if (maxHours == 48) {
-                            DCCFailableItem(DCCFailableType.TestDateExpired, 48)
-                        } else {
-                            DCCFailableItem(DCCFailableType.TestDateExpired, 72)
-                        }
+                        DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
                     }
-                } ?: run {
-                    return DCCFailableItem(DCCFailableType.TestDateExpired, 72)
                 }
             }
         } ?: run {
-            return DCCFailableItem(DCCFailableType.TestDateExpired, 72)
+            return DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
         }
 
         return null
+    }
+
+    fun getTestAge(context: Context): String? {
+
+        dateOfSampleCollection.toDate()?.let { date ->
+            val localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+            val diff: Duration = Duration.between(
+                localDateTime,
+                LocalDateTime.now()
+            )
+            val diffInHours = diff.toHours()
+            val diffInMinutes = diff.toMinutes() % 60
+            return context.getString(R.string.test_ago_x, diffInHours, diffInMinutes)
+        }
+
+        return null
+    }
+
+    fun getHoursOld(): Int? {
+
+        dateOfSampleCollection.toDate()?.let { date ->
+            val localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+            val diff: Duration = Duration.between(
+                localDateTime,
+                LocalDateTime.now()
+            )
+            return diff.toHours().toInt()
+        }
+
+        return null
+    }
+
+    fun isCountryValid(): Boolean {
+        return IsoCountries.countryForCode(countryOfTest) != null
     }
 }

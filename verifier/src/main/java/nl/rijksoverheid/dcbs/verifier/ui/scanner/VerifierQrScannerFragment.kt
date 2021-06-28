@@ -94,8 +94,8 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             binding.layoutCertificateExpired.root.visibility = View.GONE
         }
 
-
-        val departureCountry = CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName()?.let { it } ?: getString(R.string.pick_country)
+        val context = context ?: return
+        val departureCountry = CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName(context) ?: getString(R.string.pick_country)
         val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry

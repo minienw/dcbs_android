@@ -1,5 +1,8 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
+import android.content.Context
+import nl.rijksoverheid.dcbs.verifier.R
+
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
  *   Licensed under the EUROPEAN UNION PUBLIC LICENCE v. 1.2
@@ -16,15 +19,17 @@ enum class CountryColorCode(val value: String) {
     ORANGE_SHIPS_FLIGHT("code_orange_ships_flight"),
     RED("code_red");
 
-    fun getDisplayName(): String {
-        return when (this) {
-            GREEN -> "Groen"
-            YELLOW -> "Geel"
-            ORANGE -> "Oranje"
-            ORANGE_HIGH_INCIDENCE -> "Oranje hoge incidentie"
-            ORANGE_SHIPS_FLIGHT -> "Oranje erg hoog risco"
-            RED -> "Rood"
-        }
+    fun getDisplayName(context: Context): String {
+        return context.getString(
+            when (this) {
+                GREEN -> R.string.code_green
+                YELLOW -> R.string.code_yellow
+                ORANGE -> R.string.code_orange
+                ORANGE_HIGH_INCIDENCE -> R.string.code_orange_high_incidence
+                ORANGE_SHIPS_FLIGHT -> R.string.code_orange_ships_flight
+                RED -> R.string.code_red
+            }
+        )
     }
 
     companion object {
@@ -32,8 +37,8 @@ enum class CountryColorCode(val value: String) {
             return values().firstOrNull { it.value == value }
         }
 
-        fun fromDisplayName(displayName: String?): CountryColorCode? {
-            return values().firstOrNull { it.getDisplayName() == displayName }
+        fun fromDisplayName(context: Context, displayName: String?): CountryColorCode? {
+            return values().firstOrNull { it.getDisplayName(context) == displayName }
         }
     }
 }

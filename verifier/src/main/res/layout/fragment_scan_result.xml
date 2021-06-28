@@ -96,9 +96,9 @@
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
+                        android:gravity="center"
                         android:text="@string/scan_result_invalid_title"
                         android:textSize="20sp"
-                        android:gravity="center"
                         app:layout_constraintBottom_toBottomOf="@id/image"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/image"
@@ -121,10 +121,11 @@
                     android:id="@+id/recyclerView_business_error"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clipToPadding="false"
                     android:background="@color/white"
+                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/item_business_error" />
+                    tools:listitem="@layout/item_business_error"
+                    tools:visibility="gone" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/information_layout"
@@ -318,6 +319,25 @@
                                 app:layout_constraintTop_toBottomOf="@id/dose1_table_member_state_value" />
 
                             <TextView
+                                android:id="@+id/dose1_table_manufacturer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_manufacturer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_manufacturer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_manufacturer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_manufacturer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_manufacturer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_member_state_separator" />
+
+                            <View
+                                android:id="@+id/dose1_table_manufacturer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_manufacturer_value" />
+
+                            <TextView
                                 android:id="@+id/dose1_table_issuer_label"
                                 style="@style/ValidQrLabel"
                                 android:text="@string/item_certificate_issuer"
@@ -329,7 +349,7 @@
                                 android:id="@+id/dose1_table_issuer_value"
                                 style="@style/ValidQrValue"
                                 app:layout_constraintStart_toEndOf="@id/dose1_table_issuer_label"
-                                app:layout_constraintTop_toBottomOf="@id/dose1_table_member_state_separator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_manufacturer_separator"
                                 tools:text="928532480923" />
 
                             <View
@@ -421,6 +441,25 @@
                                 app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_value" />
 
                             <TextView
+                                android:id="@+id/dose2_table_manufacturer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_manufacturer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_manufacturer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_manufacturer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_manufacturer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_manufacturer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_separator" />
+
+                            <View
+                                android:id="@+id/dose2_table_manufacturer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_manufacturer_value" />
+
+                            <TextView
                                 android:id="@+id/dose2_table_issuer_label"
                                 style="@style/ValidQrLabel"
                                 android:text="@string/item_certificate_issuer"
@@ -490,32 +529,30 @@
 
                             <TextView
                                 android:id="@+id/test_box_title"
-                                style="@style/Montserrat_SemiBold_Black"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/item_test_header"
-                                android:textSize="13sp" />
-
-                            <TextView
-                                android:id="@+id/test_box_name"
                                 style="@style/Montserrat_Bold_Black"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:gravity="center"
-                                android:textSize="15sp"
-                                tools:text="Negative" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/test_box_date"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:textSize="13sp"
+                                tools:text="26.05.2021" />
+
+                            <TextView
+                                android:id="@+id/test_box_age"
                                 style="@style/Montserrat_Bold_Black"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:gravity="center"
                                 android:textSize="15sp"
-                                tools:text="26.05.2021" />
+                                tools:text="17 hours, 21 mins ago" />
 
                         </LinearLayout>
 

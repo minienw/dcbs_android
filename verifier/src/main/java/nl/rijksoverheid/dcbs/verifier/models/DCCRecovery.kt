@@ -45,4 +45,8 @@ class DCCRecovery(
         } else false
 
     }
+
+    fun isCountryValid() : Boolean {
+        return IsoCountries.countryForCode(countryOfTest) != null
+    }
 }

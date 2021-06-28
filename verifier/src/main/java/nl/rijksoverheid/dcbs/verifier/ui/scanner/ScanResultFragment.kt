@@ -104,7 +104,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
     }
 
-    private fun setBusinessErrorMessages(failedItems : List<DCCFailableItem>) {
+    private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>) {
 
         context?.let { c ->
             GroupAdapter<GroupieViewHolder>()
@@ -146,11 +146,14 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         items?.let { vaccines ->
             binding.vaccineLayout.visibility = View.VISIBLE
             binding.dose1BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[0].doseNumber, vaccines[0].totalSeriesOfDoses)
-            binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: ""
+            binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: vaccines[0].vaccineMedicalProduct
             binding.dose1BoxDate.text = vaccines[0].dateOfVaccination.formatDate()
             binding.dose1TableDiseaseVaccineValue.text =
-                "${vaccines[0].getTargetedDisease()?.getDisplayName() ?: ""} | ${vaccines[0].getVaccine()?.getDisplayName() ?: ""}"
+                "${vaccines[0].getTargetedDisease()?.getDisplayName() ?: vaccines[0].targetedDisease} | ${
+                    vaccines[0].getVaccine()?.getDisplayName() ?: vaccines[0].vaccine
+                }"
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
+            binding.dose1TableManufacturerValue.text = vaccines[0].getMarketingHolder()?.getDisplayName() ?: vaccines[0].marketingAuthorizationHolder
             binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
             binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
             if (vaccines.size == 2) {
@@ -158,11 +161,14 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 binding.dose2BoxLayout.visibility = View.VISIBLE
                 binding.dose2TableLayout.visibility = View.VISIBLE
                 binding.dose2BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[1].doseNumber, vaccines[1].totalSeriesOfDoses)
-                binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: ""
+                binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: vaccines[1].vaccineMedicalProduct
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
-                    "${vaccines[1].getTargetedDisease()?.getDisplayName() ?: ""} | ${vaccines[1].getVaccine()?.getDisplayName() ?: ""}"
+                    "${vaccines[1].getTargetedDisease()?.getDisplayName() ?: vaccines[1].targetedDisease} | ${
+                        vaccines[1].getVaccine()?.getDisplayName() ?: vaccines[1].vaccine
+                    }"
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
+                binding.dose2TableManufacturerValue.text = vaccines[1].getMarketingHolder()?.getDisplayName() ?: vaccines[1].marketingAuthorizationHolder
                 binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
                 binding.dose2TableCertificateIdentifierValue.text = vaccines[1].certificateIdentifier
             } else {
@@ -177,14 +183,16 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     }
 
     private fun initTest(items: List<DCCTest>?) {
+        val context = context ?: return
         items?.let { tests ->
             binding.testLayout.visibility = View.VISIBLE
-            binding.testBoxName.text = tests[0].getTestResult()?.getDisplayName() ?: ""
+            binding.testBoxTitle.text = tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
             binding.testBoxDate.text = tests[0].dateOfSampleCollection.formatDate()
-            binding.testTableTargetValue.text = tests[0].getTargetedDisease()?.getDisplayName() ?: ""
-            binding.testTableTypeValue.text = tests[0].getTestType()?.getDisplayName() ?: ""
+            binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
+            binding.testTableTargetValue.text = tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
+            binding.testTableTypeValue.text = tests[0].getTestType()?.getDisplayName() ?: tests[0].typeOfTest
             binding.testTableNameValue.text = tests[0].NAATestName
-            binding.testTableManufacturerValue.text = tests[0].getTestManufacturer()?.getDisplayName() ?: ""
+            binding.testTableManufacturerValue.text = tests[0].getTestManufacturer()?.getDisplayName() ?: tests[0].RATTestNameAndManufac
             binding.testTableCenterValue.text = tests[0].testingCentre
             binding.testTableCountryValue.text = tests[0].countryOfTest
             binding.testTableIssuerValue.text = tests[0].certificateIssuer
@@ -198,7 +206,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initRecovery(items: List<DCCRecovery>?) {
         items?.let { recoveries ->
             binding.recoveryLayout.visibility = View.VISIBLE
-            binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName() ?: ""
+            binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName() ?: recoveries[0].targetedDisease
             binding.recoveryTableFirstDateValue.text = recoveries[0].dateOfFirstPositiveTest.formatDate()
             binding.recoveryTableValidFromValue.text = recoveries[0].certificateValidFrom.formatDate()
             binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo.formatDate()
@@ -213,8 +221,9 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
 
     private fun initCountries() {
+        val context = context ?: return
         val departureCountry =
-            CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName()?.let { it } ?: getString(R.string.pick_country)
+            CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName(context) ?: getString(R.string.pick_country)
         val destinationCountry =
             Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry

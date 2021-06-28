@@ -53,4 +53,8 @@ class DCCVaccine(
     fun isFullyVaccinated() : Boolean {
         return doseNumber == totalSeriesOfDoses
     }
+
+    fun isCountryValid() : Boolean {
+        return IsoCountries.countryForCode(countryOfVaccination) != null
+    }
 }

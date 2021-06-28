@@ -98,7 +98,7 @@ class VerifierMainFragment :
                         ),
                         AboutThisAppData.ReadMoreItem(
                             text = getString(R.string.contact),
-                            url = getString(R.string.url_faq),
+                            url = getString(R.string.url_contact),
                         ),
                     )
                 )
