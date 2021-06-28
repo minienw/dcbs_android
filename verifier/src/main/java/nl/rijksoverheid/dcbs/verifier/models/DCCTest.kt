@@ -63,7 +63,7 @@ class DCCTest(
             testType.validFor(to)?.let { maxHours ->
                 dateOfSampleCollection.toDate()?.let { date ->
                     if (date.hourDifference() > maxHours) {
-                        DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
+                        return DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
                     }
                 }
             }

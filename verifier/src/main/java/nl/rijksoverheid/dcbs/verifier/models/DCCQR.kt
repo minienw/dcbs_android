@@ -112,12 +112,14 @@ class DCCQR(
 
     private fun processGeneralRules() : List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
-        if (dcc?.getDateOfBirth() == null) {
+        dcc?.getDateOfBirth()?.let {
+            if (!dcc.isValidDateOfBirth()) {
+                failingItems.add(DCCFailableItem(DCCFailableType.DateOfBirthOutOfRange))
+            }
+        } ?: run {
             failingItems.add(DCCFailableItem(DCCFailableType.InvalidDateOfBirth))
         }
-        if (dcc?.isValidDateOfBirth() == false) {
-            failingItems.add(DCCFailableItem(DCCFailableType.DateOfBirthOutOfRange))
-        }
+
         dcc?.vaccines?.forEach { vaccine ->
             if (vaccine.getMarketingHolder() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineHolder))
