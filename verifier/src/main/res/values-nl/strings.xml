@@ -14,7 +14,7 @@
     <string name="onboarding_screen_4_description"><![CDATA[Met behulp van deze app kun je weer bezoekers ontvangen. Maar alleen als jouw locatie of activiteit onder de aangewezen locaties valt.]]></string>
     <string name="onboarding_next">Volgende</string>
     <string name="privacy_policy_title">Voorwaarden voor gebruik</string>
-    <string name="privacy_policy_description"><![CDATA[In de <a href="https://coronacheck.nl/nl/gebruikersvoorwaarden-in-app">gebruiksvoorwaarden</a> staat hoe de app werkt en wat de rechten zijn.]]></string>
+    <string name="privacy_policy_description"><![CDATA[In de <a href="https://dcccrossborderscanner.nl/dist/termsofuse/gebruiksvoorwaarden.html">gebruiksvoorwaarden</a> staat hoe de app werkt en wat de rechten zijn.]]></string>
     <string name="privacy_policy_1"><![CDATA[U mag de in de app getoonde gegevens van de reiziger alleen gebruiken voor <b>het uitvoeren van de verplichte gezondheidscontroles voor de betreffende reis.</b>]]></string>
     <string name="privacy_policy_2"><![CDATA[Gegevens van u of van de reiziger worden <b>niet centraal, noch in de app opgeslagen.</b>]]></string>
     <string name="privacy_policy_3"><![CDATA[Gegevens van u of van de reiziger worden <b>niet centraal, noch in de app opgeslagen.</b>]]></string>
@@ -199,21 +199,20 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="rule_full_vaccination_required">Een volledige vaccinatie is nodig bij vertrek uit oranje landen</string>
     <string name="rule_recovery_not_valid">Een valide herstel is nodig bij vertrek uit oranje landen</string>
     <string name="rule_require_second_test">DCC is correct, maar voor lucht- en scheepvaart zijn twee negatieve testresultaten nodig. Vraag om een tweede resultaat van maximaal %d uur oud. Bij aankomst geldt een quarantaine verplichting.</string>
-    <string name="rule_invalid_test_manufacturer">Controleer de test fabrikant</string>
-    <string name="rule_invalid_test_result">Controleer het test resultaat</string>
-    <string name="rule_invalid_test_type">Controleer de test soort</string>
-    <string name="rule_invalid_target_disease">Controleer de doel ziekte</string>
-    <string name="rule_invalid_vaccine_holder">Controleer de vaccin fabrikant</string>
-    <string name="rule_invalid_vaccine_type">Controleer het vaccin type</string>
-    <string name="rule_invalid_vaccine_product">Controller het vaccin product</string>
-    <string name="rule_date_of_birth_out_of_range">Controleer de geboortedatum</string>
-    <string name="rule_invalid_country_code">Controleer de land code</string>
-    <string name="rule_invalid_date_of_birth">Controleer de geboortedatum</string>
-    <string name="rule_invalid_vaccine_date">Controleer de vaccinatie datum</string>
-    <string name="rule_invalid_test_date">Controleer de test datum</string>
-    <string name="rule_invalid_recovery_first_test_date">Controleer de eerste test datum</string>
-    <string name="rule_invalid_recovery_from_date">Controleer de geldig van datum</string>
-    <string name="rule_invalid_recovery_to_date">Controleer de geldig tot datum</string>
+    <string name="rule_invalid_test_result">Het testresultaat is niet herkend. Vraag om een ander testbewijs.</string>
+    <string name="rule_invalid_test_type">Het type test wordt niet herkend. Controleer of het testresultaat geldig is of vraag om een ander testbewijs.</string>
+    <string name="rule_invalid_target_disease">De QR code geeft mogelijk geen informatie over COVID. Controleer of de weergegeven aandoening Corona of COVID-19 betreft.</string>
+    <string name="rule_invalid_vaccine_holder">De vaccin fabrikant wordt niet herkend. Controleer of de fabrikant, of vraag om een ander certificaat.</string>
+    <string name="rule_invalid_vaccine_type">Het type vaccin wordt niet herkend. Controleer het type vaccin, of vraag om een ander certificaat.</string>
+    <string name="rule_invalid_vaccine_product">Het vaccin wordt niet goed herkend. Controleer de vaccingegevens, of vraag om een ander certificaat.</string>
+    <string name="rule_date_of_birth_out_of_range">De geboortedatum lijkt niet in orde. Controleer de geboortedatum met de identificatie van de reiziger.</string>
+    <string name="rule_invalid_country_code">De landcode wordt niet herkend. Controleer de landcode.</string>
+    <string name="rule_invalid_date_of_birth">De geboortedatum lijkt niet in orde. Controleer de geboortedatum met de identificatie van de reiziger.</string>
+    <string name="rule_invalid_vaccine_date">De vaccinatiedatum is niet in orde. Controleer of de vaccinatie geldig is.</string>
+    <string name="rule_invalid_test_date">De testdatum is niet in orde. Controleer of de test nog geldig is.</string>
+    <string name="rule_invalid_recovery_first_test_date">De testdatum van dit herstelcertificaat is niet in orde. Controleer of de testdatum tussen 11 en 180 dagen oud is.</string>
+    <string name="rule_invalid_recovery_from_date">De datum vanaf wanneer de herstelmelding geldig is is niet in orde. Controleer de ingangsdatum van het herstel.</string>
+    <string name="rule_invalid_recovery_to_date">De datum tot wanneer dit herstelcertificaat geldig is is niet in orde. Controleer de uiterste geldigheid van dit herstelbewijs.</string>
     <string name="item_test_header_negative">Negatieve test</string>
     <string name="item_test_header_positive">Positieve test</string>
     <string name="test_ago_x">%d uur, %d min oud</string>

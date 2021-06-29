@@ -63,12 +63,10 @@ class DCCTest(
             testType.validFor(to)?.let { maxHours ->
                 dateOfSampleCollection.toDate()?.let { date ->
                     if (date.hourDifference() > maxHours) {
-                        return DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
+                        return DCCFailableItem(DCCFailableType.TestDateExpired, date.hourDifference())
                     }
                 }
             }
-        } ?: run {
-            return DCCFailableItem(DCCFailableType.TestDateExpired, getHoursOld())
         }
 
         return null
@@ -85,20 +83,6 @@ class DCCTest(
             val diffInHours = diff.toHours()
             val diffInMinutes = diff.toMinutes() % 60
             return context.getString(R.string.test_ago_x, diffInHours, diffInMinutes)
-        }
-
-        return null
-    }
-
-    fun getHoursOld(): Int? {
-
-        dateOfSampleCollection.toDate()?.let { date ->
-            val localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-            val diff: Duration = Duration.between(
-                localDateTime,
-                LocalDateTime.now()
-            )
-            return diff.toHours().toInt()
         }
 
         return null

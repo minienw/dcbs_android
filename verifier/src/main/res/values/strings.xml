@@ -13,7 +13,7 @@
     <string name="onboarding_screen_4_description"><![CDATA[With this app, you can receive visitors again. But only if your location or activity falls under the designated locations.]]></string>
     <string name="onboarding_next">Next</string>
     <string name="privacy_policy_title">Terms of use</string>
-    <string name="privacy_policy_description"><![CDATA[<a href="https://coronacheck.nl/nl/gebruikersvoorwaarden-in-app">The Terms of use</a> provide information about how the app works, as well as your rights.]]></string>
+    <string name="privacy_policy_description"><![CDATA[<a href="https://dcccrossborderscanner.nl/dist/termsofuse/termsofuse.html">The Terms of use</a> provide information about how the app works, as well as your rights.]]></string>
     <string name="privacy_policy_1"><![CDATA[Use of the information shown in the app can only be used <b>to perform the mandatory health checks for the journey it concerns.</b>]]></string>
     <string name="privacy_policy_2"><![CDATA[<b>No personal data is stored</b> either centrally or in the app.]]></string>
     <string name="privacy_policy_3"><![CDATA[<b>No personal data is stored</b> either centrally or in the app.]]></string>
@@ -198,17 +198,16 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="rule_full_vaccination_required">A complete vaccination is required when travelling from orange countries</string>
     <string name="rule_recovery_not_valid">A valid recovery is required when travelling from orange countries</string>
     <string name="rule_require_second_test">DCC is valid, but for travelling by aircraft or boat two negative test results are required. Ask for the second test result. This test must be less than %d hours old. At arrival a quarantine period is mandatory.</string>
-    <string name="rule_invalid_test_manufacturer">Controleer de test fabrikant</string>
-    <string name="rule_invalid_test_result">Controleer het test resultaat</string>
-    <string name="rule_invalid_test_type">Controleer de test soort</string>
-    <string name="rule_invalid_target_disease">Controleer de doel ziekte</string>
-    <string name="rule_invalid_vaccine_holder">Controleer de vaccin fabrikant</string>
-    <string name="rule_invalid_vaccine_type">Controleer het vaccin type</string>
-    <string name="rule_invalid_vaccine_product">Controller het vaccin product</string>
-    <string name="rule_date_of_birth_out_of_range">Controleer de geboortedatum</string>
-    <string name="rule_invalid_country_code">Controleer de land code</string>
-    <string name="rule_invalid_date_of_birth">Controleer de geboortedatum</string>
-    <string name="rule_invalid_vaccine_date">Controleer de vaccinatie datum</string>
+    <string name="rule_invalid_test_result">The test result is not recognized, ask for different proof of testing.</string>
+    <string name="rule_invalid_test_type">The testing type is not recognized. Check the validity of the test, or request a different proof of testing.</string>
+    <string name="rule_invalid_target_disease">The QR code might not be a COVID related certificate. Check if the disease displayed is COVID or Corona related.</string>
+    <string name="rule_invalid_vaccine_holder">The manufacturer of the vaccine is not recognized. Check the manufacturer, or ask for a different certificate.</string>
+    <string name="rule_invalid_vaccine_type">The vaccine type is not recognized. Check the vaccine type, or ask for a different certificate.</string>
+    <string name="rule_invalid_vaccine_product">The vaccine is not properly recognized. Check the vaccine, or ask for a different certificate.</string>
+    <string name="rule_date_of_birth_out_of_range">The date of birth appears to be incorrect. Check the date of birth with the ID of the traveller.</string>
+    <string name="rule_invalid_country_code">The country code is not recognized. Check the country code.</string>
+    <string name="rule_invalid_date_of_birth">The date of birth appears to be incorrect. Check the date of birth with the ID of the traveller.</string>
+    <string name="rule_invalid_vaccine_date">The vaccine date is not correct. Check if the vaccine is still valid.</string>
     <string name="rule_invalid_test_date">Controleer de test datum</string>
     <string name="rule_invalid_recovery_first_test_date">Controleer de eerste test datum</string>
     <string name="rule_invalid_recovery_from_date">Controleer de geldig van datum</string>
@@ -216,4 +215,11 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="item_test_header_negative">Negative test</string>
     <string name="item_test_header_positive">Positive test</string>
     <string name="test_ago_x">%d uur, %d min oud</string>
+
+    "rule_invalid_vaccine_date" = "";
+    "rule_invalid_test_date" = "The test date is incorect. Check if the test is still valid.";
+    "rule_invalid_recovery_first_test_date" = "The test date for this recovery certificate is not valid. Check if the date is between 11 and 180 days old.";
+    "rule_invalid_recovery_from_date" = "The date from which this recovery certificate is valid is incorrect. Check the recovery start date.";
+    "rule_invalid_recovery_to_date" = "The date until which this recover certificate is valid is incorrect. Check if the certificate is still valid today.";
+    Collapse
 </resources>

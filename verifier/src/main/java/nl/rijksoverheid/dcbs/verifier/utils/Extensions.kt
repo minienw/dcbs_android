@@ -20,7 +20,7 @@ fun String.formatDate(): String? {
 
 fun String.toDate(): Date? {
     return try {
-        val temporalAccessor = DateTimeFormatter.ISO_INSTANT.parse(this)
+        val temporalAccessor = DateTimeFormatter.ISO_DATE_TIME.parse(this)
         val i = Instant.from(temporalAccessor)
         Date.from(i)
     } catch (e: Exception) {
@@ -58,7 +58,11 @@ fun Date.hourDifference(): Int {
         localDateTime,
         LocalDateTime.now()
     )
-    return diff.toHours().toInt()
+
+    return if (diff.toMinutes() % 60 > 0) {
+        diff.toHours().toInt() + 1
+    }
+    else diff.toHours().toInt()
 }
 
 fun Date.yearDifference(): Int {
