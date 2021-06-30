@@ -41,7 +41,7 @@
     <string name="scan_result_invalid_reason_description"><![CDATA[This does <b>not</b> mean the visitor has coronavirus. Possible causes<br\><br\><ul><li>The visitor shows an international QR code</li><li>The QR code has been forwarded</li><li>The QR code has been forged</li><li>The time on the visitor\'s phone is incorrect</li></ul><br\><b>What to do now?</b><br\>Ask the visitor to get vaccinated or to take a test. After that, the visitor can use the CoronaCheck app to turn it into a QR code.]]></string>
     <string name="scan_result_valid_reason_title">About the check</string>
     <string name="scan_result_valid_reason_description"><![CDATA[Make sure the QR code belongs to the visitor by checking if the details on your screen correspond with their proof of identity.<br\><br\><b>Note: details may be incomplete</b><br/>In order to protect the visitor’s privacy, not all data is displayed. Some fields may contain a hyphen (-). It’s sufficient to check the details that are displayed.<br\><br\><b>If the details are incorrect, the visitor is not allowed access.</b>]]></string>
-    <string name="about_this_app_description">The “DCC cross border Scanner NL” app is developed by the Ministry of Infrastructure and Wateraffairs in The Netherlands to simplify travelling through EU countries. Health information of travellers can be checked against travelling policies by international carriers quickly and efficiently. Safe travelling will be quicker and easier that way.</string>
+    <string name="about_this_app_description">The “DCC cross border Scanner NL” app is developed by the Ministry of Infrastructure and Water affairs in The Netherlands to simplify travelling through EU countries. Health information of travellers can be checked against travelling policies by international carriers quickly and efficiently. Safe travelling will be quicker and easier that way.</string>
     <string name="privacy_statement">Privacy statement</string>
     <string name="terms_of_use">Terms of use</string>
     <string name="scanner_custom_title">Scan QR code</string>
@@ -121,11 +121,11 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="certificates_outdated_button">Update lists</string>
     <string name="certificates_outdated_desc">You can continue to use the app. However, connect to the internet and try again using the “Update lists” button.</string>
     <string name="certificates_outdated_title">Trust list was not updated</string>
-    <string name="item_dose_x">Vaccin dose %d</string>
-    <string name="item_dose_x_x">Vaccin dose %d / %d</string>
-    <string name="item_disease">Disease / Vaccin</string>
+    <string name="item_dose_x">Vaccine dose %d</string>
+    <string name="item_dose_x_x">Vaccine dose %d / %d</string>
+    <string name="item_disease">Disease / Vaccine</string>
     <string name="item_country">Country</string>
-    <string name="item_identifier">Cerificate number</string>
+    <string name="item_identifier">Certificate number</string>
     <string name="item_date_of_birth_x">Date of birth %s</string>
     <string name="item_test_target">Disease</string>
     <string name="item_test_type">Test type</string>
@@ -191,8 +191,8 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="color_code_description">Which countries have which colour code?</string>
     <string name="color_code_button_text">View</string>
     <string name="url_color_code">https://www.nederlandwereldwijd.nl/documenten/vragen-en-antwoorden/welke-landen-hebben-welke-kleurcode</string>
-    <string name="rule_test_required">DCC is valid however travelling to The Netherlands from a country with orange colorcode requires a valid negative test result. Ask for a DCC that contains a valid test result.n</string>
-    <string name="rule_test_must_be_negative">DCC is valid however travelling to The Netherlands from a country with orange colorcode requires a valid negative test result. Ask for a DCC that contains a valid test result.</string>
+    <string name="rule_test_required">DCC is valid however travelling to The Netherlands from a country with orange color code requires a valid negative test result. Ask for a DCC that contains a valid test result.n</string>
+    <string name="rule_test_must_be_negative">DCC is valid however travelling to The Netherlands from a country with orange color code requires a valid negative test result. Ask for a DCC that contains a valid test result.</string>
     <string name="rule_test_outdated">DCC contains a test result of a test that was taken %d hours ago, which is beyond the valid time frame. Check and ask for a more recent test result if necessary.</string>
     <string name="rule_red_not_allowed">Travelling from red areas is forbidden.</string>
     <string name="rule_full_vaccination_required">A complete vaccination is required when travelling from orange countries</string>
@@ -208,18 +208,14 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="rule_invalid_country_code">The country code is not recognized. Check the country code.</string>
     <string name="rule_invalid_date_of_birth">The date of birth appears to be incorrect. Check the date of birth with the ID of the traveller.</string>
     <string name="rule_invalid_vaccine_date">The vaccine date is not correct. Check if the vaccine is still valid.</string>
-    <string name="rule_invalid_test_date">Controleer de test datum</string>
-    <string name="rule_invalid_recovery_first_test_date">Controleer de eerste test datum</string>
-    <string name="rule_invalid_recovery_from_date">Controleer de geldig van datum</string>
-    <string name="rule_invalid_recovery_to_date">Controleer de geldig tot datum</string>
+    <string name="rule_invalid_test_date">The test date is incorrect. Check if the test is still valid.</string>
+    <string name="rule_invalid_recovery_first_test_date">The test date for this recovery certificate is not valid. Check if the date is between 11 and 180 days old.</string>
+    <string name="rule_invalid_recovery_from_date">The date from which this recovery certificate is valid is incorrect. Check the recovery start date.</string>
+    <string name="rule_invalid_recovery_to_date">The date until which this recover certificate is valid is incorrect. Check if the certificate is still valid today.</string>
     <string name="item_test_header_negative">Negative test</string>
     <string name="item_test_header_positive">Positive test</string>
-    <string name="test_ago_x">%d uur, %d min oud</string>
-
-    "rule_invalid_vaccine_date" = "";
-    "rule_invalid_test_date" = "The test date is incorect. Check if the test is still valid.";
-    "rule_invalid_recovery_first_test_date" = "The test date for this recovery certificate is not valid. Check if the date is between 11 and 180 days old.";
-    "rule_invalid_recovery_from_date" = "The date from which this recovery certificate is valid is incorrect. Check the recovery start date.";
-    "rule_invalid_recovery_to_date" = "The date until which this recover certificate is valid is incorrect. Check if the certificate is still valid today.";
-    Collapse
+    <string name="test_ago_x">%d hours, %d min old</string>
+    <string name="camera_consent_message">The DCC cross border Scanner NL requires consent to use the scanner’s phone camera. This consent is required to scan the DCC, in the form of a QR code. Without this consent the user can install the app but cannot use the app to scan the DCC, in the form of a QR code.</string>
+    <string name="camera_consent_positive_button">Agree</string>
+    <string name="camera_consent_negative_button">Don\'t agree</string>
 </resources>

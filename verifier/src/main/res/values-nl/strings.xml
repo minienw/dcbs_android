@@ -216,5 +216,8 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="item_test_header_negative">Negatieve test</string>
     <string name="item_test_header_positive">Positieve test</string>
     <string name="test_ago_x">%d uur, %d min oud</string>
+    <string name="camera_consent_message">De DCC cross border Scanner NL app vereist uw toestemming de camera van uw toestel te gebruiken. Zonder deze toestemming kan u geen DCC\'s in de vorm van een QR code scannen. Zonder toestemming kan de gebruiker de app installeren, maar deze niet gebruiken om DCC\'s in de vorm van een QR code te scannen.</string>
+    <string name="camera_consent_positive_button">Toestaan</string>
+    <string name="camera_consent_negative_button">Afwijzen</string>
 
 </resources>

@@ -6,7 +6,7 @@ plugins {
     id "androidx.navigation.safeargs.kotlin"
 }
 
-def appVersionCode = 9
+def appVersionCode = 10
 version = "1.0.0"
 archivesBaseName = "verifier-v${version}-${appVersionCode}"
 
