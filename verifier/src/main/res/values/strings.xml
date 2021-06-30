@@ -176,11 +176,11 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="country_ch">Switzerland</string>
     <string name="country_is">Iceland</string>
     <string name="country_no">Norway</string>
-    <string name="departure">Departure</string>
-    <string name="destination">Destination</string>
-    <string name="departure_country">Departure Country</string>
-    <string name="destination_country">Destination Country</string>
-    <string name="pick_country">Pick a country</string>
+    <string name="departure">Leave from:</string>
+    <string name="destination">Destination:</string>
+    <string name="departure_country">Leave from</string>
+    <string name="destination_country">Destination</string>
+    <string name="pick_country">Choose country</string>
     <string name="code_green">Green</string>
     <string name="code_yellow">Yellow</string>
     <string name="code_orange">Orange</string>

@@ -177,11 +177,11 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="country_ch">Zwitserland</string>
     <string name="country_is">Ijsland</string>
     <string name="country_no">Noorwegen</string>
-    <string name="departure">Departure</string>
-    <string name="destination">Destination</string>
-    <string name="departure_country">Departure Country</string>
-    <string name="destination_country">Destination Country</string>
-    <string name="pick_country">Pick a country</string>
+    <string name="departure">Vertrek uit:</string>
+    <string name="destination">Bestemming:</string>
+    <string name="departure_country">Vertrek uit</string>
+    <string name="destination_country">Bestemming</string>
+    <string name="pick_country">Land kiezen</string>
     <string name="code_green">Groen</string>
     <string name="code_yellow">Geel</string>
     <string name="code_orange">Oranje</string>

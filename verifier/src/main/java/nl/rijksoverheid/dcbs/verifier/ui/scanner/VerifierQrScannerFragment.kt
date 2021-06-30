@@ -75,6 +75,7 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
             when (it) {
                 is VerifiedQrResultState.Error -> {
+                    (activity as? VerifierMainActivity)?.updateConfig()
                     findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(null)))
                 }
                 is VerifiedQrResultState.Demo -> {

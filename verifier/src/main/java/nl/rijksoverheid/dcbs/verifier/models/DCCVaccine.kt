@@ -51,7 +51,7 @@ class DCCVaccine(
     }
 
     fun isFullyVaccinated() : Boolean {
-        return doseNumber == totalSeriesOfDoses
+        return doseNumber >= totalSeriesOfDoses
     }
 
     fun isCountryValid() : Boolean {
