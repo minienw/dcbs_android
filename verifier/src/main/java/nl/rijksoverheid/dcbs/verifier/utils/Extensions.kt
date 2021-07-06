@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 fun String.formatDate(): String? {
-    val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
     return try {
         this.toDate()?.let {
             outputFormat.format(it)
