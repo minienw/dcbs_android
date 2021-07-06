@@ -19,6 +19,7 @@ import nl.rijksoverheid.ctr.design.BaseMainFragment
 import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppData
 import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppFragment
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentMainBinding
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class VerifierMainFragment :
@@ -83,6 +84,7 @@ class VerifierMainFragment :
                 data = AboutThisAppData(
                     versionName = BuildConfig.VERSION_NAME,
                     versionCode = BuildConfig.VERSION_CODE.toString(),
+                    trustListUpdatedDate= Date(),
                     readMoreItems = listOf(
                         AboutThisAppData.ReadMoreItem(
                             text = getString(R.string.terms_of_use),
