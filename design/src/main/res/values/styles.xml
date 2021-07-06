@@ -104,6 +104,11 @@
         <item name="android:textColor">@color/primary_blue</item>
     </style>
 
+    <style name="Montserrat_Bold_Red" parent="Montserrat_Bold">
+        <item name="android:textColor">@color/red</item>
+    </style>
+
+
     <style name="Montserrat_Bold_White" parent="Montserrat_Bold">
         <item name="android:textColor">@color/white</item>
     </style>
