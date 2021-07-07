@@ -6,7 +6,6 @@ import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
-import timber.log.Timber
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
