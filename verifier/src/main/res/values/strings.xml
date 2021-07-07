@@ -208,6 +208,7 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="rule_invalid_country_code">The country code is not recognized. Check the country code.</string>
     <string name="rule_invalid_date_of_birth">The date of birth appears to be incorrect. Check the date of birth with the ID of the traveller.</string>
     <string name="rule_invalid_vaccine_date">The vaccine date is not correct. Check if the vaccine is still valid.</string>
+    <string name="rule_vaccination_14_days">This vaccination certificate is not yet valid. Vaccine certificates become valid 14 days after the last vaccination date.</string>
     <string name="rule_invalid_test_date">The test date is incorrect. Check if the test is still valid.</string>
     <string name="rule_invalid_recovery_first_test_date">The test date for this recovery certificate is not valid. Check if the date is between 11 and 180 days old.</string>
     <string name="rule_invalid_recovery_from_date">The date from which this recovery certificate is valid is incorrect. Check the recovery start date.</string>

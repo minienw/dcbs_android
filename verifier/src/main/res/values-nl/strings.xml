@@ -205,6 +205,7 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="rule_invalid_vaccine_holder">De vaccin fabrikant wordt niet herkend. Controleer of de fabrikant, of vraag om een ander certificaat.</string>
     <string name="rule_invalid_vaccine_type">Het type vaccin wordt niet herkend. Controleer het type vaccin, of vraag om een ander certificaat.</string>
     <string name="rule_invalid_vaccine_product">Het vaccin wordt niet goed herkend. Controleer de vaccingegevens, of vraag om een ander certificaat.</string>
+    <string name="rule_vaccination_14_days">De vaccinatie in dit certificaat is nog niet geldig. De geldigheid gaat 14 dagen na laatste vaccinatie in.</string>
     <string name="rule_date_of_birth_out_of_range">De geboortedatum lijkt niet in orde. Controleer de geboortedatum met de identificatie van de reiziger.</string>
     <string name="rule_invalid_country_code">De landcode wordt niet herkend. Controleer de landcode.</string>
     <string name="rule_invalid_date_of_birth">De geboortedatum lijkt niet in orde. Controleer de geboortedatum met de identificatie van de reiziger.</string>
