@@ -10,7 +10,6 @@ package nl.rijksoverheid.ctr.appconfig.usecases
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import nl.rijksoverheid.ctr.appconfig.models.AppStatus
 import nl.rijksoverheid.ctr.appconfig.persistence.AppConfigPersistenceManager
 import nl.rijksoverheid.ctr.appconfig.models.ConfigResult
 import nl.rijksoverheid.ctr.appconfig.repositories.ConfigRepository
@@ -18,6 +17,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.time.Clock
 import java.time.OffsetDateTime
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -30,6 +30,7 @@ import java.time.OffsetDateTime
 interface AppConfigUseCase {
     suspend fun get(): ConfigResult
     fun checkLastConfigFetchExpired(time: Long) : Boolean
+    fun lastConfigFetchTime(): Date
 }
 
 class AppConfigUseCaseImpl(
@@ -56,5 +57,9 @@ class AppConfigUseCaseImpl(
 
     override fun checkLastConfigFetchExpired(time: Long) : Boolean {
         return appConfigPersistenceManager.getAppConfigLastFetchedSeconds() + time < OffsetDateTime.now(clock).toEpochSecond()
+    }
+
+    override fun lastConfigFetchTime(): Date {
+        return Date(appConfigPersistenceManager.getAppConfigLastFetchedSeconds() * 1000)
     }
 }

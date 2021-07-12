@@ -21,12 +21,14 @@ import nl.rijksoverheid.ctr.appconfig.usecases.LoadPublicKeysUseCase
 import nl.rijksoverheid.ctr.appconfig.usecases.PersistConfigUseCase
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
 import nl.rijksoverheid.ctr.shared.ext.ClmobileVerifyException
+import java.util.*
 
 abstract class AppConfigViewModel : ViewModel() {
     val appStatusLiveData = MutableLiveData<AppStatus>()
 
     abstract fun refresh(mobileCoreWrapper: MobileCoreWrapper)
     abstract fun checkLastConfigFetchExpired(time: Long): Boolean
+    abstract fun lastConfigFetchTime(): Date
 }
 
 class AppConfigViewModelImpl(
@@ -72,5 +74,9 @@ class AppConfigViewModelImpl(
 
     override fun checkLastConfigFetchExpired(time: Long): Boolean {
         return appConfigUseCase.checkLastConfigFetchExpired(time)
+    }
+
+    override fun lastConfigFetchTime(): Date {
+        return appConfigUseCase.lastConfigFetchTime()
     }
 }
