@@ -231,4 +231,6 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="invalid_for_journey">Invalid\nfor journey</string>
     <string name="country_other">Others</string>
     <string name="country_unselected">Choose country</string>
+    <string name="result_inconclusive_title">No result</string>
+    <string name="result_inconclusive_message">Please check the rules based on the data below</string>
 </resources>

@@ -231,5 +231,6 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="invalid_for_journey">Niet geldig voor\ngekozen reis</string>
     <string name="country_other">Anders</string>
     <string name="country_unselected">Land kiezen</string>
-
+    <string name="result_inconclusive_title">Geen uitkomst</string>
+    <string name="result_inconclusive_message">Controleer de regels op de basis van de onderstaande gegevens</string>
 </resources>

@@ -64,23 +64,25 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         args.data.verifiedQr?.let { verifiedQr ->
 
             appConfigUtil.getCountries(false)?.let { countries ->
-                val colorCode = CountryColorCode.fromValue(persistenceManager.getDepartureValue())
-                val toCode = persistenceManager.getDestinationValue() ?: ""
-                val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-                val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-                val failedItems = dccQR.processBusinessRules(colorCode, toCode, countries)
+                val from = countries.find { it.code == persistenceManager.getDepartureValue() }
+                val to = countries.find { it.code == persistenceManager.getDestinationValue() }
+                if (from != null && to != null) {
+                    val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                    val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                    val failedItems = dccQR.processBusinessRules(from, to, countries)
 
-                if (failedItems.isEmpty()) {
-                    setScreenValid()
-                    binding.recyclerViewBusinessError.visibility = View.GONE
-                } else {
-                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                    setBusinessErrorMessages(failedItems)
-                    setScreenInvalid()
+                    if (failedItems.isEmpty()) {
+                        setScreenValid()
+                        binding.recyclerViewBusinessError.visibility = View.GONE
+                    } else {
+                        binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                        setBusinessErrorMessages(failedItems)
+                        setScreenInvalid()
+                    }
+                    binding.informationLayout.visibility = View.VISIBLE
+                    binding.descriptionLayout.visibility = View.GONE
+                    presentPersonalDetails(verifiedQr)
                 }
-                binding.informationLayout.visibility = View.VISIBLE
-                binding.descriptionLayout.visibility = View.GONE
-                presentPersonalDetails(verifiedQr)
             }
 
         } ?: run {

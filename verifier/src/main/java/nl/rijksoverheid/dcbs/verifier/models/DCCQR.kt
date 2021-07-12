@@ -49,29 +49,30 @@ class DCCQR(
         return (expirationTime ?: 0) > Date().time
     }
 
-    fun processBusinessRules(from: CountryColorCode?, to: String, countries: List<CountryRisk>): List<DCCFailableItem> {
+    fun processBusinessRules(from: CountryRisk, to: CountryRisk, countries: List<CountryRisk>): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
+        if (from.isIndecisive() || to.isIndecisive()) {
+            return listOf(DCCFailableItem(DCCFailableType.UndecidableFrom))
+        }
         failingItems.addAll(processGeneralRules(countries))
 
-        val toCode = to.toLowerCase(Locale.getDefault())
-        from?.let {
-            if (toCode == "nl") {
-                failingItems.addAll(processNLBusinessRules(from, toCode))
-            }
+        if (to.getPassType() == CountryRiskPass.NLRules) {
+            failingItems.addAll(processNLBusinessRules(from, to))
         }
 
         return failingItems
     }
 
-    private fun processNLBusinessRules(from: CountryColorCode, to: String): List<DCCFailableItem> {
-        if (from == CountryColorCode.GREEN || from == CountryColorCode.YELLOW) {
+    private fun processNLBusinessRules(from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
+        val fromColorCode = from.getColourCode()
+        if (fromColorCode == CountryColorCode.GREEN || fromColorCode == CountryColorCode.YELLOW) {
             return emptyList()
         }
-        if (from == CountryColorCode.RED) {
+        if (fromColorCode == CountryColorCode.RED) {
             return listOf(DCCFailableItem(DCCFailableType.RedNotAllowed))
         }
-        val age = dcc?.getDateOfBirth()?.let { it.yearDifference() } ?: 99
-        if (age <= 11 && from != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+        val age = dcc?.getDateOfBirth()?.yearDifference() ?: 99
+        if (age <= 11 && fromColorCode != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
             return emptyList()
         }
 
@@ -80,7 +81,7 @@ class DCCQR(
             failingItems.add(DCCFailableItem(DCCFailableType.MissingRequiredTest))
         }
 
-        if (from == CountryColorCode.ORANGE) {
+        if (fromColorCode == CountryColorCode.ORANGE) {
 
             dcc?.vaccines?.forEach { vaccine ->
                 return if (vaccine.isFullyVaccinated()) {
@@ -107,7 +108,7 @@ class DCCQR(
             }
         }
 
-        if (from == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+        if (fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
             failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24))
         }
         return failingItems
@@ -150,7 +151,6 @@ class DCCQR(
                         failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
                     }
                 }
-
             }
         }
 

@@ -57,7 +57,7 @@ class DCCTest(
         return DCCTestManufacturer.fromValue(RATTestNameAndManufac)
     }
 
-    fun getTestDateExpiredIssue(to: String): DCCFailableItem? {
+    fun getTestDateExpiredIssue(to: CountryRisk): DCCFailableItem? {
 
         getTestType()?.let { testType ->
             testType.validFor(to)?.let { maxHours ->
