@@ -194,7 +194,7 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="color_code_description">Which countries have which colour code?</string>
     <string name="color_code_button_text">View</string>
     <string name="url_color_code">https://www.nederlandwereldwijd.nl/documenten/vragen-en-antwoorden/welke-landen-hebben-welke-kleurcode</string>
-    <string name="rule_test_required">DCC is valid however travelling to The Netherlands from a country with orange color code requires a valid negative test result. Ask for a DCC that contains a valid test result.n</string>
+    <string name="rule_test_required">DCC is valid however travelling to The Netherlands from a country with orange color code requires a valid negative test result. Ask for a DCC that contains a valid test result.</string>
     <string name="rule_test_must_be_negative">DCC is valid however travelling to The Netherlands from a country with orange color code requires a valid negative test result. Ask for a DCC that contains a valid test result.</string>
     <string name="rule_test_outdated">DCC contains a test result of a test that was taken %d hours ago, which is beyond the valid time frame. Check and ask for a more recent test result if necessary.</string>
     <string name="rule_red_not_allowed">Travelling from red areas is forbidden.</string>

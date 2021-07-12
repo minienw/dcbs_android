@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
 import nl.rijksoverheid.dcbs.verifier.models.*
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
@@ -63,7 +65,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
         args.data.verifiedQr?.let { verifiedQr ->
 
-            appConfigUtil.getCountries(false)?.let { countries ->
+            appConfigUtil.getCountries(true)?.let { countries ->
                 val from = countries.find { it.code == persistenceManager.getDepartureValue() }
                 val to = countries.find { it.code == persistenceManager.getDestinationValue() }
                 if (from != null && to != null) {
@@ -71,13 +73,17 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
                     val failedItems = dccQR.processBusinessRules(from, to, countries)
 
-                    if (failedItems.isEmpty()) {
-                        setScreenValid()
-                        binding.recyclerViewBusinessError.visibility = View.GONE
-                    } else {
-                        binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                        setBusinessErrorMessages(failedItems)
-                        setScreenInvalid()
+                    when {
+                        failedItems.isEmpty() -> setScreenValid()
+                        failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
+                            setBusinessErrorMessages(failedItems)
+                            setScreenUndecided()
+                        }
+                        else -> {
+                            binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                            setBusinessErrorMessages(failedItems)
+                            setScreenInvalid(R.drawable.ic_valid_qr_code)
+                        }
                     }
                     binding.informationLayout.visibility = View.VISIBLE
                     binding.descriptionLayout.visibility = View.GONE
@@ -86,7 +92,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             }
 
         } ?: run {
-            setScreenInvalid()
+            setScreenInvalid(R.drawable.ic_invalid_qr_code)
             binding.descriptionLayout.visibility = View.VISIBLE
             binding.informationLayout.visibility = View.GONE
             binding.recyclerViewBusinessError.visibility = View.GONE
@@ -121,22 +127,41 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         context?.let { c ->
             GroupAdapter<GroupieViewHolder>()
                 .run {
-                    addAll(failedItems.map { BusinessErrorAdapterItem(it.getDisplayName(c)) })
+                    addAll(failedItems.map {
+                        BusinessErrorAdapterItem(
+                            it.getDisplayName(c),
+                            it.type == DCCFailableType.UndecidableFrom
+                        )
+                    })
                     binding.recyclerViewBusinessError.adapter = this
                 }
         }
     }
 
     private fun setScreenValid() {
+        val context = context ?: return
         binding.root.setBackgroundResource(R.color.secondary_green)
         binding.title.text = getString(R.string.valid_for_journey)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
+        binding.recyclerViewBusinessError.visibility = View.GONE
     }
 
-    private fun setScreenInvalid() {
+    private fun setScreenUndecided() {
+        val context = context ?: return
+        binding.root.setBackgroundResource(R.color.undecided_gray)
+        binding.title.text = getString(R.string.result_inconclusive_title)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.black))
+        binding.image.setImageResource(R.drawable.ic_valid_qr_code)
+        binding.recyclerViewBusinessError.visibility = View.VISIBLE
+    }
+
+    private fun setScreenInvalid(@DrawableRes iconResId: Int) {
+        val context = context ?: return
         binding.root.setBackgroundResource(R.color.red)
         binding.title.text = getString(R.string.invalid_for_journey)
-        binding.image.setImageResource(R.drawable.ic_invalid_qr_code)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.image.setImageResource(iconResId)
     }
 
     private fun presentPersonalDetails(verifiedQr: VerifiedQr) {

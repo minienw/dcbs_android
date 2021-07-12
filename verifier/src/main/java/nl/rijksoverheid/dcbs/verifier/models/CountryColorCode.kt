@@ -12,25 +12,12 @@ import nl.rijksoverheid.dcbs.verifier.R
  */
 
 enum class CountryColorCode(val value: String) {
-    GREEN("code_green"),
-    YELLOW("code_yellow"),
-    ORANGE("code_orange"),
-    ORANGE_HIGH_INCIDENCE("code_orange_high_incidence"),
-    ORANGE_SHIPS_FLIGHT("code_orange_ships_flight"),
-    RED("code_red");
-
-    fun getDisplayName(context: Context): String {
-        return context.getString(
-            when (this) {
-                GREEN -> R.string.code_green
-                YELLOW -> R.string.code_yellow
-                ORANGE -> R.string.code_orange
-                ORANGE_HIGH_INCIDENCE -> R.string.code_orange_high_incidence
-                ORANGE_SHIPS_FLIGHT -> R.string.code_orange_ships_flight
-                RED -> R.string.code_red
-            }
-        )
-    }
+    GREEN("green"),
+    YELLOW("yellow"),
+    ORANGE("orange"),
+    ORANGE_HIGH_INCIDENCE("orange_high_incidence"),
+    ORANGE_SHIPS_FLIGHT("orange_very_high_risk"),
+    RED("red");
 
     companion object {
         fun fromValue(value: String?): CountryColorCode? {
