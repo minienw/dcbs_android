@@ -124,6 +124,7 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="certificates_outdated_title">De certificatenlijst is niet bijgewerkt!</string>
     <string name="item_dose_x">Vaccin dosis %d</string>
     <string name="item_dose_x_x">Vaccin dosis %d / %d</string>
+    <string name="item_vaccin_x_dose_x_x">Vaccin: %s, Dosis %d/%d</string>
     <string name="item_disease">Ziekte / Vaccin</string>
     <string name="item_country">Lidstaat</string>
     <string name="item_identifier">Certificaat nummer</string>
@@ -145,7 +146,8 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="resume">Verder</string>
     <string name="pause">Pauze</string>
     <string name="destination_x">Bestemmingsland: %s</string>
-
+    <string name="vaccin_complete">COMPLEET</string>
+    <string name="vaccin_incomplete">INCOMPLEET</string>
     <string name="country_at">Oostenrijk</string>
     <string name="country_be">België</string>
     <string name="country_bg">Bulgarije</string>
@@ -220,5 +222,12 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="camera_consent_message">De DCC cross border Scanner NL app vereist uw toestemming de camera van uw toestel te gebruiken. Zonder deze toestemming kan u geen DCC\'s in de vorm van een QR code scannen. Zonder toestemming kan de gebruiker de app installeren, maar deze niet gebruiken om DCC\'s in de vorm van een QR code te scannen.</string>
     <string name="camera_consent_positive_button">Toestaan</string>
     <string name="camera_consent_negative_button">Afwijzen</string>
+    <string name="x_days">%d dagen</string>
+    <string name="x_day">%d dag</string>
+    <string name="x_hours">%d uren</string>
+    <string name="x_hour">%d uur</string>
+    <string name="old">oud</string>
+    <string name="valid_for_journey">Geldig voor\ngekozen reis</string>
+    <string name="invalid_for_journey">Niet geldig voor\ngekozen reis</string>
 
 </resources>
