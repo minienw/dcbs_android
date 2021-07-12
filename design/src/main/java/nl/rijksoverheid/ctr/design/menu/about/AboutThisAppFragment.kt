@@ -63,7 +63,6 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
             }
         }
 
-        @SuppressLint("StringFormatInvalid")
         binding.appVersion.text = getString(
             R.string.app_version,
             aboutThisAppData.versionName,
