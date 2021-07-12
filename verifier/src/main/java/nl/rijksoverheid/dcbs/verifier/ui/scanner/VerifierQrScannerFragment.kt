@@ -11,11 +11,10 @@ import nl.rijksoverheid.ctr.shared.livedata.EventObserver
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
-import nl.rijksoverheid.dcbs.verifier.models.Countries
-import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQrResultState
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
@@ -31,6 +30,7 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
     private val scannerViewModel: ScannerViewModel by viewModel()
     private val persistenceManager: PersistenceManager by inject()
+    private val appConfigUtil: AppConfigCachedUtil by inject()
 
     private val autoConfigCheckHandler = Handler(Looper.getMainLooper())
     private val autoConfigCheckRunnable = Runnable {
@@ -95,18 +95,20 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             binding.layoutCertificateExpired.root.visibility = View.GONE
         }
 
-        val context = context ?: return
-        val departureCountry = CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName(context) ?: getString(R.string.pick_country)
-        val destinationCountry = Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
-        binding.layoutCountryPicker.departureValue.text = departureCountry
-        binding.layoutCountryPicker.destinationValue.text = destinationCountry
+        appConfigUtil.getCountries(true)?.let { countries ->
+            val departureCountry = countries.find { it.code == persistenceManager.getDepartureValue() }?.name() ?: getString(R.string.pick_country)
+            val destinationCountry =
+                countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = departureCountry
+            binding.layoutCountryPicker.destinationValue.text = destinationCountry
+        }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionColorCodePicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())
         }
 
     }

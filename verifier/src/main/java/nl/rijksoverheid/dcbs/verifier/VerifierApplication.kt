@@ -36,10 +36,10 @@ open class VerifierApplication : SharedApplication() {
                     BuildConfig.FEATURE_CORONA_CHECK_API_CHECKS,
                     BuildConfig.FEATURE_TEST_PROVIDER_API_CHECKS
                 ),
-                verifierModule("verifier"),
+                verifierModule("dcbs"),
                 verifierIntroductionModule,
                 sharedModule,
-                appConfigModule("verifier", BuildConfig.VERSION_CODE),
+                appConfigModule("dcbs", BuildConfig.VERSION_CODE),
                 introductionModule,
                 *getAdditionalModules().toTypedArray(),
                 designModule

@@ -19,16 +19,16 @@
             app:popExitAnim="@anim/fragment_close_exit" />
 
         <action
-            android:id="@+id/action_country_picker"
-            app:destination="@id/nav_country_picker"
+            android:id="@+id/action_destination_picker"
+            app:destination="@id/nav_destination_picker"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
 
         <action
-            android:id="@+id/action_color_code_picker"
-            app:destination="@id/nav_color_code_picker"
+            android:id="@+id/action_departure_picker"
+            app:destination="@id/nav_departure_picker"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
@@ -56,8 +56,8 @@
             app:popUpToInclusive="true" />
 
         <action
-            android:id="@+id/action_country_picker"
-            app:destination="@id/nav_country_picker"
+            android:id="@+id/action_destination_picker"
+            app:destination="@id/nav_destination_picker"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
@@ -72,8 +72,8 @@
             app:popExitAnim="@anim/fragment_close_exit" />
 
         <action
-            android:id="@+id/action_color_code_picker"
-            app:destination="@id/nav_color_code_picker"
+            android:id="@+id/action_departure_picker"
+            app:destination="@id/nav_departure_picker"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
@@ -82,14 +82,14 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_country_picker"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.CountryPickerFragment"
-        tools:layout="@layout/fragment_country_picker" />
+        android:id="@+id/nav_departure_picker"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.DepartureFragment"
+        tools:layout="@layout/fragment_departure_picker" />
 
     <fragment
-        android:id="@+id/nav_color_code_picker"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.ColorCodePickerFragment"
-        tools:layout="@layout/fragment_color_code_picker" />
+        android:id="@+id/nav_destination_picker"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.DestinationFragment"
+        tools:layout="@layout/fragment_destination_picker" />
 
     <fragment
         android:id="@+id/nav_invalid_screen_to_scan_instructions"

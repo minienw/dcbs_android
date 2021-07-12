@@ -49,9 +49,9 @@ class DCCQR(
         return (expirationTime ?: 0) > Date().time
     }
 
-    fun processBusinessRules(from: CountryColorCode?, to: String): List<DCCFailableItem> {
+    fun processBusinessRules(from: CountryColorCode?, to: String, countries: List<CountryRisk>): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
-        failingItems.addAll(processGeneralRules())
+        failingItems.addAll(processGeneralRules(countries))
 
         val toCode = to.toLowerCase(Locale.getDefault())
         from?.let {
@@ -113,7 +113,7 @@ class DCCQR(
         return failingItems
     }
 
-    private fun processGeneralRules(): List<DCCFailableItem> {
+    private fun processGeneralRules(countries: List<CountryRisk>): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
         dcc?.getDateOfBirth()?.let {
             if (!dcc.isValidDateOfBirth()) {
@@ -133,7 +133,7 @@ class DCCQR(
             if (vaccine.getVaccineProduct() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineProduct))
             }
-            if (!vaccine.isCountryValid()) {
+            if (!vaccine.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
             if (vaccine.dateOfVaccination.toDate() == null) {
@@ -164,7 +164,7 @@ class DCCQR(
             if (test.getTargetedDisease() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
             }
-            if (!test.isCountryValid()) {
+            if (!test.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
             if (test.dateOfSampleCollection.toDate() == null) {
@@ -175,7 +175,7 @@ class DCCQR(
             if (recovery.getTargetedDisease() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
             }
-            if (!recovery.isCountryValid()) {
+            if (!recovery.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
             if (recovery.certificateValidTo.toDate() == null) {

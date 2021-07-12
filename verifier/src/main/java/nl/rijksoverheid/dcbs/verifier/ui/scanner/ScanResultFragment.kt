@@ -21,6 +21,7 @@ import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
@@ -40,6 +41,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private val binding get() = _binding!!
 
     private val scannerUtil: ScannerUtil by inject()
+    private val appConfigUtil: AppConfigCachedUtil by inject()
     private val persistenceManager: PersistenceManager by inject()
 
     private var countDownTime = COUNTDOWN_TIME
@@ -61,24 +63,25 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
         args.data.verifiedQr?.let { verifiedQr ->
 
+            appConfigUtil.getCountries(false)?.let { countries ->
+                val colorCode = CountryColorCode.fromValue(persistenceManager.getDepartureValue())
+                val toCode = persistenceManager.getDestinationValue() ?: ""
+                val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                val failedItems = dccQR.processBusinessRules(colorCode, toCode, countries)
 
-            val colorCode = CountryColorCode.fromValue(persistenceManager.getDepartureValue())
-            val toCode = persistenceManager.getDestinationValue() ?: ""
-            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-            val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-            val failedItems = dccQR.processBusinessRules(colorCode, toCode)
-
-            if (failedItems.isEmpty()) {
-                setScreenValid()
-                binding.recyclerViewBusinessError.visibility = View.GONE
-            } else {
-                binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                setBusinessErrorMessages(failedItems)
-                setScreenInvalid()
+                if (failedItems.isEmpty()) {
+                    setScreenValid()
+                    binding.recyclerViewBusinessError.visibility = View.GONE
+                } else {
+                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                    setBusinessErrorMessages(failedItems)
+                    setScreenInvalid()
+                }
+                binding.informationLayout.visibility = View.VISIBLE
+                binding.descriptionLayout.visibility = View.GONE
+                presentPersonalDetails(verifiedQr)
             }
-            binding.informationLayout.visibility = View.VISIBLE
-            binding.descriptionLayout.visibility = View.GONE
-            presentPersonalDetails(verifiedQr)
 
         } ?: run {
             setScreenInvalid()
@@ -290,22 +293,21 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
 
     private fun initCountries() {
-        val context = context ?: return
-        val departureCountry =
-            CountryColorCode.fromValue(persistenceManager.getDepartureValue())
-                ?.getDisplayName(context) ?: getString(R.string.pick_country)
-        val destinationCountry =
-            Countries.getCountryNameResId(persistenceManager.getDestinationValue())
-                ?.let { getString(it) } ?: getString(R.string.pick_country)
-        binding.layoutCountryPicker.departureValue.text = departureCountry
-        binding.layoutCountryPicker.destinationValue.text = destinationCountry
+
+        appConfigUtil.getCountries(true)?.let { countries ->
+            val departureCountry = countries.find { it.code == persistenceManager.getDepartureValue() }?.name() ?: getString(R.string.pick_country)
+            val destinationCountry =
+                countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = departureCountry
+            binding.layoutCountryPicker.destinationValue.text = destinationCountry
+        }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionColorCodePicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())
         }
     }
 

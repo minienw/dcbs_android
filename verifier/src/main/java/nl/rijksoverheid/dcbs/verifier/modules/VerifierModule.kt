@@ -27,6 +27,8 @@ import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtilImpl
 import nl.rijksoverheid.dcbs.verifier.ui.scanqr.ScanQrViewModel
 import nl.rijksoverheid.dcbs.verifier.ui.scanqr.ScanQrViewModelImpl
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtilImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -59,6 +61,7 @@ fun verifierModule(path: String) = module {
     // Utils
     factory<QrCodeUtil> { QrCodeUtilImpl(get()) }
     factory<ScannerUtil> { ScannerUtilImpl() }
+    factory<AppConfigCachedUtil> { AppConfigCachedUtilImpl(get(), get()) }
 
     // ViewModels
     viewModel<ScanQrViewModel> { ScanQrViewModelImpl(get()) }

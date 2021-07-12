@@ -54,7 +54,7 @@ class DCCVaccine(
         return doseNumber >= totalSeriesOfDoses
     }
 
-    fun isCountryValid() : Boolean {
-        return IsoCountries.countryForCode(countryOfVaccination) != null
+    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
+        return countries.find {it.code == countryOfVaccination } != null
     }
 }

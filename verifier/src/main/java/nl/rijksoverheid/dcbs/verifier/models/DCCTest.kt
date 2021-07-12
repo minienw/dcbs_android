@@ -88,7 +88,7 @@ class DCCTest(
         return null
     }
 
-    fun isCountryValid(): Boolean {
-        return IsoCountries.countryForCode(countryOfTest) != null
+    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
+        return countries.find {it.code == countryOfTest } != null
     }
 }

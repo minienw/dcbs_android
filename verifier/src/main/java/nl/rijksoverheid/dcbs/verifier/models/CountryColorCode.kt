@@ -36,9 +36,5 @@ enum class CountryColorCode(val value: String) {
         fun fromValue(value: String?): CountryColorCode? {
             return values().firstOrNull { it.value == value }
         }
-
-        fun fromDisplayName(context: Context, displayName: String?): CountryColorCode? {
-            return values().firstOrNull { it.getDisplayName(context) == displayName }
-        }
     }
 }

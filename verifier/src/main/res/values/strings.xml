@@ -229,5 +229,6 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="old">old</string>
     <string name="valid_for_journey">Valid\nfor journey</string>
     <string name="invalid_for_journey">Invalid\nfor journey</string>
-
+    <string name="country_other">Others</string>
+    <string name="country_unselected">Choose country</string>
 </resources>
