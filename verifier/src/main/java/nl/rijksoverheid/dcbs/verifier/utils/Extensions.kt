@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 fun String.formatDate(): String? {
-    val outputFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    val outputFormat = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
     return try {
         this.toDate()?.let {
             outputFormat.format(it)
@@ -61,8 +61,7 @@ fun Date.hourDifference(): Int {
 
     return if (diff.toMinutes() % 60 > 0) {
         diff.toHours().toInt() + 1
-    }
-    else diff.toHours().toInt()
+    } else diff.toHours().toInt()
 }
 
 fun Date.yearDifference(): Int {
@@ -78,4 +77,52 @@ fun Date.toLocalDate(): LocalDate {
     return this.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 }
 
+fun Date.timeAgo(
+    daysLabel: String,
+    hoursLabel: String,
+    dayLabel: String,
+    hourLabel: String,
+    oldLabel: String,
+): String {
+    val elapsedDays = this.daysElapsed()
+    val elapsedHours = this.hoursElapsed()
+    var output = ""
+    if (elapsedDays > 0) output += amountLabelTextTimeDate(elapsedDays.toInt(), dayLabel, daysLabel)
+    if (elapsedDays > 0 || elapsedHours > 0) output += amountLabelTextTimeDate(
+        elapsedHours.toInt(),
+        hourLabel,
+        hoursLabel
+    )
+    return "$output$oldLabel"
+}
+
+private fun amountLabelTextTimeDate(amount: Int, labelOne: String, labelMultiple: String): String {
+    return "${if (amount > 1) labelMultiple.format(amount) else labelOne.format(amount)} "
+}
+
+fun Date.hoursElapsed(): Long {
+    val secondsInMilli: Long = 1000
+    val minutesInMilli = secondsInMilli * 60
+    val hoursInMilli = minutesInMilli * 60
+    var difference: Long = System.currentTimeMillis() - this.time
+    difference %= daysInMilli()
+    return difference / hoursInMilli
+}
+
+
+fun daysInMilli(): Long {
+    val secondsInMilli: Long = 1000
+    val minutesInMilli = secondsInMilli * 60
+    val hoursInMilli = minutesInMilli * 60
+    return hoursInMilli * 24
+}
+
+fun Date.daysElapsed(): Long {
+    val difference: Long = System.currentTimeMillis() - this.time
+    val secondsInMilli: Long = 1000
+    val minutesInMilli = secondsInMilli * 60
+    val hoursInMilli = minutesInMilli * 60
+    val daysInMilli = hoursInMilli * 24
+    return difference / daysInMilli
+}
 

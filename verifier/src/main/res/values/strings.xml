@@ -123,6 +123,7 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="certificates_outdated_title">Trust list was not updated</string>
     <string name="item_dose_x">Vaccine dose %d</string>
     <string name="item_dose_x_x">Vaccine dose %d / %d</string>
+    <string name="item_vaccin_x_dose_x_x">Vaccine: %s, Dose %d/%d</string>
     <string name="item_disease">Disease / Vaccine</string>
     <string name="item_country">Country</string>
     <string name="item_identifier">Certificate number</string>
@@ -144,6 +145,8 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="resume">Continue</string>
     <string name="pause">Pause</string>
     <string name="destination_x">Destination country: %s</string>
+    <string name="vaccin_complete">COMPLETE</string>
+    <string name="vaccin_incomplete">INCOMPLETE</string>
 
     <string name="country_at">Austria</string>
     <string name="country_be">Belgium</string>
@@ -208,6 +211,7 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="rule_invalid_country_code">The country code is not recognized. Check the country code.</string>
     <string name="rule_invalid_date_of_birth">The date of birth appears to be incorrect. Check the date of birth with the ID of the traveller.</string>
     <string name="rule_invalid_vaccine_date">The vaccine date is not correct. Check if the vaccine is still valid.</string>
+    <string name="rule_vaccination_14_days">This vaccination certificate is not yet valid. Vaccine certificates become valid 14 days after the last vaccination date.</string>
     <string name="rule_invalid_test_date">The test date is incorrect. Check if the test is still valid.</string>
     <string name="rule_invalid_recovery_first_test_date">The test date for this recovery certificate is not valid. Check if the date is between 11 and 180 days old.</string>
     <string name="rule_invalid_recovery_from_date">The date from which this recovery certificate is valid is incorrect. Check the recovery start date.</string>
@@ -219,4 +223,12 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="camera_consent_positive_button">Agree</string>
     <string name="camera_consent_negative_button">Don\'t agree</string>
     <string name="last_trustlist_update">The last trustlist update</string>
+    <string name="x_days">%d days</string>
+    <string name="x_day">%d day</string>
+    <string name="x_hours">%d hours</string>
+    <string name="x_hour">%d hour</string>
+    <string name="old">old</string>
+    <string name="valid_for_journey">Valid\nfor journey</string>
+    <string name="invalid_for_journey">Invalid\nfor journey</string>
+
 </resources>

@@ -3,10 +3,12 @@ package nl.rijksoverheid.dcbs.verifier.models
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 /*
@@ -26,7 +28,8 @@ class DCCQR(
 ) {
 
     fun getName(): String {
-        return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName ?: "").capitalize(Locale.getDefault())
+        return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName
+            ?: "").capitalize(Locale.getDefault())
     }
 
     fun getBirthDate(): String? {
@@ -110,7 +113,7 @@ class DCCQR(
         return failingItems
     }
 
-    private fun processGeneralRules() : List<DCCFailableItem> {
+    private fun processGeneralRules(): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
         dcc?.getDateOfBirth()?.let {
             if (!dcc.isValidDateOfBirth()) {
@@ -135,6 +138,19 @@ class DCCQR(
             }
             if (vaccine.dateOfVaccination.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineDate))
+            } else if (LocalDate.now() >= LocalDate.of(2021, 7, 10)) {
+                vaccine.dateOfVaccination.toDate()?.let { vaccinationDate ->
+                    val localDateRequiredMinimumVaccinationDate: LocalDateTime =
+                        LocalDateTime.now().minusDays(14)
+                    val requiredMinimumVaccinationDate = Date.from(
+                        localDateRequiredMinimumVaccinationDate.atZone(ZoneId.systemDefault())
+                            .toInstant()
+                    )
+                    if (vaccinationDate > requiredMinimumVaccinationDate) {
+                        failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
+                    }
+                }
+
             }
         }
 

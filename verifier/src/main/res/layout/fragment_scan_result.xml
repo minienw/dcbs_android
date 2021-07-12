@@ -96,8 +96,8 @@
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
-                        android:gravity="center"
-                        android:text="@string/scan_result_invalid_title"
+                        android:text="@string/invalid_for_journey"
+                        android:textAlignment="textStart"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="@id/image"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -189,28 +189,39 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="@string/item_dose_x_x"
+                                android:text="@string/item_vaccin_x_dose_x_x"
                                 android:textSize="13sp" />
 
                             <TextView
-                                android:id="@+id/dose1_box_name"
-                                style="@style/Montserrat_Bold_Black"
+                                android:id="@+id/dose1_status"
+                                style="@style/Montserrat_Bold_Red"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
+                                android:layout_marginTop="2dp"
                                 android:gravity="center"
+                                android:textAllCaps="true"
                                 android:textSize="15sp"
-                                tools:text="Biontech/Pfizer" />
+                                tools:text="INCOMPLETE" />
 
                             <TextView
                                 android:id="@+id/dose1_box_date"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center"
+                                android:textSize="13sp"
+                                tools:text="26.05.2021" />
+
+                            <TextView
+                                android:id="@+id/dose1_box_time_ago"
                                 style="@style/Montserrat_Bold_Black"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
+                                android:layout_marginTop="2dp"
                                 android:gravity="center"
                                 android:textSize="15sp"
-                                tools:text="26.05.2021" />
+                                tools:text="10 days old" />
 
                         </LinearLayout>
 

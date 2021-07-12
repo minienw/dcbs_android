@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -21,6 +22,8 @@ import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
+import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
+import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
 
@@ -83,7 +86,11 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.informationLayout.visibility = View.GONE
             binding.recyclerViewBusinessError.visibility = View.GONE
             binding.subtitle.enableCustomLinks {
-                findNavController().navigate(ScanResultFragmentDirections.actionInvalidScreenToScanInstructions(true))
+                findNavController().navigate(
+                    ScanResultFragmentDirections.actionInvalidScreenToScanInstructions(
+                        true
+                    )
+                )
             }
         }
 
@@ -117,13 +124,13 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
     private fun setScreenValid() {
         binding.root.setBackgroundResource(R.color.secondary_green)
-        binding.title.text = getString(R.string.scan_result_valid_title)
+        binding.title.text = getString(R.string.valid_for_journey)
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
     }
 
     private fun setScreenInvalid() {
         binding.root.setBackgroundResource(R.color.red)
-        binding.title.text = getString(R.string.scan_result_invalid_title)
+        binding.title.text = getString(R.string.invalid_for_journey)
         binding.image.setImageResource(R.drawable.ic_invalid_qr_code)
     }
 
@@ -145,32 +152,66 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.dose2TableTitle.text = getString(R.string.item_dose_x, 2)
         items?.let { vaccines ->
             binding.vaccineLayout.visibility = View.VISIBLE
-            binding.dose1BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[0].doseNumber, vaccines[0].totalSeriesOfDoses)
-            binding.dose1BoxName.text = vaccines[0].getVaccineProduct()?.getDisplayName() ?: vaccines[0].vaccineMedicalProduct
+            val vaccinMedicalProduct = vaccines[0].getVaccineProduct()?.getDisplayName()
+                ?: vaccines[0].vaccineMedicalProduct
+            binding.dose1BoxTitle.text = getString(
+                R.string.item_vaccin_x_dose_x_x,
+                vaccinMedicalProduct,
+                vaccines[0].doseNumber,
+                vaccines[0].totalSeriesOfDoses
+            )
+            binding.dose1Status.text = getVaccineStatusText(vaccines[0])
+            getVaccineStatusColour(vaccines[0])?.let { textColor ->
+                binding.dose1Status.setTextColor(textColor)
+            }
             binding.dose1BoxDate.text = vaccines[0].dateOfVaccination.formatDate()
+            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination.toDate()?.timeAgo(
+                daysLabel = getString(R.string.x_days),
+                dayLabel = getString(R.string.x_day),
+                hoursLabel = getString(R.string.x_hours),
+                hourLabel = getString(R.string.x_hour),
+                oldLabel = getString(R.string.old)
+            )
             binding.dose1TableDiseaseVaccineValue.text =
-                "${vaccines[0].getTargetedDisease()?.getDisplayName() ?: vaccines[0].targetedDisease} | ${
+                "${
+                    vaccines[0].getTargetedDisease()
+                        ?.getDisplayName() ?: vaccines[0].targetedDisease
+                } | ${
                     vaccines[0].getVaccine()?.getDisplayName() ?: vaccines[0].vaccine
                 }"
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
-            binding.dose1TableManufacturerValue.text = vaccines[0].getMarketingHolder()?.getDisplayName() ?: vaccines[0].marketingAuthorizationHolder
+            binding.dose1TableManufacturerValue.text =
+                vaccines[0].getMarketingHolder()?.getDisplayName()
+                    ?: vaccines[0].marketingAuthorizationHolder
             binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
             binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
             if (vaccines.size == 2) {
                 binding.dose1TableTitle.visibility = View.VISIBLE
                 binding.dose2BoxLayout.visibility = View.VISIBLE
                 binding.dose2TableLayout.visibility = View.VISIBLE
-                binding.dose2BoxTitle.text = getString(R.string.item_dose_x_x, vaccines[1].doseNumber, vaccines[1].totalSeriesOfDoses)
-                binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName() ?: vaccines[1].vaccineMedicalProduct
+                binding.dose2BoxTitle.text = getString(
+                    R.string.item_vaccin_x_dose_x_x,
+                    vaccines[1].vaccine,
+                    vaccines[1].doseNumber,
+                    vaccines[1].totalSeriesOfDoses
+                )
+                binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName()
+                    ?: vaccines[1].vaccineMedicalProduct
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
-                    "${vaccines[1].getTargetedDisease()?.getDisplayName() ?: vaccines[1].targetedDisease} | ${
+                    "${
+                        vaccines[1].getTargetedDisease()
+                            ?.getDisplayName() ?: vaccines[1].targetedDisease
+                    } | ${
                         vaccines[1].getVaccine()?.getDisplayName() ?: vaccines[1].vaccine
                     }"
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
-                binding.dose2TableManufacturerValue.text = vaccines[1].getMarketingHolder()?.getDisplayName() ?: vaccines[1].marketingAuthorizationHolder
+                binding.dose2TableManufacturerValue.text =
+                    vaccines[1].getMarketingHolder()?.getDisplayName()
+                        ?: vaccines[1].marketingAuthorizationHolder
                 binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
-                binding.dose2TableCertificateIdentifierValue.text = vaccines[1].certificateIdentifier
+                binding.dose2TableCertificateIdentifierValue.text =
+                    vaccines[1].certificateIdentifier
             } else {
                 binding.dose1TableTitle.visibility = View.GONE
                 binding.dose2BoxLayout.visibility = View.GONE
@@ -182,17 +223,42 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
     }
 
+    private fun getVaccineStatusColour(vaccine: DCCVaccine): Int? {
+        return context?.let {
+            ContextCompat.getColor(
+                it, if (validVaccination(vaccine))
+                    R.color.black
+                else R.color.red
+            )
+        }
+    }
+
+    private fun validVaccination(vaccine: DCCVaccine): Boolean {
+        return vaccine.totalSeriesOfDoses == vaccine.doseNumber
+
+    }
+
+    private fun getVaccineStatusText(vaccine: DCCVaccine): String {
+        return if (validVaccination(vaccine)) getString(R.string.vaccin_complete) else getString(
+            R.string.vaccin_incomplete
+        )
+    }
+
     private fun initTest(items: List<DCCTest>?) {
         val context = context ?: return
         items?.let { tests ->
             binding.testLayout.visibility = View.VISIBLE
-            binding.testBoxTitle.text = tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
+            binding.testBoxTitle.text =
+                tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
             binding.testBoxDate.text = tests[0].dateOfSampleCollection.formatDate()
             binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
-            binding.testTableTargetValue.text = tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
-            binding.testTableTypeValue.text = tests[0].getTestType()?.getDisplayName() ?: tests[0].typeOfTest
+            binding.testTableTargetValue.text =
+                tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
+            binding.testTableTypeValue.text =
+                tests[0].getTestType()?.getDisplayName() ?: tests[0].typeOfTest
             binding.testTableNameValue.text = tests[0].NAATestName
-            binding.testTableManufacturerValue.text = tests[0].getTestManufacturer()?.getDisplayName() ?: tests[0].RATTestNameAndManufac
+            binding.testTableManufacturerValue.text =
+                tests[0].getTestManufacturer()?.getDisplayName() ?: tests[0].RATTestNameAndManufac
             binding.testTableCenterValue.text = tests[0].testingCentre
             binding.testTableCountryValue.text = tests[0].countryOfTest
             binding.testTableIssuerValue.text = tests[0].certificateIssuer
@@ -206,9 +272,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initRecovery(items: List<DCCRecovery>?) {
         items?.let { recoveries ->
             binding.recoveryLayout.visibility = View.VISIBLE
-            binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName() ?: recoveries[0].targetedDisease
-            binding.recoveryTableFirstDateValue.text = recoveries[0].dateOfFirstPositiveTest.formatDate()
-            binding.recoveryTableValidFromValue.text = recoveries[0].certificateValidFrom.formatDate()
+            binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName()
+                ?: recoveries[0].targetedDisease
+            binding.recoveryTableFirstDateValue.text =
+                recoveries[0].dateOfFirstPositiveTest.formatDate()
+            binding.recoveryTableValidFromValue.text =
+                recoveries[0].certificateValidFrom.formatDate()
             binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo.formatDate()
             binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
             binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
@@ -223,9 +292,11 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initCountries() {
         val context = context ?: return
         val departureCountry =
-            CountryColorCode.fromValue(persistenceManager.getDepartureValue())?.getDisplayName(context) ?: getString(R.string.pick_country)
+            CountryColorCode.fromValue(persistenceManager.getDepartureValue())
+                ?.getDisplayName(context) ?: getString(R.string.pick_country)
         val destinationCountry =
-            Countries.getCountryNameResId(persistenceManager.getDestinationValue())?.let { getString(it) } ?: getString(R.string.pick_country)
+            Countries.getCountryNameResId(persistenceManager.getDestinationValue())
+                ?.let { getString(it) } ?: getString(R.string.pick_country)
         binding.layoutCountryPicker.departureValue.text = departureCountry
         binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
