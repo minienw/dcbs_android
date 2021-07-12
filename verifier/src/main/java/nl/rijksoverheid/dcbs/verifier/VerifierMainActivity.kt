@@ -15,6 +15,7 @@ import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
 import nl.rijksoverheid.dcbs.verifier.databinding.ActivityMainBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -76,6 +77,10 @@ class VerifierMainActivity : AppCompatActivity() {
 
     fun updateConfig() {
         appStatusViewModel.refresh(mobileCoreWrapper)
+    }
+
+    fun lastConfigFetchTime(): Date {
+        return appStatusViewModel.lastConfigFetchTime()
     }
 
     fun checkLastConfigFetchExpired(time: Long): Boolean {
