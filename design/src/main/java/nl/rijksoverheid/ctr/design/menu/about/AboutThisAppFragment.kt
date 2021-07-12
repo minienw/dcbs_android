@@ -8,6 +8,7 @@
 
 package nl.rijksoverheid.ctr.design.menu.about
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -19,6 +20,8 @@ import nl.rijksoverheid.ctr.design.databinding.AboutThisAppRowBinding
 import nl.rijksoverheid.ctr.design.databinding.FragmentAboutAppBinding
 import nl.rijksoverheid.ctr.shared.ext.launchUrl
 import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
+import java.text.SimpleDateFormat
+import java.util.*
 
 class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
 
@@ -38,6 +41,10 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
 
         val aboutThisAppData = arguments?.getParcelable<AboutThisAppData>(EXTRA_ABOUT_THIS_APP_DATA)
             ?: throw IllegalStateException("AboutThisAppData should be set")
+
+        aboutThisAppData.trustListUpdatedDate?.let { date ->
+            binding.trustListBoxDate.text = formatTrustListDate(date)
+        }
 
         aboutThisAppData.readMoreItems.forEach { item ->
             val view = AboutThisAppRowBinding.inflate(
@@ -61,5 +68,10 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
             aboutThisAppData.versionName,
             aboutThisAppData.versionCode
         )
+    }
+
+    private fun formatTrustListDate(trustListDate: Date): String {
+        val outputFormat = SimpleDateFormat("d MMM yyyy HH:m", Locale.getDefault())
+        return outputFormat.format(trustListDate)
     }
 }

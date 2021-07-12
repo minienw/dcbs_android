@@ -2,6 +2,7 @@ package nl.rijksoverheid.ctr.design.menu.about
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -14,7 +15,8 @@ import kotlinx.parcelize.Parcelize
 data class AboutThisAppData(
     val versionName: String,
     val versionCode: String,
-    val readMoreItems: List<ReadMoreItem> = listOf()
+    val readMoreItems: List<ReadMoreItem> = listOf(),
+    val trustListUpdatedDate: Date?
 ) : Parcelable {
 
     @Parcelize

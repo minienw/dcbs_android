@@ -229,5 +229,6 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="old">oud</string>
     <string name="valid_for_journey">Geldig voor\ngekozen reis</string>
     <string name="invalid_for_journey">Niet geldig voor\ngekozen reis</string>
+    <string name="last_trustlist_update">De laatste trustlist update</string>
 
 </resources>

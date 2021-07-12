@@ -222,6 +222,7 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="camera_consent_message">The DCC cross border Scanner NL requires consent to use the scanner’s phone camera. This consent is required to scan the DCC, in the form of a QR code. Without this consent the user can install the app but cannot use the app to scan the DCC, in the form of a QR code.</string>
     <string name="camera_consent_positive_button">Agree</string>
     <string name="camera_consent_negative_button">Don\'t agree</string>
+    <string name="last_trustlist_update">The last trustlist update</string>
     <string name="x_days">%d days</string>
     <string name="x_day">%d day</string>
     <string name="x_hours">%d hours</string>
