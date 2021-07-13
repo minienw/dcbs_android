@@ -28,7 +28,7 @@ class DCCTest(
     @SerializedName("ma")
     val RATTestNameAndManufac: String?,
     @SerializedName("sc")
-    val dateOfSampleCollection: String,
+    val dateOfSampleCollection: String?,
     @SerializedName("tr")
     val testResult: String,
     @SerializedName("tc")
@@ -61,7 +61,7 @@ class DCCTest(
 
         getTestType()?.let { testType ->
             testType.validFor(to)?.let { maxHours ->
-                dateOfSampleCollection.toDate()?.let { date ->
+                dateOfSampleCollection?.toDate()?.let { date ->
                     if (date.hourDifference() > maxHours) {
                         return DCCFailableItem(DCCFailableType.TestDateExpired, date.hourDifference())
                     }
@@ -74,7 +74,7 @@ class DCCTest(
 
     fun getTestAge(context: Context): String? {
 
-        dateOfSampleCollection.toDate()?.let { date ->
+        dateOfSampleCollection?.toDate()?.let { date ->
             val localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
             val diff: Duration = Duration.between(
                 localDateTime,

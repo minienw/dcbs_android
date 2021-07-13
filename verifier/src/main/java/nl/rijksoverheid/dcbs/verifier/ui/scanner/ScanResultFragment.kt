@@ -194,8 +194,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             getVaccineStatusColour(vaccines[0])?.let { textColor ->
                 binding.dose1Status.setTextColor(textColor)
             }
-            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination.formatDate()
-            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination.toDate()?.timeAgo(
+            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination?.formatDate()
+            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination?.toDate()?.timeAgo(
                 daysLabel = getString(R.string.x_days),
                 dayLabel = getString(R.string.x_day),
                 hoursLabel = getString(R.string.x_hours),
@@ -227,7 +227,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 )
                 binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName()
                     ?: vaccines[1].vaccineMedicalProduct
-                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination.formatDate()
+                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
                     "${
                         vaccines[1].getTargetedDisease()
@@ -280,7 +280,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.testLayout.visibility = View.VISIBLE
             binding.testBoxTitle.text =
                 tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
-            binding.testBoxDate.text = tests[0].dateOfSampleCollection.formatDate()
+            binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
             binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
             binding.testTableTargetValue.text =
                 tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
@@ -305,10 +305,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName()
                 ?: recoveries[0].targetedDisease
             binding.recoveryTableFirstDateValue.text =
-                recoveries[0].dateOfFirstPositiveTest.formatDate()
+                recoveries[0].dateOfFirstPositiveTest?.formatDate()
             binding.recoveryTableValidFromValue.text =
-                recoveries[0].certificateValidFrom.formatDate()
-            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo.formatDate()
+                recoveries[0].certificateValidFrom?.formatDate()
+            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo?.formatDate()
             binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
             binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
             binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier

@@ -25,7 +25,7 @@ class DCCVaccine(
     @SerializedName("sd")
     val totalSeriesOfDoses: Int,
     @SerializedName("dt")
-    val dateOfVaccination: String,
+    val dateOfVaccination: String?,
     @SerializedName("co")
     val countryOfVaccination: String,
     @SerializedName("is")

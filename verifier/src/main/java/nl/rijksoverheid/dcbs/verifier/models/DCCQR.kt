@@ -3,6 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.models
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
+import nl.rijksoverheid.dcbs.verifier.utils.daysElapsed
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
@@ -23,9 +24,12 @@ class DCCQR(
     val credentialVersion: Int?,
     val issuer: String?, // Country for example France
     val issuedAt: Long?, // When was this QR issued at in seconds
-    val expirationTime: Long?, // When does this QR expire in seconds
+    private val expirationTime: Long?, // When does this QR expire in seconds
     val dcc: DCC?
 ) {
+
+    val july17th = 1626472800.0
+    val july24th = 1627077600.0
 
     fun getName(): String {
         return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName
@@ -84,10 +88,18 @@ class DCCQR(
         if (fromColorCode == CountryColorCode.ORANGE) {
 
             dcc?.vaccines?.forEach { vaccine ->
+                val items = ArrayList<DCCFailableItem>()
+                if ((vaccine.dateOfVaccination?.toDate()?.daysElapsed() ?: 0) < 15
+                    && Date().time >= july17th
+                    && (vaccine.dateOfVaccination?.toDate()?.time ?: 0) >= july17th
+                ) {
+                    items.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
+                }
                 return if (vaccine.isFullyVaccinated()) {
-                    emptyList()
+                    items
                 } else {
-                    listOf(DCCFailableItem(DCCFailableType.NeedFullVaccination))
+                    items.add(DCCFailableItem(DCCFailableType.NeedFullVaccination))
+                    items
                 }
             }
 
@@ -140,21 +152,23 @@ class DCCQR(
             if (!vaccine.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
-            if (vaccine.dateOfVaccination.toDate() == null) {
+            if (vaccine.dateOfVaccination?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineDate))
-            } else if (LocalDate.now() >= LocalDate.of(2021, 7, 10)) {
-                vaccine.dateOfVaccination.toDate()?.let { vaccinationDate ->
-                    val localDateRequiredMinimumVaccinationDate: LocalDateTime =
-                        LocalDateTime.now().minusDays(14)
-                    val requiredMinimumVaccinationDate = Date.from(
-                        localDateRequiredMinimumVaccinationDate.atZone(ZoneId.systemDefault())
-                            .toInstant()
-                    )
-                    if (vaccinationDate > requiredMinimumVaccinationDate) {
-                        failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
-                    }
-                }
             }
+
+//            if (LocalDate.now() >= LocalDate.of(2021, 7, 10)) {
+//                vaccine.dateOfVaccination.toDate()?.let { vaccinationDate ->
+//                    val localDateRequiredMinimumVaccinationDate: LocalDateTime =
+//                        LocalDateTime.now().minusDays(14)
+//                    val requiredMinimumVaccinationDate = Date.from(
+//                        localDateRequiredMinimumVaccinationDate.atZone(ZoneId.systemDefault())
+//                            .toInstant()
+//                    )
+//                    if (vaccinationDate > requiredMinimumVaccinationDate) {
+//
+//                    }
+//                }
+//            }
         }
 
         dcc?.tests?.forEach { test ->
@@ -170,7 +184,7 @@ class DCCQR(
             if (!test.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
-            if (test.dateOfSampleCollection.toDate() == null) {
+            if (test.dateOfSampleCollection?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestDate))
             }
         }
@@ -181,13 +195,13 @@ class DCCQR(
             if (!recovery.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
-            if (recovery.certificateValidTo.toDate() == null) {
+            if (recovery.certificateValidTo?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryToDate))
             }
-            if (recovery.certificateValidFrom.toDate() == null) {
+            if (recovery.certificateValidFrom?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFromDate))
             }
-            if (recovery.dateOfFirstPositiveTest.toDate() == null) {
+            if (recovery.dateOfFirstPositiveTest?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFirstTestDate))
             }
         }

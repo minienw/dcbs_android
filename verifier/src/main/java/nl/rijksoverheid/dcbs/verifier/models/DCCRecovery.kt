@@ -19,15 +19,15 @@ class DCCRecovery(
     @SerializedName("tg")
     val targetedDisease: String,
     @SerializedName("fr")
-    val dateOfFirstPositiveTest: String,
+    val dateOfFirstPositiveTest: String?,
     @SerializedName("co")
     val countryOfTest: String,
     @SerializedName("is")
     val certificateIssuer: String,
     @SerializedName("df")
-    val certificateValidFrom: String,
+    val certificateValidFrom: String?,
     @SerializedName("du")
-    val certificateValidTo: String,
+    val certificateValidTo: String?,
     @SerializedName("ci")
     val certificateIdentifier: String
 ) {
@@ -37,8 +37,8 @@ class DCCRecovery(
     }
 
     fun isValidRecovery() : Boolean {
-        val from = certificateValidFrom.toDate()
-        val to = certificateValidTo.toDate()
+        val from = certificateValidFrom?.toDate()
+        val to = certificateValidTo?.toDate()
         return if (from != null && to != null) {
             val now = Date()
             now.after(from.resetToMidnight()) && now.before(to.resetToEndOfTheDay())
