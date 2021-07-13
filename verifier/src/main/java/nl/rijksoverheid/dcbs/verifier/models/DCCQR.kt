@@ -134,6 +134,9 @@ class DCCQR(
             if (vaccine.getVaccineProduct() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineProduct))
             }
+            if (vaccine.getTargetedDisease() == null) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
+            }
             if (!vaccine.isCountryValid(countries)) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
             }
