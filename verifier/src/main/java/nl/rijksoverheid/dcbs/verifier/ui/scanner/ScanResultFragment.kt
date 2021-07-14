@@ -198,8 +198,6 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination?.toDate()?.timeAgo(
                 daysLabel = getString(R.string.x_days),
                 dayLabel = getString(R.string.x_day),
-                hoursLabel = getString(R.string.x_hours),
-                hourLabel = getString(R.string.x_hour),
                 oldLabel = getString(R.string.old)
             )
             binding.dose1TableDiseaseVaccineValue.text =

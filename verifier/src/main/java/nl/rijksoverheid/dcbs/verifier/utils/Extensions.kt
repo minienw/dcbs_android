@@ -79,42 +79,16 @@ fun Date.toLocalDate(): LocalDate {
 
 fun Date.timeAgo(
     daysLabel: String,
-    hoursLabel: String,
     dayLabel: String,
-    hourLabel: String,
     oldLabel: String,
 ): String {
     val elapsedDays = this.daysElapsed()
-    val elapsedHours = this.hoursElapsed()
-    var output = ""
-    if (elapsedDays > 0) output += amountLabelTextTimeDate(elapsedDays.toInt(), dayLabel, daysLabel)
-    if (elapsedDays > 0 || elapsedHours > 0) output += amountLabelTextTimeDate(
-        elapsedHours.toInt(),
-        hourLabel,
-        hoursLabel
-    )
+    val output = amountLabelTextTimeDate(elapsedDays.toInt(), dayLabel, daysLabel)
     return "$output$oldLabel"
 }
 
 private fun amountLabelTextTimeDate(amount: Int, labelOne: String, labelMultiple: String): String {
     return "${if (amount > 1) labelMultiple.format(amount) else labelOne.format(amount)} "
-}
-
-fun Date.hoursElapsed(): Long {
-    val secondsInMilli: Long = 1000
-    val minutesInMilli = secondsInMilli * 60
-    val hoursInMilli = minutesInMilli * 60
-    var difference: Long = System.currentTimeMillis() - this.time
-    difference %= daysInMilli()
-    return difference / hoursInMilli
-}
-
-
-fun daysInMilli(): Long {
-    val secondsInMilli: Long = 1000
-    val minutesInMilli = secondsInMilli * 60
-    val hoursInMilli = minutesInMilli * 60
-    return hoursInMilli * 24
 }
 
 fun Date.daysElapsed(): Long {

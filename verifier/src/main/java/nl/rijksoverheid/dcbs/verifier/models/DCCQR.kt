@@ -7,9 +7,6 @@ import nl.rijksoverheid.dcbs.verifier.utils.daysElapsed
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.util.*
 
 /*
@@ -28,8 +25,9 @@ class DCCQR(
     val dcc: DCC?
 ) {
 
-    val july17th = 1626472800.0
-    val july24th = 1627077600.0
+    companion object {
+        const val july17th = 1626469200000L
+    }
 
     fun getName(): String {
         return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName
@@ -91,7 +89,6 @@ class DCCQR(
                 val items = ArrayList<DCCFailableItem>()
                 if ((vaccine.dateOfVaccination?.toDate()?.daysElapsed() ?: 0) < 15
                     && Date().time >= july17th
-                    && (vaccine.dateOfVaccination?.toDate()?.time ?: 0) >= july17th
                 ) {
                     items.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
                 }
@@ -155,20 +152,6 @@ class DCCQR(
             if (vaccine.dateOfVaccination?.toDate() == null) {
                 failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineDate))
             }
-
-//            if (LocalDate.now() >= LocalDate.of(2021, 7, 10)) {
-//                vaccine.dateOfVaccination.toDate()?.let { vaccinationDate ->
-//                    val localDateRequiredMinimumVaccinationDate: LocalDateTime =
-//                        LocalDateTime.now().minusDays(14)
-//                    val requiredMinimumVaccinationDate = Date.from(
-//                        localDateRequiredMinimumVaccinationDate.atZone(ZoneId.systemDefault())
-//                            .toInstant()
-//                    )
-//                    if (vaccinationDate > requiredMinimumVaccinationDate) {
-//
-//                    }
-//                }
-//            }
         }
 
         dcc?.tests?.forEach { test ->
