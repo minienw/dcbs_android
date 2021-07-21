@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -18,9 +19,11 @@ import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
 import nl.rijksoverheid.dcbs.verifier.models.*
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
@@ -40,6 +43,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private val binding get() = _binding!!
 
     private val scannerUtil: ScannerUtil by inject()
+    private val appConfigUtil: AppConfigCachedUtil by inject()
     private val persistenceManager: PersistenceManager by inject()
 
     private var countDownTime = COUNTDOWN_TIME
@@ -61,27 +65,34 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
         args.data.verifiedQr?.let { verifiedQr ->
 
+            appConfigUtil.getCountries(true)?.let { countries ->
+                val from = countries.find { it.code == persistenceManager.getDepartureValue() }
+                val to = countries.find { it.code == persistenceManager.getDestinationValue() }
+                if (from != null && to != null) {
+                    val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                    val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                    val failedItems = dccQR.processBusinessRules(from, to, countries)
 
-            val colorCode = CountryColorCode.fromValue(persistenceManager.getDepartureValue())
-            val toCode = persistenceManager.getDestinationValue() ?: ""
-            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-            val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-            val failedItems = dccQR.processBusinessRules(colorCode, toCode)
-
-            if (failedItems.isEmpty()) {
-                setScreenValid()
-                binding.recyclerViewBusinessError.visibility = View.GONE
-            } else {
-                binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                setBusinessErrorMessages(failedItems)
-                setScreenInvalid()
+                    when {
+                        failedItems.isEmpty() -> setScreenValid()
+                        failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
+                            setBusinessErrorMessages(failedItems)
+                            setScreenUndecided()
+                        }
+                        else -> {
+                            binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                            setBusinessErrorMessages(failedItems)
+                            setScreenInvalid(R.drawable.ic_valid_qr_code)
+                        }
+                    }
+                    binding.informationLayout.visibility = View.VISIBLE
+                    binding.descriptionLayout.visibility = View.GONE
+                    presentPersonalDetails(verifiedQr)
+                }
             }
-            binding.informationLayout.visibility = View.VISIBLE
-            binding.descriptionLayout.visibility = View.GONE
-            presentPersonalDetails(verifiedQr)
 
         } ?: run {
-            setScreenInvalid()
+            setScreenInvalid(R.drawable.ic_invalid_qr_code)
             binding.descriptionLayout.visibility = View.VISIBLE
             binding.informationLayout.visibility = View.GONE
             binding.recyclerViewBusinessError.visibility = View.GONE
@@ -116,22 +127,41 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         context?.let { c ->
             GroupAdapter<GroupieViewHolder>()
                 .run {
-                    addAll(failedItems.map { BusinessErrorAdapterItem(it.getDisplayName(c)) })
+                    addAll(failedItems.map {
+                        BusinessErrorAdapterItem(
+                            it.getDisplayName(c),
+                            it.type == DCCFailableType.UndecidableFrom
+                        )
+                    })
                     binding.recyclerViewBusinessError.adapter = this
                 }
         }
     }
 
     private fun setScreenValid() {
+        val context = context ?: return
         binding.root.setBackgroundResource(R.color.secondary_green)
         binding.title.text = getString(R.string.valid_for_journey)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
+        binding.recyclerViewBusinessError.visibility = View.GONE
     }
 
-    private fun setScreenInvalid() {
+    private fun setScreenUndecided() {
+        val context = context ?: return
+        binding.root.setBackgroundResource(R.color.undecided_gray)
+        binding.title.text = getString(R.string.result_inconclusive_title)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.black))
+        binding.image.setImageResource(R.drawable.ic_valid_qr_code)
+        binding.recyclerViewBusinessError.visibility = View.VISIBLE
+    }
+
+    private fun setScreenInvalid(@DrawableRes iconResId: Int) {
+        val context = context ?: return
         binding.root.setBackgroundResource(R.color.red)
         binding.title.text = getString(R.string.invalid_for_journey)
-        binding.image.setImageResource(R.drawable.ic_invalid_qr_code)
+        binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.image.setImageResource(iconResId)
     }
 
     private fun presentPersonalDetails(verifiedQr: VerifiedQr) {
@@ -164,12 +194,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             getVaccineStatusColour(vaccines[0])?.let { textColor ->
                 binding.dose1Status.setTextColor(textColor)
             }
-            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination.formatDate()
-            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination.toDate()?.timeAgo(
+            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination?.formatDate()
+            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination?.toDate()?.timeAgo(
                 daysLabel = getString(R.string.x_days),
                 dayLabel = getString(R.string.x_day),
-                hoursLabel = getString(R.string.x_hours),
-                hourLabel = getString(R.string.x_hour),
                 oldLabel = getString(R.string.old)
             )
             binding.dose1TableDiseaseVaccineValue.text =
@@ -197,7 +225,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 )
                 binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName()
                     ?: vaccines[1].vaccineMedicalProduct
-                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination.formatDate()
+                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
                     "${
                         vaccines[1].getTargetedDisease()
@@ -250,7 +278,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.testLayout.visibility = View.VISIBLE
             binding.testBoxTitle.text =
                 tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
-            binding.testBoxDate.text = tests[0].dateOfSampleCollection.formatDate()
+            binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
             binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
             binding.testTableTargetValue.text =
                 tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
@@ -275,10 +303,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName()
                 ?: recoveries[0].targetedDisease
             binding.recoveryTableFirstDateValue.text =
-                recoveries[0].dateOfFirstPositiveTest.formatDate()
+                recoveries[0].dateOfFirstPositiveTest?.formatDate()
             binding.recoveryTableValidFromValue.text =
-                recoveries[0].certificateValidFrom.formatDate()
-            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo.formatDate()
+                recoveries[0].certificateValidFrom?.formatDate()
+            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo?.formatDate()
             binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
             binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
             binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
@@ -290,22 +318,21 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
 
     private fun initCountries() {
-        val context = context ?: return
-        val departureCountry =
-            CountryColorCode.fromValue(persistenceManager.getDepartureValue())
-                ?.getDisplayName(context) ?: getString(R.string.pick_country)
-        val destinationCountry =
-            Countries.getCountryNameResId(persistenceManager.getDestinationValue())
-                ?.let { getString(it) } ?: getString(R.string.pick_country)
-        binding.layoutCountryPicker.departureValue.text = departureCountry
-        binding.layoutCountryPicker.destinationValue.text = destinationCountry
+
+        appConfigUtil.getCountries(true)?.let { countries ->
+            val departureCountry = countries.find { it.code == persistenceManager.getDepartureValue() }?.name() ?: getString(R.string.pick_country)
+            val destinationCountry =
+                countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = departureCountry
+            binding.layoutCountryPicker.destinationValue.text = destinationCountry
+        }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionColorCodePicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionCountryPicker())
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())
         }
     }
 

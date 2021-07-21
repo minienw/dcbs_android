@@ -71,7 +71,7 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
     }
 
     private fun formatTrustListDate(trustListDate: Date): String {
-        val outputFormat = SimpleDateFormat("d MMM yyyy HH:m", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("d MMM yyyy HH:mm", Locale.getDefault())
         return outputFormat.format(trustListDate)
     }
 }

@@ -21,5 +21,7 @@
     <color name="darkened_blue">#002D88</color>
     <color name="expired_red">#ff7254</color>
     <color name="primary_blue_opacity10">#1a154273</color>
+    <color name="primary_blue_opacity30">#4d154273</color>
     <color name="white_opacity70">#b3ffffff</color>
+    <color name="undecided_gray">#DDE2E8</color>
 </resources>

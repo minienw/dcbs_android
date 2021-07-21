@@ -16,6 +16,7 @@ import java.io.File
  */
 
 interface CachedAppConfigUseCase {
+    fun getCachedAppConfigRaw(): String?
     fun getCachedAppConfig(): AppConfig?
     fun getCachedAppConfigMaxValidityHours(): Int
     fun getCachedAppConfigVaccinationEventValidity(): Int
@@ -28,6 +29,11 @@ class CachedAppConfigUseCaseImpl constructor(
     private val cacheDir: String,
     private val moshi: Moshi
 ) : CachedAppConfigUseCase {
+
+    override  fun getCachedAppConfigRaw(): String? {
+        val configFile = File(cacheDir, "config.json")
+        return appConfigStorageManager.getFileAsBufferedSource(configFile)?.readUtf8()
+    }
 
     override fun getCachedAppConfig(): AppConfig? {
         val configFile = File(cacheDir, "config.json")

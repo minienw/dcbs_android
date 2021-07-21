@@ -25,7 +25,7 @@ class DCCVaccine(
     @SerializedName("sd")
     val totalSeriesOfDoses: Int,
     @SerializedName("dt")
-    val dateOfVaccination: String,
+    val dateOfVaccination: String?,
     @SerializedName("co")
     val countryOfVaccination: String,
     @SerializedName("is")
@@ -54,7 +54,7 @@ class DCCVaccine(
         return doseNumber >= totalSeriesOfDoses
     }
 
-    fun isCountryValid() : Boolean {
-        return IsoCountries.countryForCode(countryOfVaccination) != null
+    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
+        return countries.find {it.code == countryOfVaccination } != null
     }
 }

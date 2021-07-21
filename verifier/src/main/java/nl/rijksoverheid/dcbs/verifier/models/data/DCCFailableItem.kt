@@ -24,11 +24,12 @@ class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null) {
             DCCFailableType.InvalidCountryCode -> context.getString(R.string.rule_invalid_country_code)
             DCCFailableType.InvalidDateOfBirth -> context.getString(R.string.rule_invalid_date_of_birth)
             DCCFailableType.InvalidVaccineDate -> context.getString(R.string.rule_invalid_vaccine_date)
-            DCCFailableType.InvalidVaccine14Days -> context.getString(R.string.rule_vaccination_14_days)
             DCCFailableType.InvalidTestDate -> context.getString(R.string.rule_invalid_test_date)
             DCCFailableType.InvalidRecoveryFirstTestDate -> context.getString(R.string.rule_invalid_recovery_first_test_date)
             DCCFailableType.InvalidRecoveryFromDate -> context.getString(R.string.rule_invalid_recovery_from_date)
             DCCFailableType.InvalidRecoveryToDate -> context.getString(R.string.rule_invalid_recovery_to_date)
+            DCCFailableType.InvalidVaccine14Days -> context.getString(R.string.rule_vaccination_14_days)
+            DCCFailableType.UndecidableFrom -> context.getString(R.string.result_inconclusive_message)
         }
     }
 }
@@ -41,6 +42,7 @@ enum class DCCFailableType {
     NeedFullVaccination,
     RecoveryNotValid,
     RequireSecondTest,
+
     InvalidTestResult,
     InvalidTestType,
     InvalidTargetDisease,
@@ -55,5 +57,6 @@ enum class DCCFailableType {
     InvalidRecoveryFirstTestDate,
     InvalidRecoveryFromDate,
     InvalidRecoveryToDate,
-    InvalidVaccine14Days
+    InvalidVaccine14Days,
+    UndecidableFrom
 }

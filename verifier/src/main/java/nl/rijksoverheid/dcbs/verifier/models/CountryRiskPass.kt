@@ -11,16 +11,13 @@ import nl.rijksoverheid.dcbs.verifier.R
  *
  */
 
-enum class CountryColorCode(val value: String) {
-    GREEN("green"),
-    YELLOW("yellow"),
-    ORANGE("orange"),
-    ORANGE_HIGH_INCIDENCE("orange_high_incidence"),
-    ORANGE_SHIPS_FLIGHT("orange_very_high_risk"),
-    RED("red");
+enum class CountryRiskPass(val value: String) {
+    Pass("pass"),
+    Inconclusive("inconclusive"),
+    NLRules("nl_rules");
 
     companion object {
-        fun fromValue(value: String?): CountryColorCode? {
+        fun fromValue(value: String?): CountryRiskPass? {
             return values().firstOrNull { it.value == value }
         }
     }
