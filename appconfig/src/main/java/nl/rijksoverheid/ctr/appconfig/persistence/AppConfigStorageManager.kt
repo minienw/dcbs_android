@@ -37,8 +37,9 @@ class AppConfigStorageManagerImpl(private val cacheDir: String): AppConfigStorag
     override fun areConfigFilesPresent(): Boolean {
         val configFile = File(cacheDir, "config.json")
         val publicKeysFile = File(cacheDir, "public_keys.json")
+        val businessRulesFile = File(cacheDir, "business_rules.json")
 
-        return configFile.exists() && publicKeysFile.exists()
+        return configFile.exists() && publicKeysFile.exists() && businessRulesFile.exists()
     }
 
     override fun getFileAsBufferedSource(file: File): BufferedSource? {

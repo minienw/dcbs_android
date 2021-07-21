@@ -93,6 +93,7 @@ dependencies {
     implementation project(":api")
     implementation project(':mobilecore')
     implementation project(":qrscanner")
+    implementation project(':engine')
 
     implementation "com.github.lisawray.groupie:groupie:${groupie_version}"
     implementation "com.github.lisawray.groupie:groupie-viewbinding:${groupie_version}"
@@ -127,5 +128,9 @@ dependencies {
     accImplementation "com.google.firebase:firebase-crashlytics-ktx:$crashlytics_version"
 
     debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0-rc1'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3'
+
 }
 

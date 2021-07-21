@@ -50,7 +50,8 @@ class AppConfigViewModelImpl(
             if (configResult is ConfigResult.Success) {
                 persistConfigUseCase.persist(
                     appConfigContents = configResult.appConfig,
-                    publicKeyContents = configResult.publicKeys
+                    publicKeyContents = configResult.publicKeys,
+                    businessRulesContent = configResult.businessRules,
                 )
                 cachedAppConfigUseCase.getCachedPublicKeys()?.let {
                     loadPublicKeysUseCase.load(it)

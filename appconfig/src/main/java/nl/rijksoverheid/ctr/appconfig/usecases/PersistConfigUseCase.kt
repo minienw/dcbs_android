@@ -17,7 +17,7 @@ import java.io.File
  */
 
 interface PersistConfigUseCase {
-    suspend fun persist(appConfigContents: String, publicKeyContents: String): StorageResult
+    suspend fun persist(appConfigContents: String, publicKeyContents: String, businessRulesContent: String): StorageResult
 }
 
 class PersistConfigUseCaseImpl(
@@ -27,7 +27,7 @@ class PersistConfigUseCaseImpl(
     private val cacheDir: String,
 ) : PersistConfigUseCase {
 
-    override suspend fun persist(appConfigContents: String, publicKeyContents: String) =
+    override suspend fun persist(appConfigContents: String, publicKeyContents: String, businessRulesContent: String) =
         withContext(Dispatchers.IO) {
 
             val publicKeysFile = File(cacheDir, "public_keys.json")
@@ -40,6 +40,12 @@ class PersistConfigUseCaseImpl(
             val configStorageResult = appConfigStorageManager.storageFile(configFile, appConfigContents)
             if (configStorageResult is StorageResult.Error) {
                 return@withContext configStorageResult
+            }
+
+            val businessRulesFile = File(cacheDir, "business_rules.json")
+            val businessRulesStorageResult = appConfigStorageManager.storageFile(businessRulesFile, businessRulesContent)
+            if (businessRulesStorageResult is StorageResult.Error) {
+                return@withContext businessRulesStorageResult
             }
 
             return@withContext StorageResult.Success

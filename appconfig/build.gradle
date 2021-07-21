@@ -51,6 +51,7 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     implementation "androidx.preference:preference-ktx:$preference_version"
     implementation "com.google.android.material:material:${material_version}"
+    implementation project(path: ':engine')
 
 
     kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi_version"

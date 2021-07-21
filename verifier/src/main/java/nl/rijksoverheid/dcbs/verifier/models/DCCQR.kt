@@ -1,5 +1,14 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import dgca.verifier.app.engine.*
+import dgca.verifier.app.engine.data.CertificateType
+import dgca.verifier.app.engine.data.ExternalParameter
+import dgca.verifier.app.engine.data.Rule
+import dgca.verifier.app.engine.data.source.local.rules.DefaultRulesLocalDataSource
+import dgca.verifier.app.engine.data.source.remote.rules.DefaultRulesRemoteDataSource
+import dgca.verifier.app.engine.data.source.rules.DefaultRulesRepository
+import dgca.verifier.app.engine.domain.rules.DefaultGetRulesUseCase
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
@@ -7,7 +16,13 @@ import nl.rijksoverheid.dcbs.verifier.utils.daysElapsed
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
+import timber.log.Timber
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.util.*
+
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -51,17 +66,92 @@ class DCCQR(
         return (expirationTime ?: 0) > Date().time
     }
 
-    fun processBusinessRules(from: CountryRisk, to: CountryRisk, countries: List<CountryRisk>): List<DCCFailableItem> {
+    private fun DCC.getEngineCertificateType(): CertificateType {
+        return when {
+            this.recoveries?.isNotEmpty() == true -> CertificateType.RECOVERY
+            this.vaccines?.isNotEmpty() == true -> CertificateType.VACCINATION
+            this.tests?.isNotEmpty() == true -> CertificateType.TEST
+            else -> CertificateType.TEST
+        }
+    }
+
+
+    fun processBusinessRules(
+        from: CountryRisk,
+        to: CountryRisk,
+        countries: List<CountryRisk>,
+        businessRules: List<Rule>
+    ): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
         if (from.isIndecisive() || to.isIndecisive()) {
             return listOf(DCCFailableItem(DCCFailableType.UndecidableFrom))
         }
-        failingItems.addAll(processGeneralRules(countries))
 
+        if ((from.isColourCode != null && from.isColourCode) || (to.isColourCode != null && to.isColourCode)) {
+            failingItems.addAll(processGeneralRules(countries))
+
+        } else {
+            failingItems.addAll(
+                filterByRuleEngine(
+                    from = from,
+                    to = to,
+                    businessRules = businessRules
+                )
+            )
+
+        }
         if (to.getPassType() == CountryRiskPass.NLRules) {
             failingItems.addAll(processNLBusinessRules(from, to))
         }
 
+        return failingItems
+    }
+
+    private fun filterByRuleEngine(
+        from: CountryRisk,
+        to: CountryRisk,
+        businessRules: List<Rule>
+    ): List<DCCFailableItem> {
+        Timber.d("DCCQR ${businessRules[0]}")
+
+        val objectMapper = ObjectMapper()
+        val certLogicEngine = DefaultCertLogicEngine(
+            jsonLogicValidator = DefaultJsonLogicValidator(),
+            affectedFieldsDataRetriever = DefaultAffectedFieldsDataRetriever(
+                objectMapper.readTree(
+                    JSON_SCHEMA_V1
+                ), objectMapper
+            )
+        )
+        val valueSetsMap = mutableMapOf<String, List<String>>()
+        val instantExpirationTime: Instant = Instant.ofEpochMilli(this.expirationTime!!)
+        val instantIssuedAt: Instant = Instant.ofEpochMilli(this.issuedAt!!)
+
+        val externalParameter = ExternalParameter(
+            validationClock = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id)),
+            valueSets = valueSetsMap,
+            countryCode = to.code ?: "",
+            exp = ZonedDateTime.ofInstant(instantExpirationTime, ZoneId.systemDefault()),
+            iat = ZonedDateTime.ofInstant(instantIssuedAt, ZoneId.systemDefault()),
+            issuerCountryCode = issuer ?: "",
+            region = "",
+            kid = "",
+        )
+        val validationResults =
+            certLogicEngine.validate(
+                CertificateType.VACCINATION,
+                "1.3.0",
+                businessRules,
+                externalParameter,
+                "{}"
+            )
+        val failingItems = ArrayList<DCCFailableItem>()
+        validationResults.map { validationResult ->
+            if (validationResult.result == Result.FAIL) {
+                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestType))
+                Timber.d(validationResult.rule.descriptions.toString())
+            }
+        }
         return failingItems
     }
 

@@ -12,6 +12,8 @@ import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import org.koin.android.ext.android.inject
+import timber.log.Timber
+import java.util.*
 
 class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
 
@@ -22,17 +24,23 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentCountryPickerBinding.bind(view)
+        val businessRules = appConfigUtil.getBusinessRules()
         appConfigUtil.getCountries(true)
-            ?.filter { it.getPassType() == CountryRiskPass.NLRules || it.code == context?.getString(R.string.country_other) }
+            ?.filter {
+                businessRules?.find { rule ->
+                    rule.countryCode.toUpperCase(Locale.getDefault()) == it.code
+                } != null || it.code == context?.getString(R.string.country_other)
+            }
             ?.let { countries ->
                 GroupAdapter<GroupieViewHolder>()
                     .run {
                         addAll(countries.map { PickerAdapterItem(it.name()) })
                         binding.recyclerView.adapter = this
                         setOnItemClickListener { item, _ ->
-                            countries.find { it.name() == (item as? PickerAdapterItem)?.title }?.let { country ->
-                                persistenceManager.saveDestinationValue(country.code ?: "")
-                            }
+                            countries.find { it.name() == (item as? PickerAdapterItem)?.title }
+                                ?.let { country ->
+                                    persistenceManager.saveDestinationValue(country.code ?: "")
+                                }
                             findNavController().popBackStack()
                         }
                     }
