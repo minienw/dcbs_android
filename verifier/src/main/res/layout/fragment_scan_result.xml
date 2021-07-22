@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/red"
+    android:background="@color/undecided_gray"
     tools:ignore="MissingConstraints,ContentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="32dp"
-                        android:src="@drawable/ic_invalid_qr_code"
+                        android:src="@drawable/ic_valid_qr_code"
                         app:layout_constraintEnd_toStartOf="@id/title"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +96,7 @@
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="10dp"
-                        android:text="@string/invalid_for_journey"
+                        android:text="@string/result_inconclusive_title"
                         android:textAlignment="textStart"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="@id/image"
