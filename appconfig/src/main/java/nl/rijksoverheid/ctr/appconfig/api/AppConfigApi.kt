@@ -25,4 +25,14 @@ interface AppConfigApi {
     @SignedRequest
     @Streaming
     suspend fun getPublicKeys(): ResponseBody
+
+    @GET("business_rules")
+    @SignedRequest
+    @Streaming
+    suspend fun getBusinessRules(): ResponseBody
+
+    @GET("value_sets")
+    @SignedRequest
+    @Streaming
+    suspend fun getValueSets(): ResponseBody
 }

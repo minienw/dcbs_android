@@ -42,7 +42,9 @@ class AppConfigUseCaseImpl(
         try {
             val success = ConfigResult.Success(
                 appConfig = configRepository.getConfig(),
-                publicKeys = configRepository.getPublicKeys()
+                publicKeys = configRepository.getPublicKeys(),
+                businessRules = configRepository.getBusinessRules(),
+                valueSets = configRepository.getValueSets(),
             )
             appConfigPersistenceManager.saveAppConfigLastFetchedSeconds(
                 OffsetDateTime.now(clock).toEpochSecond()
