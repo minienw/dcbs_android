@@ -3,10 +3,11 @@ package nl.rijksoverheid.dcbs.verifier.models
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import dgca.verifier.app.engine.*
-import dgca.verifier.app.engine.data.CertificateType
-import dgca.verifier.app.engine.data.ExternalParameter
-import dgca.verifier.app.engine.data.Rule
+import dgca.verifier.app.engine.DefaultAffectedFieldsDataRetriever
+import dgca.verifier.app.engine.DefaultCertLogicEngine
+import dgca.verifier.app.engine.DefaultJsonLogicValidator
+import dgca.verifier.app.engine.Result
+import dgca.verifier.app.engine.data.*
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
@@ -14,7 +15,6 @@ import nl.rijksoverheid.dcbs.verifier.utils.daysElapsed
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
-import timber.log.Timber
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -31,9 +31,8 @@ import java.util.*
  */
 
 class DCCQR(
-    val credentialVersion: Int?,
-    val issuer: String?, // Country for example France
-    val issuedAt: Long?, // When was this QR issued at in seconds
+    private val issuer: String?, // Country for example France
+    private val issuedAt: Long?, // When was this QR issued at in seconds
     private val expirationTime: Long?, // When does this QR expire in seconds
     val dcc: DCC?
 ) {
@@ -50,18 +49,6 @@ class DCCQR(
     fun getBirthDate(): String? {
 
         return (dcc?.dateOfBirth ?: "").formatDate()
-    }
-
-    fun isSpecimen(): Boolean {
-        return false
-    }
-
-    fun isDomesticDcc(): Boolean {
-        return false
-    }
-
-    fun isVerified(): Boolean {
-        return (expirationTime ?: 0) > Date().time
     }
 
     private fun DCC.getEngineCertificateType(): CertificateType {
@@ -87,6 +74,27 @@ class DCCQR(
             valueSetsMap[entrySetItem.key] = nestedKeysList
         }
         return valueSetsMap
+    }
+
+    private fun List<Rule>.filterRules(
+        validationClock: ZonedDateTime,
+        issuanceCountryIsoCode: String,
+        certificateType: CertificateType,
+    ): List<Rule> {
+        val acceptanceRules = this.toMutableList()
+        if (issuanceCountryIsoCode.isNotBlank()) {
+            forEach { rule ->
+                val validDate = rule.validFrom < validationClock && rule.validTo > validationClock
+                val validType =
+                    rule.ruleCertificateType.name == certificateType.name || rule.ruleCertificateType == RuleCertificateType.GENERAL
+                val validCountry =
+                    rule.countryCode.toUpperCase(Locale.getDefault()) == issuanceCountryIsoCode
+                if (!validDate || !validType || !validCountry) {
+                    acceptanceRules.remove(rule)
+                }
+            }
+        }
+        return acceptanceRules
     }
 
 
@@ -145,29 +153,38 @@ class DCCQR(
         val valueSetsMap = valueSets.getValueSetMap()
         val instantExpirationTime: Instant = Instant.ofEpochMilli(this.expirationTime!!)
         val instantIssuedAt: Instant = Instant.ofEpochMilli(this.issuedAt!!)
-
         val externalParameter = ExternalParameter(
             validationClock = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id)),
             valueSets = valueSetsMap,
             countryCode = to.code ?: "",
             exp = ZonedDateTime.ofInstant(instantExpirationTime, ZoneId.systemDefault()),
             iat = ZonedDateTime.ofInstant(instantIssuedAt, ZoneId.systemDefault()),
-            issuerCountryCode = issuer ?: "",
+            issuerCountryCode = to.code ?: "",
             kid = "",
         )
-        Timber.d(payload)
+
+        val payloadData: String = JsonParser.parseString(payload).asJsonObject.get("dcc").toString()
         val validationResults =
             certLogicEngine.validate(
                 dcc.getEngineCertificateType(),
                 dcc.version,
-                businessRules,
+                businessRules.filterRules(
+                    ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id)),
+                    to.code ?: "",
+                    dcc.getEngineCertificateType(),
+                ),
                 externalParameter,
-                payload
+                payloadData
             )
         val failingItems = ArrayList<DCCFailableItem>()
         validationResults.map { validationResult ->
             if (validationResult.result == Result.FAIL) {
-                failingItems.add(DCCFailableItem(DCCFailableType.CustomFailure, customMessage = validationResult.rule.descriptions["en"]))
+                failingItems.add(
+                    DCCFailableItem(
+                        DCCFailableType.CustomFailure,
+                        customMessage = validationResult.rule.descriptions["en"]
+                    )
+                )
             }
         }
         return failingItems
