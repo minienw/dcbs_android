@@ -28,7 +28,6 @@ import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /*

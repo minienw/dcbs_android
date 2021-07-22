@@ -8,11 +8,9 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentCountryPickerBinding
-import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import org.koin.android.ext.android.inject
-import timber.log.Timber
 import java.util.*
 
 class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {

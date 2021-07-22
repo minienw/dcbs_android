@@ -129,8 +129,8 @@ dependencies {
 
     debugImplementation "androidx.fragment:fragment-testing:$fragment_version"
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.0-rc1'
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.3'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jackson_databind"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
 
 }
 
