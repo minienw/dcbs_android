@@ -28,6 +28,7 @@ import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import org.koin.android.ext.android.inject
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /*
@@ -64,32 +65,42 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
 
         args.data.verifiedQr?.let { verifiedQr ->
+            appConfigUtil.getValueSetsRaw()?.let { valueSetsRaw ->
+                appConfigUtil.getBusinessRules()?.let { businessRules ->
+                    appConfigUtil.getCountries(true)?.let { countries ->
+                        val from =
+                            countries.find { it.code == persistenceManager.getDepartureValue() }
+                        val to =
+                            countries.find { it.code == persistenceManager.getDestinationValue() }
+                        if (from != null && to != null) {
+                            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                            val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                            val failedItems =
+                                dccQR.processBusinessRules(
+                                    from,
+                                    to,
+                                    countries,
+                                    businessRules,
+                                    valueSetsRaw,
+                                    verifiedQr.data
+                                )
 
-            appConfigUtil.getBusinessRules()?.let { businessRules ->
-                appConfigUtil.getCountries(true)?.let { countries ->
-                    val from = countries.find { it.code == persistenceManager.getDepartureValue() }
-                    val to = countries.find { it.code == persistenceManager.getDestinationValue() }
-                    if (from != null && to != null) {
-                        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-                        val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-                        val failedItems =
-                            dccQR.processBusinessRules(from, to, countries, businessRules)
-
-                        when {
-                            failedItems.isEmpty() -> setScreenValid()
-                            failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
-                                setBusinessErrorMessages(failedItems)
-                                setScreenUndecided()
+                            when {
+                                failedItems.isEmpty() -> setScreenValid()
+                                failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
+                                    setBusinessErrorMessages(failedItems)
+                                    setScreenUndecided()
+                                }
+                                else -> {
+                                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                                    setBusinessErrorMessages(failedItems)
+                                    setScreenInvalid(R.drawable.ic_valid_qr_code)
+                                }
                             }
-                            else -> {
-                                binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                                setBusinessErrorMessages(failedItems)
-                                setScreenInvalid(R.drawable.ic_valid_qr_code)
-                            }
+                            binding.informationLayout.visibility = View.VISIBLE
+                            binding.descriptionLayout.visibility = View.GONE
+                            presentPersonalDetails(verifiedQr)
                         }
-                        binding.informationLayout.visibility = View.VISIBLE
-                        binding.descriptionLayout.visibility = View.GONE
-                        presentPersonalDetails(verifiedQr)
                     }
                 }
             }

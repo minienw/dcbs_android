@@ -8,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import dgca.verifier.app.engine.data.Rule
+import dgca.verifier.app.engine.data.ValueSet
 import dgca.verifier.app.engine.data.source.remote.rules.RuleRemote
 import dgca.verifier.app.engine.data.source.remote.rules.toRules
 import nl.rijksoverheid.ctr.appconfig.CachedAppConfigUseCase
@@ -16,7 +17,6 @@ import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
 import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import org.json.JSONObject
-import timber.log.Timber
 import java.util.*
 
 /*
@@ -29,6 +29,7 @@ import java.util.*
 interface AppConfigCachedUtil {
     fun getCountries(isOtherIncluded: Boolean): List<CountryRisk>?
     fun getBusinessRules(): List<Rule>?
+    fun getValueSetsRaw(): String?
 }
 
 class AppConfigCachedUtilImpl(
@@ -39,7 +40,6 @@ class AppConfigCachedUtilImpl(
     override fun getCountries(isOtherIncluded: Boolean): List<CountryRisk>? {
         cachedAppConfigUseCase.getCachedAppConfigRaw()?.let { appConfig ->
             val jsonString = JSONObject(appConfig).getString("countryColors")
-            Timber.d(jsonString)
             val type = object : TypeToken<List<CountryRisk>>() {}.type
             val countries = Gson().fromJson<ArrayList<CountryRisk>>(jsonString, type)
             if (isOtherIncluded) {
@@ -56,12 +56,14 @@ class AppConfigCachedUtilImpl(
             mapper.findAndRegisterModules();
             val remoteRules = mapper.readValue(businessRules,
                 object : TypeReference<List<RuleRemote>>() {})
-            Timber.d(remoteRules.size.toString())
-            Timber.d(remoteRules[0].toString())
             return remoteRules.toRules()
         }
         return null
 
+    }
+
+    override fun getValueSetsRaw(): String? {
+        return cachedAppConfigUseCase.getCachedValueSetsRaw()
     }
 
     private fun getOther(): CountryRisk {

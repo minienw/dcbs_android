@@ -1,14 +1,12 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.JsonElement
+import com.google.gson.JsonParser
 import dgca.verifier.app.engine.*
 import dgca.verifier.app.engine.data.CertificateType
 import dgca.verifier.app.engine.data.ExternalParameter
 import dgca.verifier.app.engine.data.Rule
-import dgca.verifier.app.engine.data.source.local.rules.DefaultRulesLocalDataSource
-import dgca.verifier.app.engine.data.source.remote.rules.DefaultRulesRemoteDataSource
-import dgca.verifier.app.engine.data.source.rules.DefaultRulesRepository
-import dgca.verifier.app.engine.domain.rules.DefaultGetRulesUseCase
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
@@ -75,12 +73,30 @@ class DCCQR(
         }
     }
 
+    private fun String.getValueSetMap(): Map<String, List<String>> {
+        val valueSetsMap = mutableMapOf<String, List<String>>()
+        val jsonObject = JsonParser.parseString(this).asJsonObject
+        val entrySet: MutableSet<MutableMap.MutableEntry<String, JsonElement>> =
+            jsonObject.entrySet()
+        entrySet.forEach { entrySetItem ->
+            val nestedKeysList = mutableListOf<String>()
+            val nestedEntrySet = entrySetItem.value.asJsonObject.entrySet()
+            nestedEntrySet.forEach { nestedEntrySetItem ->
+                nestedKeysList.add(nestedEntrySetItem.key)
+            }
+            valueSetsMap[entrySetItem.key] = nestedKeysList
+        }
+        return valueSetsMap
+    }
+
 
     fun processBusinessRules(
         from: CountryRisk,
         to: CountryRisk,
         countries: List<CountryRisk>,
-        businessRules: List<Rule>
+        businessRules: List<Rule>,
+        valueSets: String,
+        payload: String,
     ): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
         if (from.isIndecisive() || to.isIndecisive()) {
@@ -89,15 +105,18 @@ class DCCQR(
 
         if ((from.isColourCode != null && from.isColourCode) || (to.isColourCode != null && to.isColourCode)) {
             failingItems.addAll(processGeneralRules(countries))
-
         } else {
-            failingItems.addAll(
-                filterByRuleEngine(
-                    from = from,
-                    to = to,
-                    businessRules = businessRules
+            dcc?.let { dcc ->
+                failingItems.addAll(
+                    filterByRuleEngine(
+                        to = to,
+                        businessRules = businessRules,
+                        payload = payload,
+                        dcc = dcc,
+                        valueSets = valueSets,
+                    )
                 )
-            )
+            }
 
         }
         if (to.getPassType() == CountryRiskPass.NLRules) {
@@ -108,12 +127,12 @@ class DCCQR(
     }
 
     private fun filterByRuleEngine(
-        from: CountryRisk,
         to: CountryRisk,
-        businessRules: List<Rule>
+        businessRules: List<Rule>,
+        payload: String,
+        dcc: DCC,
+        valueSets: String,
     ): List<DCCFailableItem> {
-        Timber.d("DCCQR ${businessRules[0]}")
-
         val objectMapper = ObjectMapper()
         val certLogicEngine = DefaultCertLogicEngine(
             jsonLogicValidator = DefaultJsonLogicValidator(),
@@ -123,7 +142,7 @@ class DCCQR(
                 ), objectMapper
             )
         )
-        val valueSetsMap = mutableMapOf<String, List<String>>()
+        val valueSetsMap = valueSets.getValueSetMap()
         val instantExpirationTime: Instant = Instant.ofEpochMilli(this.expirationTime!!)
         val instantIssuedAt: Instant = Instant.ofEpochMilli(this.issuedAt!!)
 
@@ -134,22 +153,21 @@ class DCCQR(
             exp = ZonedDateTime.ofInstant(instantExpirationTime, ZoneId.systemDefault()),
             iat = ZonedDateTime.ofInstant(instantIssuedAt, ZoneId.systemDefault()),
             issuerCountryCode = issuer ?: "",
-            region = "",
             kid = "",
         )
+        Timber.d(payload)
         val validationResults =
             certLogicEngine.validate(
-                CertificateType.VACCINATION,
-                "1.3.0",
+                dcc.getEngineCertificateType(),
+                dcc.version,
                 businessRules,
                 externalParameter,
-                "{}"
+                payload
             )
         val failingItems = ArrayList<DCCFailableItem>()
         validationResults.map { validationResult ->
             if (validationResult.result == Result.FAIL) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestType))
-                Timber.d(validationResult.rule.descriptions.toString())
+                failingItems.add(DCCFailableItem(DCCFailableType.CustomFailure, customMessage = validationResult.rule.descriptions["en"]))
             }
         }
         return failingItems

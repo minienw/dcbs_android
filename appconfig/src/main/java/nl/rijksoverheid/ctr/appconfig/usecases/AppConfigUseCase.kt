@@ -44,6 +44,7 @@ class AppConfigUseCaseImpl(
                 appConfig = configRepository.getConfig(),
                 publicKeys = configRepository.getPublicKeys(),
                 businessRules = configRepository.getBusinessRules(),
+                valueSets = configRepository.getValueSets(),
             )
             appConfigPersistenceManager.saveAppConfigLastFetchedSeconds(
                 OffsetDateTime.now(clock).toEpochSecond()

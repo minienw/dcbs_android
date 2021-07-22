@@ -52,6 +52,7 @@ class AppConfigViewModelImpl(
                     appConfigContents = configResult.appConfig,
                     publicKeyContents = configResult.publicKeys,
                     businessRulesContent = configResult.businessRules,
+                    valueSetsContent = configResult.valueSets,
                 )
                 cachedAppConfigUseCase.getCachedPublicKeys()?.let {
                     loadPublicKeysUseCase.load(it)

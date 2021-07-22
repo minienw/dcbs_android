@@ -14,6 +14,7 @@ interface ConfigRepository {
     suspend fun getConfig(): String
     suspend fun getPublicKeys(): String
     suspend fun getBusinessRules(): String
+    suspend fun getValueSets(): String
 
 }
 
@@ -29,5 +30,9 @@ class ConfigRepositoryImpl(private val api: AppConfigApi) : ConfigRepository {
 
     override suspend fun getBusinessRules(): String {
         return api.getBusinessRules().source().readUtf8()
+    }
+
+    override suspend fun getValueSets(): String {
+        return api.getValueSets().source().readUtf8()
     }
 }

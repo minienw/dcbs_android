@@ -24,6 +24,7 @@ interface CachedAppConfigUseCase {
     fun getCachedPublicKeys(): BufferedSource?
     fun getCachedBusinessRulesRaw(): String?
     fun getProviderName(providerIdentifier: String?): String
+    fun getCachedValueSetsRaw(): String?
 }
 
 class CachedAppConfigUseCaseImpl constructor(
@@ -62,6 +63,12 @@ class CachedAppConfigUseCaseImpl constructor(
         val businessRulesFile = File(cacheDir, "business_rules.json")
         return appConfigStorageManager.getFileAsBufferedSource(businessRulesFile)?.readUtf8()
     }
+
+    override fun getCachedValueSetsRaw(): String? {
+        val valueSetsFile = File(cacheDir, "value_sets.json")
+        return appConfigStorageManager.getFileAsBufferedSource(valueSetsFile)?.readUtf8()
+    }
+
 
     override fun getProviderName(providerIdentifier: String?): String {
         return getCachedAppConfig()?.providerIdentifiers?.firstOrNull { provider -> provider.code == providerIdentifier }?.name
