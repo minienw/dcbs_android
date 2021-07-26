@@ -301,8 +301,6 @@ abstract class QrCodeScannerFragment : Fragment(R.layout.fragment_scanner) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        requireActivity().requestedOrientation =
-            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
     }
 
     /**

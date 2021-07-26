@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/undecided_gray"
+    tools:ignore="MissingConstraints,ContentDescription">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_close" />
+
+        <LinearLayout
+            android:id="@+id/btn_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:elevation="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/toolbar">
+
+            <TextView
+                android:id="@+id/pause_value"
+                style="@style/Montserrat_Bold_White"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_black_circle"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textSize="15sp"
+                tools:text="59" />
+
+            <TextView
+                android:id="@+id/pause_label"
+                style="@style/Montserrat_SemiBold_Black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/pause"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@+id/button_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/top_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:src="@drawable/ic_valid_qr_code"
+                        app:layout_constraintEnd_toStartOf="@id/title"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/title"
+                        style="@style/Montserrat_Bold_White"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:text="@string/result_inconclusive_title"
+                        android:textAlignment="textStart"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="@id/image"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/image"
+                        app:layout_constraintTop_toTopOf="@id/image" />
+
+                    <include
+                        android:id="@+id/layout_country_picker"
+                        layout="@layout/layout_country_picker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/image" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView_business_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_business_error"
+                    tools:visibility="gone" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/information_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <TextView
+                        android:id="@+id/name"
+                        style="@style/Montserrat_Bold_Black"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="32dp"
+                        android:textSize="26sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Maiko van Young" />
+
+                    <TextView
+                        android:id="@+id/date_of_birth"
+                        style="@style/Montserrat_Bold_Black"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/item_date_of_birth_x"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toEndOf="@id/name"
+                        app:layout_constraintStart_toStartOf="@id/name"
+                        app:layout_constraintTop_toBottomOf="@id/name" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/vaccine_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="@id/name"
+                        app:layout_constraintStart_toStartOf="@id/name"
+                        app:layout_constraintTop_toBottomOf="@id/date_of_birth"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:id="@+id/dose1_box_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_parliament_rounded_opacity10"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            app:layout_constraintEnd_toStartOf="@id/dose2_box_layout"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/dose1_box_title"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/item_vaccin_x_dose_x_x"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/dose1_status"
+                                style="@style/Montserrat_Bold_Red"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center"
+                                android:textAllCaps="true"
+                                android:textSize="15sp"
+                                tools:text="INCOMPLETE" />
+
+                            <TextView
+                                android:id="@+id/dose1_box_date"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:gravity="center"
+                                android:textSize="13sp"
+                                tools:text="26.05.2021" />
+
+                            <TextView
+                                android:id="@+id/dose1_box_time_ago"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                tools:text="10 days old" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/dose2_box_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_parliament_rounded_opacity10"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toEndOf="@id/dose1_box_layout"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/dose2_box_title"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/item_dose_x_x"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/dose2_box_name"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                tools:text="Biontech/Pfizer" />
+
+                            <TextView
+                                android:id="@+id/dose2_box_date"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                tools:text="26.05.2021" />
+
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/dose1_table_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/dose1_box_layout">
+
+                            <TextView
+                                android:id="@+id/dose1_table_title"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/item_dose_x"
+                                android:textSize="15sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_disease_vaccine_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_disease"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_disease_vaccine_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_disease_vaccine_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_disease_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_disease_vaccine_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_disease_vaccine_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_title"
+                                tools:text="Covid-19 | mrna" />
+
+                            <View
+                                android:id="@+id/dose1_table_disease_vaccine_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_member_state_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_country"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_member_state_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_member_state_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_member_state_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_member_state_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_member_state_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_vaccine_separator"
+                                tools:text="The Netherlands Ministry of Health" />
+
+                            <View
+                                android:id="@+id/dose1_table_member_state_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_member_state_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_manufacturer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_manufacturer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_manufacturer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_manufacturer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_manufacturer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_manufacturer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_member_state_separator" />
+
+                            <View
+                                android:id="@+id/dose1_table_manufacturer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_issuer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_certificate_issuer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_issuer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_issuer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_issuer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_issuer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_manufacturer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/dose1_table_issuer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_certificate_identifier_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_identifier"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_certificate_identifier_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_certificate_identifier_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_certificate_identifier_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_certificate_identifier_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_certificate_identifier_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_issuer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/dose1_table_certificate_identifier_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_certificate_identifier_value" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/dose2_table_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/dose1_table_layout">
+
+                            <TextView
+                                android:id="@+id/dose2_table_title"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/item_dose_x"
+                                android:textSize="15sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_disease_vaccine_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_disease"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_disease_vaccine_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_disease_vaccine_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_disease_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_disease_vaccine_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_disease_vaccine_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_title"
+                                tools:text="Covid-19 | mrna" />
+
+                            <View
+                                android:id="@+id/dose2_table_disease_vaccine_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_member_state_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_country"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_member_state_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_member_state_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_member_state_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_member_state_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_member_state_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_vaccine_separator"
+                                tools:text="The Netherlands Ministry of Health" />
+
+                            <View
+                                android:id="@+id/dose2_table_member_state_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_manufacturer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_manufacturer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_manufacturer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_manufacturer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_manufacturer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_manufacturer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_separator" />
+
+                            <View
+                                android:id="@+id/dose2_table_manufacturer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_issuer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_certificate_issuer"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_issuer_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_issuer_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_issuer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_issuer_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/dose2_table_issuer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_certificate_identifier_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_identifier"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_certificate_identifier_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_certificate_identifier_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_certificate_identifier_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_certificate_identifier_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_certificate_identifier_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_issuer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/dose2_table_certificate_identifier_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_certificate_identifier_value" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/test_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="@id/name"
+                        app:layout_constraintStart_toStartOf="@id/name"
+                        app:layout_constraintTop_toBottomOf="@id/vaccine_layout"
+                        tools:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/test_box_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_parliament_rounded_opacity10"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/test_box_title"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/test_box_date"
+                                style="@style/Montserrat_SemiBold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:textSize="13sp"
+                                tools:text="26.05.2021" />
+
+                            <TextView
+                                android:id="@+id/test_box_age"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                tools:text="17 hours, 21 mins ago" />
+
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/test_table_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/test_box_layout">
+
+                            <TextView
+                                android:id="@+id/test_table_target_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_target"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_target_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_target_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_target_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_target_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_target_label"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Covid-19" />
+
+                            <View
+                                android:id="@+id/test_table_target_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_target_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_type_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_type"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_type_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_type_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_type_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_type_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_type_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_target_separator"
+                                tools:text="The Netherlands Ministry of Health" />
+
+                            <View
+                                android:id="@+id/test_table_type_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_type_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_name_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_name"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_name_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_name_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_name_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_name_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_name_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_type_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_name_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_name_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_manufacturer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_manufacturer"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_manufacturer_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_manufacturer_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_manufacturer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_manufacturer_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_name_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_manufacturer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_manufacturer_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_center_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_location"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_center_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_center_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_center_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_center_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_center_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_manufacturer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_center_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_center_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_country_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_test_country"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_country_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_country_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_country_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_country_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_country_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_center_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_country_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_country_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_issuer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_certificate_issuer"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_issuer_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_issuer_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_issuer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_issuer_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_country_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_issuer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_identifier_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_identifier"
+                                app:layout_constraintBottom_toBottomOf="@id/test_table_identifier_value"
+                                app:layout_constraintEnd_toStartOf="@id/test_table_identifier_value"
+                                app:layout_constraintTop_toTopOf="@id/test_table_identifier_value" />
+
+                            <TextView
+                                android:id="@+id/test_table_identifier_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/test_table_identifier_label"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_issuer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/test_table_identifier_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/test_table_identifier_value" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/recovery_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:layout_constraintEnd_toEndOf="@id/name"
+                        app:layout_constraintStart_toStartOf="@id/name"
+                        app:layout_constraintTop_toBottomOf="@id/test_layout"
+                        tools:visibility="gone">
+
+                        <LinearLayout
+                            android:id="@+id/recovery_box_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_parliament_rounded_opacity10"
+                            android:orientation="vertical"
+                            android:padding="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_chainStyle="packed"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/recovery_box_name"
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:textSize="15sp"
+                                tools:text="Negative" />
+
+                            <TextView
+                                style="@style/Montserrat_Bold_Black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:text="@string/item_recovery_header"
+                                android:textSize="15sp" />
+
+                        </LinearLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/recovery_table_layout"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/recovery_box_layout">
+
+                            <TextView
+                                android:id="@+id/recovery_table_first_date_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_recovery_first_date"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_first_date_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_first_date_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_first_date_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_first_date_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_first_date_label"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Covid-19" />
+
+                            <View
+                                android:id="@+id/recovery_table_first_date_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_first_date_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_valid_from_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_recovery_from"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_valid_from_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_valid_from_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_valid_from_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_valid_from_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_valid_from_label"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_first_date_separator"
+                                tools:text="The Netherlands Ministry of Health" />
+
+                            <View
+                                android:id="@+id/recovery_table_valid_from_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_valid_from_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_valid_to_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_recovery_to"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_valid_to_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_valid_to_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_valid_to_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_valid_to_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_valid_to_label"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_valid_from_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/recovery_table_valid_to_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_valid_to_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_country_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_recovery_country"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_country_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_country_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_country_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_country_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_country_label"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_valid_to_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/recovery_table_country_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_country_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_issuer_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_certificate_issuer"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_issuer_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_issuer_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_issuer_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_issuer_label"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_country_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/recovery_table_issuer_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_issuer_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_identifier_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_identifier"
+                                app:layout_constraintBottom_toBottomOf="@id/recovery_table_identifier_value"
+                                app:layout_constraintEnd_toStartOf="@id/recovery_table_identifier_value"
+                                app:layout_constraintTop_toTopOf="@id/recovery_table_identifier_value" />
+
+                            <TextView
+                                android:id="@+id/recovery_table_identifier_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/recovery_table_identifier_label"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_issuer_separator"
+                                tools:text="928532480923" />
+
+                            <View
+                                android:id="@+id/recovery_table_identifier_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/recovery_table_identifier_value" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/recovery_layout" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/description_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@color/white">
+
+                    <nl.rijksoverheid.ctr.design.views.HtmlTextViewWidget
+                        android:id="@+id/subtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="120dp"
+                        android:layout_marginBottom="16dp"
+                        android:textAlignment="center"
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textColorLink="?android:textColorPrimary"
+                        app:htmlText="@string/scan_result_invalid_subtitle"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0"
+                        app:layout_goneMarginTop="32dp" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <FrameLayout
+            android:id="@+id/button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button"
+                style="@style/Widget.App.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_parliament_rounded"
+                android:text="@string/scan_result_invalid_button"
+                android:textAllCaps="false"
+                app:layout_constrainedWidth="true" />
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

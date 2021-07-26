@@ -1,6 +1,9 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
+import nl.rijksoverheid.dcbs.verifier.utils.toDate
+import nl.rijksoverheid.dcbs.verifier.utils.toLocalDate
+import java.util.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -12,15 +15,28 @@ import com.google.gson.annotations.SerializedName
 
 class DCC(
     @SerializedName("ver")
-    val version: String?, // DCC version
+    val version: String, // DCC version
     @SerializedName("dob")
-    val dateOfBirth: String?, // Date of birth 1962-07-01
+    val dateOfBirth: String, // Date of birth 1962-07-01
     @SerializedName("nam")
-    val name: DCCNameObject?,
+    val name: DCCNameObject,
     @SerializedName("v")
     val vaccines: List<DCCVaccine>?,
     @SerializedName("t")
     val tests: List<DCCTest>?,
     @SerializedName("r")
     val recoveries: List<DCCRecovery>?,
-)
+) {
+    fun getDateOfBirth(): Date? {
+        return dateOfBirth.toDate()
+    }
+
+    fun isValidDateOfBirth(): Boolean {
+        getDateOfBirth()?.toLocalDate()?.let { date ->
+            if (date.year in 1900..2099) {
+                return true
+            }
+        }
+        return false
+    }
+}

@@ -1,6 +1,7 @@
 package nl.rijksoverheid.ctr.appconfig
 
 import com.squareup.moshi.Moshi
+import dgca.verifier.app.engine.data.Rule
 import nl.rijksoverheid.ctr.appconfig.api.model.AppConfig
 import nl.rijksoverheid.ctr.appconfig.persistence.AppConfigStorageManager
 import nl.rijksoverheid.ctr.shared.ext.toObject
@@ -16,11 +17,14 @@ import java.io.File
  */
 
 interface CachedAppConfigUseCase {
+    fun getCachedAppConfigRaw(): String?
     fun getCachedAppConfig(): AppConfig?
     fun getCachedAppConfigMaxValidityHours(): Int
     fun getCachedAppConfigVaccinationEventValidity(): Int
     fun getCachedPublicKeys(): BufferedSource?
+    fun getCachedBusinessRulesRaw(): String?
     fun getProviderName(providerIdentifier: String?): String
+    fun getCachedValueSetsRaw(): String?
 }
 
 class CachedAppConfigUseCaseImpl constructor(
@@ -29,9 +33,15 @@ class CachedAppConfigUseCaseImpl constructor(
     private val moshi: Moshi
 ) : CachedAppConfigUseCase {
 
+    override fun getCachedAppConfigRaw(): String? {
+        val configFile = File(cacheDir, "config.json")
+        return appConfigStorageManager.getFileAsBufferedSource(configFile)?.readUtf8()
+    }
+
     override fun getCachedAppConfig(): AppConfig? {
         val configFile = File(cacheDir, "config.json")
-        return appConfigStorageManager.getFileAsBufferedSource(configFile)?.readUtf8()?.toObject(moshi)
+        return appConfigStorageManager.getFileAsBufferedSource(configFile)?.readUtf8()
+            ?.toObject(moshi)
     }
 
     override fun getCachedAppConfigMaxValidityHours(): Int {
@@ -49,7 +59,19 @@ class CachedAppConfigUseCaseImpl constructor(
         return appConfigStorageManager.getFileAsBufferedSource(publicKeysFile)
     }
 
+    override fun getCachedBusinessRulesRaw(): String? {
+        val businessRulesFile = File(cacheDir, "business_rules.json")
+        return appConfigStorageManager.getFileAsBufferedSource(businessRulesFile)?.readUtf8()
+    }
+
+    override fun getCachedValueSetsRaw(): String? {
+        val valueSetsFile = File(cacheDir, "value_sets.json")
+        return appConfigStorageManager.getFileAsBufferedSource(valueSetsFile)?.readUtf8()
+    }
+
+
     override fun getProviderName(providerIdentifier: String?): String {
-        return getCachedAppConfig()?.providerIdentifiers?.firstOrNull { provider -> provider.code == providerIdentifier }?.name ?: ""
+        return getCachedAppConfig()?.providerIdentifiers?.firstOrNull { provider -> provider.code == providerIdentifier }?.name
+            ?: ""
     }
 }

@@ -11,9 +11,11 @@ import nl.rijksoverheid.ctr.shared.livedata.EventObserver
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
-import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData
-import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData
+import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
+import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQrResultState
+import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -27,6 +29,8 @@ import java.util.concurrent.TimeUnit
 class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
     private val scannerViewModel: ScannerViewModel by viewModel()
+    private val persistenceManager: PersistenceManager by inject()
+    private val appConfigUtil: AppConfigCachedUtil by inject()
 
     private val autoConfigCheckHandler = Handler(Looper.getMainLooper())
     private val autoConfigCheckRunnable = Runnable {
@@ -68,42 +72,20 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         })
 
         scannerViewModel.verifiedQrResultStateLiveData.observe(viewLifecycleOwner, EventObserver {
+
             when (it) {
-                is VerifiedQrResultState.Valid -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultValid(
-                            validData = ScanResultValidData.Valid(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
+                is VerifiedQrResultState.Error -> {
+                    (activity as? VerifierMainActivity)?.updateConfig()
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(null)))
                 }
                 is VerifiedQrResultState.Demo -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultValid(
-                            validData = ScanResultValidData.Demo(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
+                }
+                is VerifiedQrResultState.Valid -> {
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
                 }
                 is VerifiedQrResultState.Invalid -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultInvalid(
-                            invalidData = ScanResultInvalidData.Invalid(
-                                verifiedQr = it.verifiedQr
-                            )
-                        )
-                    )
-                }
-                is VerifiedQrResultState.Error -> {
-                    findNavController().navigate(
-                        VerifierQrScannerFragmentDirections.actionScanResultInvalid(
-                            invalidData = ScanResultInvalidData.Error(
-                                error = it.error
-                            )
-                        )
-                    )
+                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
                 }
             }
         })
@@ -112,6 +94,23 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             (activity as? VerifierMainActivity)?.updateConfig()
             binding.layoutCertificateExpired.root.visibility = View.GONE
         }
+
+        appConfigUtil.getCountries(true)?.let { countries ->
+            val departureCountry = countries.find { it.code == persistenceManager.getDepartureValue() }?.name() ?: getString(R.string.pick_country)
+            val destinationCountry =
+                countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = departureCountry
+            binding.layoutCountryPicker.destinationValue.text = destinationCountry
+        }
+
+        binding.layoutCountryPicker.departureCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
+        }
+
+        binding.layoutCountryPicker.destinationCard.setOnClickListener {
+            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())
+        }
+
     }
 
     override fun onResume() {

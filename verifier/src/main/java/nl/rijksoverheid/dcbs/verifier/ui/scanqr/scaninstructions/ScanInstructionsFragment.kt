@@ -3,6 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.ui.scanqr.scaninstructions
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import nl.rijksoverheid.ctr.appconfig.AppConfigUtil
@@ -23,10 +24,13 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
     private val appConfigUtil: AppConfigUtil by inject()
     private val scannerUtil: ScannerUtil by inject()
 
+    private val args: ScanInstructionsFragmentArgs by navArgs()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         val binding = FragmentScanInstructionsBinding.bind(view)
+
+        binding.toolbar.visibility = if (args.showInvalidItem) View.VISIBLE else View.GONE
         binding.button.setOnClickListener {
             scannerUtil.launchScanner(requireActivity())
         }
@@ -65,6 +69,11 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
                     )
                 )
                 binding.recyclerView.adapter = this
+                if (args.showInvalidItem) {
+                    binding.recyclerView.post {
+                        binding.recyclerView.scrollToPosition(3)
+                    }
+                }
             }
     }
 }

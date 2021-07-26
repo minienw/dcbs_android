@@ -11,16 +11,24 @@
         tools:layout="@layout/fragment_scanner">
 
         <action
-            android:id="@+id/action_scan_result_valid"
-            app:destination="@id/nav_scan_result_valid"
+            android:id="@+id/action_scan_result"
+            app:destination="@id/nav_scan_result"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
             app:popExitAnim="@anim/fragment_close_exit" />
 
         <action
-            android:id="@+id/action_scan_result_invalid"
-            app:destination="@id/nav_scan_result_invalid"
+            android:id="@+id/action_destination_picker"
+            app:destination="@id/nav_destination_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+        <action
+            android:id="@+id/action_departure_picker"
+            app:destination="@id/nav_departure_picker"
             app:enterAnim="@anim/fragment_open_enter"
             app:exitAnim="@anim/fragment_open_exit"
             app:popEnterAnim="@anim/fragment_close_enter"
@@ -29,13 +37,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_scan_result_invalid"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultInvalidFragment"
-        tools:layout="@layout/fragment_scan_result_invalid">
+        android:id="@+id/nav_scan_result"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultFragment"
+        tools:layout="@layout/fragment_scan_result">
 
         <argument
-            android:name="invalidData"
-            app:argType="nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultInvalidData" />
+            android:name="data"
+            app:argType="nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultData" />
 
         <action
             android:id="@+id/action_nav_main"
@@ -48,46 +56,51 @@
             app:popUpToInclusive="true" />
 
         <action
-            android:id="@+id/action_show_invalid_explanation"
-            app:destination="@id/invalid_explanation_bottomsheet" />
+            android:id="@+id/action_destination_picker"
+            app:destination="@id/nav_destination_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+        <action
+            android:id="@+id/action_invalid_screen_to_scan_instructions"
+            app:destination="@id/nav_invalid_screen_to_scan_instructions"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
+
+        <action
+            android:id="@+id/action_departure_picker"
+            app:destination="@id/nav_departure_picker"
+            app:enterAnim="@anim/fragment_open_enter"
+            app:exitAnim="@anim/fragment_open_exit"
+            app:popEnterAnim="@anim/fragment_close_enter"
+            app:popExitAnim="@anim/fragment_close_exit" />
 
     </fragment>
 
     <fragment
-        android:id="@+id/nav_scan_result_valid"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultValidFragment"
-        tools:layout="@layout/fragment_scan_result_valid">
+        android:id="@+id/nav_departure_picker"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.DepartureFragment"
+        tools:layout="@layout/fragment_departure_picker" />
+
+    <fragment
+        android:id="@+id/nav_destination_picker"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.pickers.DestinationFragment"
+        tools:layout="@layout/fragment_destination_picker" />
+
+    <fragment
+        android:id="@+id/nav_invalid_screen_to_scan_instructions"
+        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanqr.scaninstructions.ScanInstructionsFragment"
+        android:label="@string/scan_instructions"
+        tools:layout="@layout/fragment_scan_instructions">
 
         <argument
-            android:name="validData"
-            app:argType="nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultValidData" />
-
-        <action
-            android:id="@+id/action_nav_main"
-            app:destination="@id/nav_main"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:exitAnim="@anim/fragment_open_exit"
-            app:popEnterAnim="@anim/fragment_close_enter"
-            app:popExitAnim="@anim/fragment_close_exit"
-            app:popUpTo="@id/nav_main"
-            app:popUpToInclusive="true" />
-
-        <action
-            android:id="@+id/action_show_valid_explanation"
-            app:destination="@id/valid_explanation_bottomsheet" />
+            android:name="showInvalidItem"
+            app:argType="boolean" />
 
     </fragment>
-
-    <dialog
-        android:id="@+id/valid_explanation_bottomsheet"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultValidExplanationDialogFragment"
-        android:label="ScanResultValidExplanationDialogFragment"
-        tools:layout="@layout/fragment_scan_result_valid_reason"/>
-
-    <dialog
-        android:id="@+id/invalid_explanation_bottomsheet"
-        android:name="nl.rijksoverheid.dcbs.verifier.ui.scanner.ScanResultInvalidExplanationDialogFragment"
-        android:label="ScanResultInvalidExplanationDialogFragment"
-        tools:layout="@layout/fragment_scan_result_invalid_reason" />
 
 </navigation>

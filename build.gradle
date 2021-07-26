@@ -51,6 +51,8 @@ buildscript {
     ext.room_version = '2.3.0'
     ext.sqlcypher_version = '4.4.0'
     ext.sqlite_jdbc = '3.34.0'
+    ext.jackson_databind = '2.13.0-rc1'
+    ext.jackson_datatype_jsr310 = '2.12.3'
 
     repositories {
         google()
@@ -86,7 +88,7 @@ allprojects {
             android {
                 compileSdkVersion 30
                 defaultConfig {
-                    minSdkVersion 23
+                    minSdkVersion 26
                     targetSdkVersion 30
                 }
                 compileOptions {

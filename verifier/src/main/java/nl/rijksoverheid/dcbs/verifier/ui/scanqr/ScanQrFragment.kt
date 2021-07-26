@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
+import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanQrBinding
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
 import org.koin.android.ext.android.inject
@@ -29,10 +30,11 @@ class ScanQrFragment : Fragment(R.layout.fragment_scan_qr) {
 
         val binding = FragmentScanQrBinding.bind(view)
         binding.description.enableCustomLinks {
-            findNavControllerSafety(R.id.nav_scan_qr)?.navigate(ScanQrFragmentDirections.actionScanInstructions())
+            findNavControllerSafety(R.id.nav_scan_qr)?.navigate(ScanQrFragmentDirections.actionScanInstructions(false))
         }
 
         binding.bottom.setButtonClick {
+            (activity as? VerifierMainActivity)?.updateConfig()
             scannerUtil.launchScanner(requireActivity())
         }
     }

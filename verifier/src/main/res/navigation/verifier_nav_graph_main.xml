@@ -36,7 +36,13 @@
         android:id="@+id/nav_scan_instructions"
         android:name="nl.rijksoverheid.dcbs.verifier.ui.scanqr.scaninstructions.ScanInstructionsFragment"
         android:label="@string/scan_instructions"
-        tools:layout="@layout/fragment_scan_instructions" />
+        tools:layout="@layout/fragment_scan_instructions" >
+
+        <argument
+            android:name="showInvalidItem"
+            app:argType="boolean" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/nav_about_this_app"

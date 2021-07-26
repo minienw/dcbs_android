@@ -26,6 +26,16 @@
         tools:title="QR-Code scannen" />
 
     <include
+        android:id="@+id/layout_country_picker"
+        layout="@layout/layout_country_picker"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <include
         android:id="@+id/layout_certificate_expired"
         layout="@layout/layout_certificate_expired"
         android:layout_height="wrap_content"
@@ -36,7 +46,7 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@id/layout_country_picker" />
 
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view"

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import nl.rijksoverheid.ctr.introduction.IntroductionViewModel
 import nl.rijksoverheid.ctr.introduction.R
 import nl.rijksoverheid.ctr.introduction.databinding.FragmentPrivacyConsentBinding
@@ -63,9 +64,25 @@ class PrivacyConsentFragment : Fragment(R.layout.fragment_privacy_consent) {
         }
 
         binding.bottom.setButtonClick {
-            introductionViewModel.saveIntroductionFinished(args.introductionData.newTerms)
-            requireActivity().findNavControllerSafety(R.id.main_nav_host_fragment)
-                ?.navigate(R.id.action_main)
+            showConsentDialog()
         }
+    }
+
+    private fun showConsentDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(R.string.camera_consent_message)
+            .setNegativeButton(R.string.camera_consent_negative_button) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(R.string.camera_consent_positive_button) { _, _ ->
+                finishIntroduction()
+            }
+            .show()
+    }
+
+    private fun finishIntroduction() {
+        introductionViewModel.saveIntroductionFinished(args.introductionData.newTerms)
+        requireActivity().findNavControllerSafety(R.id.main_nav_host_fragment)
+            ?.navigate(R.id.action_main)
     }
 }

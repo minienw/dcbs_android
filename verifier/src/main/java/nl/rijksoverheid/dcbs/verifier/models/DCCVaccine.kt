@@ -13,25 +13,25 @@ import nl.rijksoverheid.dcbs.verifier.models.data.*
 
 class DCCVaccine(
     @SerializedName("tg")
-    val targetedDisease: String?,
+    val targetedDisease: String,
     @SerializedName("vp")
-    val vaccine: String?,
+    val vaccine: String,
     @SerializedName("mp")
-    val vaccineMedicalProduct: String?, // EU1/20/1507 (vaccine model?)
+    val vaccineMedicalProduct: String, // EU1/20/1507 (vaccine model?)
     @SerializedName("ma")
-    val marketingAuthorizationHolder: String?, // ORG-100031184 issuer?
+    val marketingAuthorizationHolder: String, // ORG-100031184 issuer?
     @SerializedName("dn")
-    val doseNumber: Int?,
+    val doseNumber: Int,
     @SerializedName("sd")
-    val totalSeriesOfDoses: Int?,
+    val totalSeriesOfDoses: Int,
     @SerializedName("dt")
     val dateOfVaccination: String?,
     @SerializedName("co")
-    val countryOfVaccination: String?,
+    val countryOfVaccination: String,
     @SerializedName("is")
-    val certificateIssuer: String?,
+    val certificateIssuer: String,
     @SerializedName("ci")
-    val certificateIdentifier: String?
+    val certificateIdentifier: String
 ) {
 
     fun getVaccine(): VaccineProphylaxis? {
@@ -48,5 +48,13 @@ class DCCVaccine(
 
     fun getMarketingHolder(): VaccineHolder? {
         return VaccineHolder.fromValue(marketingAuthorizationHolder)
+    }
+
+    fun isFullyVaccinated() : Boolean {
+        return doseNumber >= totalSeriesOfDoses
+    }
+
+    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
+        return countries.find {it.code == countryOfVaccination } != null
     }
 }

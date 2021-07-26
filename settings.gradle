@@ -14,5 +14,7 @@ include ':verifier'
 include ':holder'
 include ':mobilecore'
 include ':appconfig'
+include ':engine'
 
 rootProject.name = "CoronaTester"
+project(':engine').projectDir = new File("../dgc-certlogic-android/engine")
