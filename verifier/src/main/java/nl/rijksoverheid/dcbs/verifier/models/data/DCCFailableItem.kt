@@ -3,7 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.models.data
 import android.content.Context
 import nl.rijksoverheid.dcbs.verifier.R
 
-class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null) {
+class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null, val customMessage: String? = null) {
 
     fun getDisplayName(context: Context): String {
         return when (type) {
@@ -30,6 +30,7 @@ class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null) {
             DCCFailableType.InvalidRecoveryToDate -> context.getString(R.string.rule_invalid_recovery_to_date)
             DCCFailableType.InvalidVaccine14Days -> context.getString(R.string.rule_vaccination_14_days)
             DCCFailableType.UndecidableFrom -> context.getString(R.string.result_inconclusive_message)
+            DCCFailableType.CustomFailure -> customMessage ?: ""
         }
     }
 }
@@ -58,5 +59,6 @@ enum class DCCFailableType {
     InvalidRecoveryFromDate,
     InvalidRecoveryToDate,
     InvalidVaccine14Days,
-    UndecidableFrom
+    UndecidableFrom,
+    CustomFailure
 }
