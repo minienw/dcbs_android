@@ -217,20 +217,24 @@ class DCCQR(
                 ) {
                     items.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
                 }
-                return if (vaccine.isFullyVaccinated()) {
-                    items
-                } else {
-                    items.add(DCCFailableItem(DCCFailableType.NeedFullVaccination))
-                    items
-                }
+                failingItems.addAll(
+                    if (vaccine.isFullyVaccinated()) {
+                        items
+                    } else {
+                        items.add(DCCFailableItem(DCCFailableType.NeedFullVaccination))
+                        items
+                    }
+                )
             }
 
             dcc?.recoveries?.forEach { recovery ->
-                return if (recovery.isValidRecovery()) {
-                    emptyList()
-                } else {
-                    listOf(DCCFailableItem(DCCFailableType.RecoveryNotValid))
-                }
+                failingItems.addAll(
+                    if (recovery.isValidRecovery()) {
+                        emptyList()
+                    } else {
+                        listOf(DCCFailableItem(DCCFailableType.RecoveryNotValid))
+                    }
+                )
             }
         }
         dcc?.tests?.forEach { test ->
