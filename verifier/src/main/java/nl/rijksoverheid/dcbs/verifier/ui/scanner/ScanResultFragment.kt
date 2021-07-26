@@ -99,6 +99,9 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                             binding.informationLayout.visibility = View.VISIBLE
                             binding.descriptionLayout.visibility = View.GONE
                             presentPersonalDetails(verifiedQr)
+                        } else {
+                            setScreenUndecided()
+                            presentPersonalDetails(verifiedQr)
                         }
                     }
                 }
