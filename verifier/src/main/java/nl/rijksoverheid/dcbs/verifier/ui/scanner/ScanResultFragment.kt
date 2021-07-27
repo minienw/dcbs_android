@@ -159,6 +159,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.root.setBackgroundResource(R.color.secondary_green)
         binding.title.text = getString(R.string.valid_for_journey)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.GONE
     }
@@ -168,6 +169,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.root.setBackgroundResource(R.color.undecided_gray)
         binding.title.text = getString(R.string.result_inconclusive_title)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.black))
+        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.black))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.VISIBLE
     }
@@ -177,6 +179,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.root.setBackgroundResource(R.color.red)
         binding.title.text = getString(R.string.invalid_for_journey)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(iconResId)
     }
 
@@ -336,14 +339,15 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initCountries() {
 
         appConfigUtil.getCountries(true)?.let { countries ->
-            val departureCountry =
-                countries.find { it.code == persistenceManager.getDepartureValue() }?.name()
-                    ?: getString(R.string.pick_country)
+            val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
+            val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
             val destinationCountry =
                 countries.find { it.code == persistenceManager.getDestinationValue() }?.name()
                     ?: getString(R.string.pick_country)
             binding.layoutCountryPicker.departureValue.text = departureCountry
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
+            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
+            binding.layoutCountryPicker.riskLabel.text = riskColor ?: ""
         }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {

@@ -76,6 +76,7 @@ class AppConfigCachedUtilImpl(
             other,
             CountryColorCode.GREEN.value,
             CountryRiskPass.Inconclusive.value,
+            false,
             false
         )
     }

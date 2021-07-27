@@ -3,8 +3,10 @@ package nl.rijksoverheid.dcbs.verifier.models
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import nl.rijksoverheid.dcbs.verifier.R
-import nl.rijksoverheid.dcbs.verifier.models.data.*
-import nl.rijksoverheid.dcbs.verifier.utils.hourDifference
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestManufacturer
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
+import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
+import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import java.time.Duration
 import java.time.LocalDateTime
@@ -57,21 +59,6 @@ class DCCTest(
         return DCCTestManufacturer.fromValue(RATTestNameAndManufac)
     }
 
-    fun getTestDateExpiredIssue(to: CountryRisk): DCCFailableItem? {
-
-        getTestType()?.let { testType ->
-            testType.validFor(to)?.let { maxHours ->
-                dateOfSampleCollection?.toDate()?.let { date ->
-                    if (date.hourDifference() > maxHours) {
-                        return DCCFailableItem(DCCFailableType.TestDateExpired, date.hourDifference())
-                    }
-                }
-            }
-        }
-
-        return null
-    }
-
     fun getTestAge(context: Context): String? {
 
         dateOfSampleCollection?.toDate()?.let { date ->
@@ -88,7 +75,7 @@ class DCCTest(
         return null
     }
 
-    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
-        return countries.find {it.code == countryOfTest } != null
+    fun isCountryValid(countries: List<CountryRisk>): Boolean {
+        return countries.find { it.code == countryOfTest } != null
     }
 }

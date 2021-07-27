@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:elevation="5dp"
     android:gravity="center">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/departure_card"
@@ -15,7 +15,10 @@
         android:layout_weight="1"
         android:padding="10dp"
         android:layout_marginStart="20dp"
-        android:background="@drawable/bg_white_opacity70" >
+        android:background="@drawable/bg_white_opacity70"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/arrow_icon">
 
         <TextView
             android:id="@+id/departure_title"
@@ -53,12 +56,17 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
+        android:id="@+id/arrow_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_country_right_arrow"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        app:layout_constraintTop_toTopOf="@id/departure_card"
+        app:layout_constraintBottom_toBottomOf="@id/departure_card"
+        app:layout_constraintStart_toEndOf="@id/departure_card"
+        app:layout_constraintEnd_toStartOf="@id/destination_card"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/destination_card"
@@ -67,7 +75,10 @@
         android:layout_weight="1"
         android:layout_marginEnd="20dp"
         android:padding="10dp"
-        android:background="@drawable/bg_white_opacity70">
+        android:background="@drawable/bg_white_opacity70"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/arrow_icon">
 
         <TextView
             android:id="@+id/destination_title"
@@ -104,4 +115,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/risk_label"
+        style="@style/Montserrat_Bold_White"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="High Risk"
+        android:textSize="13sp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/departure_card" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

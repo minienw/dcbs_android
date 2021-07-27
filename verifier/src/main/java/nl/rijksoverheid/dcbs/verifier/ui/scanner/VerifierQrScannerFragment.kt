@@ -96,11 +96,14 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         }
 
         appConfigUtil.getCountries(true)?.let { countries ->
-            val departureCountry = countries.find { it.code == persistenceManager.getDepartureValue() }?.name() ?: getString(R.string.pick_country)
+            val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
+            val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
             val destinationCountry =
                 countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
             binding.layoutCountryPicker.departureValue.text = departureCountry
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
+            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
+            binding.layoutCountryPicker.riskLabel.text = riskColor ?: ""
         }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {

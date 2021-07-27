@@ -27,12 +27,14 @@ class CountryRisk(
     @SerializedName("result_on_valid_code")
     val resultOnValidCode: String?,
     @SerializedName("is_colour_code")
-    val isColourCode: Boolean?
+    val isColourCode: Boolean?,
+    @SerializedName("rule_engine_enabled")
+    val ruleEngineEnabled: Boolean?
 ) {
 
     fun getUnselected(context: Context): CountryRisk {
         val unselected = context.getString(R.string.country_unselected)
-        return CountryRisk(unselected, unselected, unselected, unselected, unselected, CountryColorCode.GREEN.value, CountryRiskPass.Inconclusive.value, false)
+        return CountryRisk(unselected, unselected, unselected, unselected, unselected, CountryColorCode.GREEN.value, CountryRiskPass.Inconclusive.value, false, false)
     }
 
     fun isIndecisive(): Boolean {

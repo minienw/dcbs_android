@@ -12,6 +12,7 @@ import nl.rijksoverheid.ctr.introduction.IntroductionFragment
 import nl.rijksoverheid.ctr.introduction.IntroductionViewModel
 import nl.rijksoverheid.ctr.introduction.ui.status.models.IntroductionStatus
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
+import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.databinding.ActivityMainBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -73,6 +74,14 @@ class VerifierMainActivity : AppCompatActivity() {
         if (introductionViewModel.getIntroductionStatus() is IntroductionStatus.IntroductionFinished) {
             updateConfig()
         }
+    }
+
+    override fun onStop() {
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        navController.setGraph(R.navigation.verifier_nav_graph_root)
+        super.onStop()
     }
 
     fun updateConfig() {

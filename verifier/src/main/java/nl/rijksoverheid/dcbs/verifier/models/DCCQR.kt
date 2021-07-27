@@ -107,13 +107,8 @@ class DCCQR(
         payload: String,
     ): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
-        if (from.isIndecisive() || to.isIndecisive()) {
-            return listOf(DCCFailableItem(DCCFailableType.UndecidableFrom))
-        }
 
-        if ((from.isColourCode != null && from.isColourCode) || (to.isColourCode != null && to.isColourCode)) {
-            failingItems.addAll(processGeneralRules(countries))
-        } else {
+        if (to.ruleEngineEnabled != false) {
             dcc?.let { dcc ->
                 failingItems.addAll(
                     filterByRuleEngine(
@@ -125,9 +120,21 @@ class DCCQR(
                     )
                 )
             }
-
         }
+
+        if (from.isIndecisive() || to.isIndecisive()) {
+            return listOf(DCCFailableItem(DCCFailableType.UndecidableFrom))
+        }
+
         if (to.getPassType() == CountryRiskPass.NLRules) {
+            val fromColorCode = from.getColourCode()
+            if (fromColorCode == CountryColorCode.GREEN || fromColorCode == CountryColorCode.YELLOW) {
+                return emptyList()
+            }
+            val age = dcc?.getDateOfBirth()?.yearDifference() ?: 99
+            if (age <= 11 && fromColorCode != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+                return emptyList()
+            }
             failingItems.addAll(processNLBusinessRules(from, to))
         }
 
@@ -192,15 +199,8 @@ class DCCQR(
 
     private fun processNLBusinessRules(from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
         val fromColorCode = from.getColourCode()
-        if (fromColorCode == CountryColorCode.GREEN || fromColorCode == CountryColorCode.YELLOW) {
-            return emptyList()
-        }
         if (fromColorCode == CountryColorCode.RED) {
             return listOf(DCCFailableItem(DCCFailableType.RedNotAllowed))
-        }
-        val age = dcc?.getDateOfBirth()?.yearDifference() ?: 99
-        if (age <= 11 && fromColorCode != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
-            return emptyList()
         }
 
         val failingItems = ArrayList<DCCFailableItem>()
@@ -211,111 +211,20 @@ class DCCQR(
         if (fromColorCode == CountryColorCode.ORANGE) {
 
             dcc?.vaccines?.forEach { vaccine ->
-                val items = ArrayList<DCCFailableItem>()
-                if ((vaccine.dateOfVaccination?.toDate()?.daysElapsed() ?: 0) < 15
-                    && Date().time >= july17th
-                ) {
-                    items.add(DCCFailableItem(DCCFailableType.InvalidVaccine14Days))
+                if (vaccine.isFullyVaccinated()) {
+                    return emptyList()
                 }
-                failingItems.addAll(
-                    if (vaccine.isFullyVaccinated()) {
-                        items
-                    } else {
-                        items.add(DCCFailableItem(DCCFailableType.NeedFullVaccination))
-                        items
-                    }
-                )
             }
 
             dcc?.recoveries?.forEach { recovery ->
-                failingItems.addAll(
-                    if (recovery.isValidRecovery()) {
-                        emptyList()
-                    } else {
-                        listOf(DCCFailableItem(DCCFailableType.RecoveryNotValid))
-                    }
-                )
-            }
-        }
-        dcc?.tests?.forEach { test ->
-            if (test.getTestResult() != DCCTestResult.NotDetected) {
-                failingItems.add(DCCFailableItem(DCCFailableType.TestMustBeNegative))
-            }
-            test.getTestDateExpiredIssue(to)?.let {
-                failingItems.add(it)
+                if (recovery.isValidRecovery()) {
+                    return emptyList()
+                }
             }
         }
 
         if (fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
             failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24))
-        }
-        return failingItems
-    }
-
-    private fun processGeneralRules(countries: List<CountryRisk>): List<DCCFailableItem> {
-        val failingItems = ArrayList<DCCFailableItem>()
-        dcc?.getDateOfBirth()?.let {
-            if (!dcc.isValidDateOfBirth()) {
-                failingItems.add(DCCFailableItem(DCCFailableType.DateOfBirthOutOfRange))
-            }
-        } ?: run {
-            failingItems.add(DCCFailableItem(DCCFailableType.InvalidDateOfBirth))
-        }
-
-        dcc?.vaccines?.forEach { vaccine ->
-            if (vaccine.getMarketingHolder() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineHolder))
-            }
-            if (vaccine.getVaccine() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineType))
-            }
-            if (vaccine.getVaccineProduct() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineProduct))
-            }
-            if (vaccine.getTargetedDisease() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
-            }
-            if (!vaccine.isCountryValid(countries)) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
-            }
-            if (vaccine.dateOfVaccination?.toDate() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidVaccineDate))
-            }
-        }
-
-        dcc?.tests?.forEach { test ->
-            if (test.getTestResult() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestResult))
-            }
-            if (test.getTestType() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestType))
-            }
-            if (test.getTargetedDisease() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
-            }
-            if (!test.isCountryValid(countries)) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
-            }
-            if (test.dateOfSampleCollection?.toDate() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTestDate))
-            }
-        }
-        dcc?.recoveries?.forEach { recovery ->
-            if (recovery.getTargetedDisease() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidTargetDisease))
-            }
-            if (!recovery.isCountryValid(countries)) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidCountryCode))
-            }
-            if (recovery.certificateValidTo?.toDate() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryToDate))
-            }
-            if (recovery.certificateValidFrom?.toDate() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFromDate))
-            }
-            if (recovery.dateOfFirstPositiveTest?.toDate() == null) {
-                failingItems.add(DCCFailableItem(DCCFailableType.InvalidRecoveryFirstTestDate))
-            }
         }
         return failingItems
     }
