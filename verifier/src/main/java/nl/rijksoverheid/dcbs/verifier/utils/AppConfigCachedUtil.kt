@@ -3,12 +3,9 @@ package nl.rijksoverheid.dcbs.verifier.utils
 import android.content.Context
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.type.TypeFactory
 import com.google.gson.Gson
-import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import dgca.verifier.app.engine.data.Rule
-import dgca.verifier.app.engine.data.ValueSet
 import dgca.verifier.app.engine.data.source.remote.rules.RuleRemote
 import dgca.verifier.app.engine.data.source.remote.rules.toRules
 import nl.rijksoverheid.ctr.appconfig.CachedAppConfigUseCase
@@ -76,8 +73,9 @@ class AppConfigCachedUtilImpl(
             other,
             CountryColorCode.GREEN.value,
             CountryRiskPass.Inconclusive.value,
-            false,
-            false
+            isColourCode = false,
+            ruleEngineEnabled = false,
+            isEU = false
         )
     }
 }

@@ -199,4 +199,6 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="result_inconclusive_message">Controleer de regels op de basis van de onderstaande gegevens</string>
     <string name="countries">Landen</string>
     <string name="colour_codes">Kleur codes</string>
+    <string name="item_eu">EU</string>
+    <string name="item_not_eu">Buiten EU</string>
 </resources>

@@ -83,6 +83,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                                     valueSetsRaw,
                                     verifiedQr.data
                                 )
+                            val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
 
                             when {
                                 failedItems.isEmpty() -> setScreenValid()
@@ -92,8 +93,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                                 }
                                 else -> {
                                     binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                                    setBusinessErrorMessages(failedItems)
-                                    setScreenInvalid(R.drawable.ic_valid_qr_code)
+                                    setBusinessErrorMessages(failedItems, shouldShowGreenOverride)
+                                    setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
                                 }
                             }
                             binding.informationLayout.visibility = View.VISIBLE
@@ -108,7 +109,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             }
 
         } ?: run {
-            setScreenInvalid(R.drawable.ic_invalid_qr_code)
+            setScreenInvalid(R.drawable.ic_invalid_qr_code, false)
             binding.descriptionLayout.visibility = View.VISIBLE
             binding.informationLayout.visibility = View.GONE
             binding.recyclerViewBusinessError.visibility = View.GONE
@@ -138,7 +139,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
     }
 
-    private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>) {
+    private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>, showBlack: Boolean = false) {
 
         context?.let { c ->
             GroupAdapter<GroupieViewHolder>()
@@ -146,7 +147,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     addAll(failedItems.map {
                         BusinessErrorAdapterItem(
                             it.getDisplayName(c),
-                            it.type == DCCFailableType.UndecidableFrom
+                            it.type == DCCFailableType.UndecidableFrom || showBlack
                         )
                     })
                     binding.recyclerViewBusinessError.adapter = this
@@ -174,10 +175,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.recyclerViewBusinessError.visibility = View.VISIBLE
     }
 
-    private fun setScreenInvalid(@DrawableRes iconResId: Int) {
+    private fun setScreenInvalid(@DrawableRes iconResId: Int, showGreen: Boolean) {
         val context = context ?: return
-        binding.root.setBackgroundResource(R.color.red)
-        binding.title.text = getString(R.string.invalid_for_journey)
+        binding.root.setBackgroundResource(if (showGreen) R.color.secondary_green else R.color.red)
+        binding.title.text = if (showGreen) getString(R.string.valid_for_journey) else getString(R.string.invalid_for_journey)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(iconResId)
@@ -347,7 +348,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.layoutCountryPicker.departureValue.text = departureCountry
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
             val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
-            binding.layoutCountryPicker.riskLabel.text = riskColor ?: ""
+            val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
+            binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
         }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {

@@ -103,7 +103,9 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             binding.layoutCountryPicker.departureValue.text = departureCountry
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
             val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
-            binding.layoutCountryPicker.riskLabel.text = riskColor ?: ""
+            val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
+            binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
+
         }
 
         binding.layoutCountryPicker.departureCard.setOnClickListener {

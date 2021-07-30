@@ -10,10 +10,7 @@ import dgca.verifier.app.engine.Result
 import dgca.verifier.app.engine.data.*
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
-import nl.rijksoverheid.dcbs.verifier.utils.daysElapsed
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
-import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
 import java.time.Instant
 import java.time.ZoneId
@@ -36,10 +33,6 @@ class DCCQR(
     private val expirationTime: Long?, // When does this QR expire in seconds
     val dcc: DCC?
 ) {
-
-    companion object {
-        const val july17th = 1626469200000L
-    }
 
     fun getName(): String {
         return dcc?.name?.retrieveLastName() + " " + (dcc?.name?.firstName
@@ -127,15 +120,11 @@ class DCCQR(
         }
 
         if (to.getPassType() == CountryRiskPass.NLRules) {
-            val fromColorCode = from.getColourCode()
-            if (fromColorCode == CountryColorCode.GREEN || fromColorCode == CountryColorCode.YELLOW) {
-                return emptyList()
-            }
             val age = dcc?.getDateOfBirth()?.yearDifference() ?: 99
-            if (age <= 11 && fromColorCode != CountryColorCode.ORANGE_SHIPS_FLIGHT) {
+            if (age <= 11) {
                 return emptyList()
             }
-            failingItems.addAll(processNLBusinessRules(from, to))
+            failingItems.addAll(processNLBusinessRules(from))
         }
 
         return failingItems
@@ -197,35 +186,23 @@ class DCCQR(
         return failingItems
     }
 
-    private fun processNLBusinessRules(from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
-        val fromColorCode = from.getColourCode()
-        if (fromColorCode == CountryColorCode.RED) {
-            return listOf(DCCFailableItem(DCCFailableType.RedNotAllowed))
-        }
 
+    private fun processNLBusinessRules(from: CountryRisk): List<DCCFailableItem> {
+        val fromColorCode = from.getColourCode()
         val failingItems = ArrayList<DCCFailableItem>()
-        if (dcc?.tests == null || dcc.tests.isEmpty()) {
+        val requireTestInsideEU = fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT && from.isEU == true
+        val requireTestOutsideEU = (fromColorCode == CountryColorCode.ORANGE_HIGH_INCIDENCE ||  fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) && from.isEU == false
+        val requireTest = requireTestOutsideEU || requireTestInsideEU
+        if (requireTest && (dcc?.tests == null || dcc.tests.isEmpty())) {
             failingItems.add(DCCFailableItem(DCCFailableType.MissingRequiredTest))
         }
 
-        if (fromColorCode == CountryColorCode.ORANGE) {
-
-            dcc?.vaccines?.forEach { vaccine ->
-                if (vaccine.isFullyVaccinated()) {
-                    return emptyList()
-                }
-            }
-
-            dcc?.recoveries?.forEach { recovery ->
-                if (recovery.isValidRecovery()) {
-                    return emptyList()
-                }
-            }
-        }
-
-        if (fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
-            failingItems.add(DCCFailableItem(DCCFailableType.RequireSecondTest, 24))
-        }
         return failingItems
     }
+
+    fun shouldShowGreenOverride(from: CountryRisk, to: CountryRisk): Boolean {
+        return to.getPassType() == CountryRiskPass.NLRules && from.getColourCode() == CountryColorCode.GREEN
+                && from.isEU == true
+    }
+
 }

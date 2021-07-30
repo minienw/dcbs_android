@@ -1,7 +1,6 @@
 package nl.rijksoverheid.dcbs.verifier.ui.pickers
 
 import android.view.View
-import androidx.annotation.StringRes
 import com.xwray.groupie.viewbinding.BindableItem
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.ItemCountryPickerBinding
@@ -14,10 +13,12 @@ import nl.rijksoverheid.dcbs.verifier.databinding.ItemCountryPickerBinding
  *
  */
 class PickerAdapterItem(
-    val title: String
+    val title: String,
+    val isLast: Boolean = false
 ) : BindableItem<ItemCountryPickerBinding>() {
     override fun bind(viewBinding: ItemCountryPickerBinding, position: Int) {
         viewBinding.title.text = title
+        viewBinding.separator.visibility = if (isLast) View.GONE else View.VISIBLE
     }
 
     override fun getLayout(): Int {

@@ -482,7 +482,7 @@
                                 android:id="@+id/dose2_table_issuer_value"
                                 style="@style/ValidQrValue"
                                 app:layout_constraintStart_toEndOf="@id/dose2_table_issuer_label"
-                                app:layout_constraintTop_toBottomOf="@id/dose2_table_member_state_separator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_manufacturer_separator"
                                 tools:text="928532480923" />
 
                             <View

@@ -6,30 +6,20 @@
     android:layout_height="wrap_content"
     android:focusable="false"
     android:importantForAccessibility="no"
-    android:layout_marginHorizontal="24dp"
-    tools:background="@color/white">
+    android:background="@color/grey_4">
 
     <TextView
         android:id="@+id/title"
-        style="@style/Montserrat_SemiBold_Black"
+        style="@style/Montserrat_Bold_Black"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginVertical="15dp"
+        android:layout_marginHorizontal="44dp"
+        android:layout_marginVertical="5dp"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="@string/country_nl" />
-
-    <View
-        android:id="@+id/separator"
-        style="@style/ValidQrSeparator"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:text="A" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
