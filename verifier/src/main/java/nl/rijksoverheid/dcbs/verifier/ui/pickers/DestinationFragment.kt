@@ -34,7 +34,7 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
                 binding.recyclerView.adapter = this
                 setOnItemClickListener { item, _ ->
                     countries.find { it.name() == (item as? PickerAdapterItem)?.title }?.let { country ->
-                        persistenceManager.saveDepartureValue(country.code ?: "")
+                        persistenceManager.saveDestinationValue(country.code ?: "")
                     }
                     findNavController().popBackStack()
                 }
