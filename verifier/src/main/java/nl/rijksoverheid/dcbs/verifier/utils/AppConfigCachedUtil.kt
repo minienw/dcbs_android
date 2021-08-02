@@ -42,7 +42,7 @@ class AppConfigCachedUtilImpl(
             if (isOtherIncluded) {
                 countries.add(getOther())
             }
-            return countries
+            return countries.sortedBy { it.name() }
         }
         return null
     }
@@ -50,7 +50,7 @@ class AppConfigCachedUtilImpl(
     override fun getBusinessRules(): List<Rule>? {
         cachedAppConfigUseCase.getCachedBusinessRulesRaw()?.let { businessRules ->
             val mapper = ObjectMapper()
-            mapper.findAndRegisterModules();
+            mapper.findAndRegisterModules()
             val remoteRules = mapper.readValue(businessRules,
                 object : TypeReference<List<RuleRemote>>() {})
             return remoteRules.toRules()

@@ -17,7 +17,10 @@ import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
-import nl.rijksoverheid.dcbs.verifier.models.*
+import nl.rijksoverheid.dcbs.verifier.models.DCCQR
+import nl.rijksoverheid.dcbs.verifier.models.DCCRecovery
+import nl.rijksoverheid.dcbs.verifier.models.DCCTest
+import nl.rijksoverheid.dcbs.verifier.models.DCCVaccine
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
@@ -274,20 +277,15 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun getVaccineStatusColour(vaccine: DCCVaccine): Int? {
         return context?.let {
             ContextCompat.getColor(
-                it, if (validVaccination(vaccine))
+                it, if (vaccine.isFullyVaccinated())
                     R.color.black
                 else R.color.red
             )
         }
     }
 
-    private fun validVaccination(vaccine: DCCVaccine): Boolean {
-        return vaccine.totalSeriesOfDoses == vaccine.doseNumber
-
-    }
-
     private fun getVaccineStatusText(vaccine: DCCVaccine): String {
-        return if (validVaccination(vaccine)) getString(R.string.vaccin_complete) else getString(
+        return if (vaccine.isFullyVaccinated()) getString(R.string.vaccin_complete) else getString(
             R.string.vaccin_incomplete
         )
     }
@@ -347,7 +345,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     ?: getString(R.string.pick_country)
             binding.layoutCountryPicker.departureValue.text = departureCountry
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
-            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
+            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color }?.name()
             val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
             binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
         }

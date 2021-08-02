@@ -62,7 +62,7 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
     private fun getCountries(query: String): List<CountryRisk>? {
         val businessRules = appConfigUtil.getBusinessRules()
         val countries = appConfigUtil
-            .getCountries(false)
+            .getCountries(true)
             ?.filter {
                 businessRules?.find { rule ->
                     rule.countryCode.toUpperCase(Locale.getDefault()) == it.code
