@@ -200,4 +200,11 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="colour_codes">Colour codes</string>
     <string name="item_eu">EU</string>
     <string name="item_not_eu">Outside EU</string>
+    <string name="voc_require_second_antigen">A second antigen test of no more than %d hours old is required in orange VOC</string>
+    <string name="voc_require_second_pcr">A second PCR/NAAT test of no more than %d hours old is required in orange VOC</string>
+    <string name="voc_require_pcr_or_antigen">In orange voc, one of the following is required
+    - A PCR/NAAT test of no more than %d hours old
+    of
+    - A PCR/NAAT test of no more than %d hours old AND an antigen test of no more than %d hours old</string>
+
 </resources>

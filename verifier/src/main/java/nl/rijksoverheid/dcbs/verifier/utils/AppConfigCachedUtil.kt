@@ -13,6 +13,7 @@ import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
 import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
+import nl.rijksoverheid.dcbs.verifier.models.EURules
 import org.json.JSONObject
 import java.util.*
 
@@ -25,6 +26,7 @@ import java.util.*
  */
 interface AppConfigCachedUtil {
     fun getCountries(isOtherIncluded: Boolean): List<CountryRisk>?
+    fun getEuropeanVerificationRules(): EURules?
     fun getBusinessRules(): List<Rule>?
     fun getValueSetsRaw(): String?
 }
@@ -43,6 +45,15 @@ class AppConfigCachedUtilImpl(
                 countries.add(getOther())
             }
             return countries.sortedBy { it.name() }
+        }
+        return null
+    }
+
+    override fun getEuropeanVerificationRules(): EURules? {
+        cachedAppConfigUseCase.getCachedAppConfigRaw()?.let { appConfig ->
+            val jsonString = JSONObject(appConfig).getString("europeanVerificationRules")
+            val type = object : TypeToken<EURules>() {}.type
+            return Gson().fromJson<EURules>(jsonString, type)
         }
         return null
     }

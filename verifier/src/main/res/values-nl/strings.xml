@@ -201,4 +201,11 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="colour_codes">Kleur codes</string>
     <string name="item_eu">EU</string>
     <string name="item_not_eu">Buiten EU</string>
+    <string name="voc_require_second_antigen">Een tweede antigeen test van maximaal %d uur oud is nodig bij oranje VOC</string>
+    <string name="voc_require_second_pcr">Een tweede PCR/NAAT test van maximaal %d uur oud is nodig bij oranje VOC</string>
+    <string name="voc_require_pcr_or_antigen">Bij oranje VOC is
+    - Een PCR/NAAT test van maximaal %d uur oud
+    of
+    - Een PCR/NAAT test van maximaal %d uur oud &amp; een Antigeen test van maximaal %d uur oud</string>
+
 </resources>

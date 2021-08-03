@@ -70,42 +70,45 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             appConfigUtil.getValueSetsRaw()?.let { valueSetsRaw ->
                 appConfigUtil.getBusinessRules()?.let { businessRules ->
                     appConfigUtil.getCountries(true)?.let { countries ->
-                        val from =
-                            countries.find { it.code == persistenceManager.getDepartureValue() }
-                        val to =
-                            countries.find { it.code == persistenceManager.getDestinationValue() }
-                        if (from != null && to != null) {
-                            val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-                            val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-                            val failedItems =
-                                dccQR.processBusinessRules(
-                                    from,
-                                    to,
-                                    countries,
-                                    businessRules,
-                                    valueSetsRaw,
-                                    verifiedQr.data
-                                )
-                            val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
+                        appConfigUtil.getEuropeanVerificationRules()?.vocExtraTestRule?.let { vocRule ->
 
-                            when {
-                                failedItems.isEmpty() -> setScreenValid()
-                                failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
-                                    setBusinessErrorMessages(failedItems)
-                                    setScreenUndecided()
+                            val from =
+                                countries.find { it.code == persistenceManager.getDepartureValue() }
+                            val to =
+                                countries.find { it.code == persistenceManager.getDestinationValue() }
+                            if (from != null && to != null) {
+                                val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                                val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                                val failedItems =
+                                    dccQR.processBusinessRules(
+                                        from,
+                                        to,
+                                        vocRule,
+                                        businessRules,
+                                        valueSetsRaw,
+                                        verifiedQr.data
+                                    )
+                                val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
+
+                                when {
+                                    failedItems.isEmpty() -> setScreenValid()
+                                    failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
+                                        setBusinessErrorMessages(failedItems)
+                                        setScreenUndecided()
+                                    }
+                                    else -> {
+                                        binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                                        setBusinessErrorMessages(failedItems, shouldShowGreenOverride)
+                                        setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
+                                    }
                                 }
-                                else -> {
-                                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                                    setBusinessErrorMessages(failedItems, shouldShowGreenOverride)
-                                    setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
-                                }
+                                binding.informationLayout.visibility = View.VISIBLE
+                                binding.descriptionLayout.visibility = View.GONE
+                                presentPersonalDetails(verifiedQr)
+                            } else {
+                                setScreenUndecided()
+                                presentPersonalDetails(verifiedQr)
                             }
-                            binding.informationLayout.visibility = View.VISIBLE
-                            binding.descriptionLayout.visibility = View.GONE
-                            presentPersonalDetails(verifiedQr)
-                        } else {
-                            setScreenUndecided()
-                            presentPersonalDetails(verifiedQr)
                         }
                     }
                 }

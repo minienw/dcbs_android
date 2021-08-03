@@ -3,7 +3,11 @@ package nl.rijksoverheid.dcbs.verifier.models.data
 import android.content.Context
 import nl.rijksoverheid.dcbs.verifier.R
 
-class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null, val customMessage: String? = null) {
+class DCCFailableItem(val type: DCCFailableType,
+                      val param1: Int? = null,
+                      val param2: Int? = null,
+                      val param3: Int? = null,
+                      val customMessage: String? = null) {
 
     fun getDisplayName(context: Context): String {
         return when (type) {
@@ -31,6 +35,9 @@ class DCCFailableItem(val type: DCCFailableType, val param1: Int? = null, val cu
             DCCFailableType.InvalidVaccine14Days -> context.getString(R.string.rule_vaccination_14_days)
             DCCFailableType.UndecidableFrom -> context.getString(R.string.result_inconclusive_message)
             DCCFailableType.CustomFailure -> customMessage ?: ""
+            DCCFailableType.VocRequireSecondAntigen -> context.getString(R.string.voc_require_second_antigen, param1)
+            DCCFailableType.VocRequireSecondPCR -> context.getString(R.string.voc_require_second_pcr, param1)
+            DCCFailableType.VocRequirePCROrAntigen -> context.getString(R.string.voc_require_pcr_or_antigen, param1, param2, param3)
         }
     }
 }
@@ -43,7 +50,6 @@ enum class DCCFailableType {
     NeedFullVaccination,
     RecoveryNotValid,
     RequireSecondTest,
-
     InvalidTestResult,
     InvalidTestType,
     InvalidTargetDisease,
@@ -60,5 +66,8 @@ enum class DCCFailableType {
     InvalidRecoveryToDate,
     InvalidVaccine14Days,
     UndecidableFrom,
-    CustomFailure
+    CustomFailure,
+    VocRequireSecondAntigen,
+    VocRequireSecondPCR,
+    VocRequirePCROrAntigen
 }

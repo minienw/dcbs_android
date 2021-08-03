@@ -9,8 +9,8 @@ enum class DCCTestType(val value: String) {
 
     fun getDisplayName(): String {
         return when (this) {
-            NucleidAcid -> "Nucleic acid amplification with probe detection"
-            RapidImmune -> "Rapid immunoassay"
+            NucleidAcid -> "Nucleic acid amplification with probe detection (NAAT / PCR)"
+            RapidImmune -> "Rapid immunoassay (Antigen)"
         }
     }
 

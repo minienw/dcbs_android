@@ -75,7 +75,22 @@ class DCCTest(
         return null
     }
 
-    fun isCountryValid(countries: List<CountryRisk>): Boolean {
-        return countries.find { it.code == countryOfTest } != null
+    fun getTestAgeInHours(): Int? {
+
+        dateOfSampleCollection?.toDate()?.let { date ->
+            val localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
+            val diff: Duration = Duration.between(
+                localDateTime,
+                LocalDateTime.now()
+            )
+            var diffInHours = diff.toHours()
+            val diffInMinutes = diff.toMinutes() % 60
+            if (diffInMinutes > 0) {
+                diffInHours += 1
+            }
+            return diffInHours.toInt()
+        }
+
+        return null
     }
 }
