@@ -7,6 +7,7 @@ import java.util.*
 
 fun String.formatDate(): String? {
     val outputFormat = SimpleDateFormat("d MMM yyyy", Locale.getDefault())
+    outputFormat.isLenient = false
     return try {
         this.toDate()?.let {
             outputFormat.format(it)
@@ -25,6 +26,7 @@ fun String.toDate(): Date? {
         Date.from(i)
     } catch (e: Exception) {
         val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        inputFormat.isLenient = false
         try {
             inputFormat.parse(this)
         } catch (e: Exception) {
