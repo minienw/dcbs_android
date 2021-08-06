@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import dgca.verifier.app.engine.data.Rule
 import dgca.verifier.app.engine.data.source.remote.rules.RuleRemote
 import dgca.verifier.app.engine.data.source.remote.rules.toRules
-import kotlinx.coroutines.test.runBlockingTest
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import org.junit.Assert
 import org.junit.Before
@@ -17,11 +16,13 @@ import java.time.ZonedDateTime
 
 class DCCQRTest {
 
-    lateinit var businessRules: List<Rule>
-    lateinit var vocExtraTestRule: VOCExtraTestRule
-    lateinit var valueSets: String
-    var validationClock = ZonedDateTime.of(2021, 7, 6, 0, 0, 0, 0,
-        ZoneId.of(ZoneOffset.UTC.id))
+    private lateinit var businessRules: List<Rule>
+    private lateinit var vocExtraTestRule: VOCExtraTestRule
+    private lateinit var valueSets: String
+    private var validationClock: ZonedDateTime = ZonedDateTime.of(
+        2021, 8, 6, 0, 0, 0, 0,
+        ZoneId.of(ZoneOffset.UTC.id)
+    )
 
     @Before
     fun setUp() {
@@ -31,25 +32,55 @@ class DCCQRTest {
     }
 
     @Test
-    fun `VR should pass`() = runBlockingTest {
-
-        val dccQR = getDccQr("VR_pass.json")
-        assertPass(dccQR)
-    }
+    fun `VR should pass`() = assertPass(getDccQr("VR_pass.json"))
 
     @Test
-    fun `RR should pass`() = runBlockingTest {
-
-        val dccQR = getDccQr("RR_pass.json")
-        assertPass(dccQR)
-    }
+    fun `RR should pass`() = assertPass(getDccQr("RR_pass.json"))
 
     @Test
-    fun `TR should pass`() = runBlockingTest {
+    fun `TR should pass`() = assertPass(getDccQr("TR_pass.json"))
 
-        val dccQR = getDccQr("TR_pass.json")
-        assertPass(dccQR)
-    }
+    @Test
+    fun `GR-NL-0000 should fail`() = assertFail("GR-NL-0000")
+
+    @Test
+    fun `GR-NL-0001 should fail`() = assertFail("GR-NL-0001")
+
+    @Test
+    fun `TR-NL-0000 should fail`() = assertFail("TR-NL-0000")
+
+    @Test
+    fun `TR-NL-0001 should fail`() = assertFail("TR-NL-0001")
+
+    @Test
+    fun `TR-NL-0003 should fail`() = assertFail("TR-NL-0003")
+
+    @Test
+    fun `TR-NL-0004 should fail`() = assertFail("TR-NL-0004")
+
+    @Test
+    fun `VR-NL-0000 should fail`() = assertFail("VR-NL-0000")
+
+    @Test
+    fun `VR-NL-0001 should fail`() = assertFail("VR-NL-0001")
+
+    @Test
+    fun `VR-NL-0002 should fail`() = assertFail("VR-NL-0002")
+
+    @Test
+    fun `VR-NL-0005 should fail`() = assertFail("VR-NL-0005")
+
+    @Test
+    fun `RR-NL-0000 should fail`() = assertFail("RR-NL-0000")
+
+    @Test
+    fun `RR-NL-0001 should fail`() = assertFail("RR-NL-0001")
+
+    @Test
+    fun `RR-NL-0003 should fail`() = assertFail("RR-NL-0003")
+
+    @Test
+    fun `RR-NL-0004 should fail`() = assertFail("RR-NL-0004")
 
     private fun assertPass(dccQR: DCCQR) {
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
@@ -58,7 +89,15 @@ class DCCQRTest {
         Assert.assertEquals(0, result.size)
     }
 
-    private fun processRules(dccQR: DCCQR, from: CountryRisk, to: CountryRisk) : List<DCCFailableItem> {
+    private fun assertFail(ruleIdentifier: String) {
+        val dccQR = getDccQr(ruleIdentifier + "_fail.json")
+        val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
+        val to = CountryRiskHelper.NL
+        val result = processRules(dccQR, from, to)
+        Assert.assertTrue(result.any { it.ruleIdentifier == ruleIdentifier })
+    }
+
+    private fun processRules(dccQR: DCCQR, from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
         return dccQR.processBusinessRules(from, to, vocExtraTestRule, businessRules, valueSets, Gson().toJson(dccQR), validationClock)
     }
 
@@ -84,6 +123,8 @@ class DCCQRTest {
     }
 
     private fun readJsonFile(filename: String): String {
-        return this.javaClass.classLoader.getResourceAsStream(filename).bufferedReader().use { it.readText() }
+        return this.javaClass.classLoader?.let { classLoader ->
+            classLoader.getResourceAsStream(filename).bufferedReader().use { it.readText() }
+        } ?: ""
     }
 }

@@ -3,11 +3,14 @@ package nl.rijksoverheid.dcbs.verifier.models.data
 import android.content.Context
 import nl.rijksoverheid.dcbs.verifier.R
 
-class DCCFailableItem(val type: DCCFailableType,
-                      val param1: Int? = null,
-                      val param2: Int? = null,
-                      val param3: Int? = null,
-                      val customMessage: String? = null) {
+class DCCFailableItem(
+    val type: DCCFailableType,
+    val param1: Int? = null,
+    val param2: Int? = null,
+    val param3: Int? = null,
+    val customMessage: String? = null,
+    val ruleIdentifier: String? = null
+) {
 
     fun getDisplayName(context: Context): String {
         return when (type) {

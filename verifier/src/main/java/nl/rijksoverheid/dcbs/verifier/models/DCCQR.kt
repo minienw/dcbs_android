@@ -177,7 +177,8 @@ class DCCQR(
                 failingItems.add(
                     DCCFailableItem(
                         DCCFailableType.CustomFailure,
-                        customMessage = validationResult.rule.descriptions["en"]
+                        customMessage = validationResult.rule.descriptions["en"],
+                        ruleIdentifier = validationResult.rule.identifier
                     )
                 )
             }
