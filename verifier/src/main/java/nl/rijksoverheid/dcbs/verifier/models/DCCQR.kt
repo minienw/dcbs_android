@@ -91,7 +91,6 @@ class DCCQR(
         return acceptanceRules
     }
 
-
     fun processBusinessRules(
         from: CountryRisk,
         to: CountryRisk,
@@ -99,6 +98,7 @@ class DCCQR(
         businessRules: List<Rule>,
         valueSets: String,
         payload: String,
+        validationClock: ZonedDateTime = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id))
     ): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
 
@@ -111,6 +111,7 @@ class DCCQR(
                         payload = payload,
                         dcc = dcc,
                         valueSets = valueSets,
+                        validationClock = validationClock
                     )
                 )
             }
@@ -133,6 +134,7 @@ class DCCQR(
         payload: String,
         dcc: DCC,
         valueSets: String,
+        validationClock: ZonedDateTime
     ): List<DCCFailableItem> {
         val objectMapper = ObjectMapper()
         val certLogicEngine = DefaultCertLogicEngine(
@@ -147,7 +149,7 @@ class DCCQR(
         val instantExpirationTime: Instant = Instant.ofEpochMilli(this.expirationTime!!)
         val instantIssuedAt: Instant = Instant.ofEpochMilli(this.issuedAt!!)
         val externalParameter = ExternalParameter(
-            validationClock = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id)),
+            validationClock = validationClock,
             valueSets = valueSetsMap,
             countryCode = to.code ?: "",
             exp = ZonedDateTime.ofInstant(instantExpirationTime, ZoneId.systemDefault()),

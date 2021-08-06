@@ -1,0 +1,29 @@
+{
+  "issuer": "",
+  "issuedAt": 0,
+  "expirationTime": 0,
+  "dcc": {
+    "ver": "1.0.0",
+    "nam": {
+      "fn": "Achternaam",
+      "fnt": "ACHTERNAAM",
+      "gn": "Voornaam",
+      "gnt": "VOORNAAM"
+    },
+    "dob": "2021-01-01",
+    "v": [
+      {
+        "tg": "840539006",
+        "vp": "1119349007",
+        "mp": "EU/1/20/1507",
+        "ma": "ORG-100013793",
+        "dn": 8,
+        "sd": 8,
+        "dt": "2021-02-18",
+        "co": "AW",
+        "is": "Ministry of Health Welfare and Sport",
+        "ci": "urn:uvci:01:NL:ad86e2d1f61546d19dbca9b70a950aef"
+      }
+    ]
+  }
+}
