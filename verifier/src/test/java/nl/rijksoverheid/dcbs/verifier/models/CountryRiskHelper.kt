@@ -126,4 +126,57 @@ object CountryRiskHelper {
         ruleEngineEnabled = true,
         isEU = true
     )
+
+    val LU = CountryRisk(
+        "Luxembourg",
+        "Luxemburg",
+        "",
+        "",
+        "LU",
+        "yellow",
+        "pass",
+        isColourCode = true,
+        ruleEngineEnabled = true,
+        isEU = true
+    )
+
+    val ES = CountryRisk(
+        "Spain",
+        "Spanje",
+        "",
+        "",
+        "ES",
+        "yellow",
+        "pass",
+        isColourCode = true,
+        ruleEngineEnabled = true,
+        isEU = true
+    )
+    val IE = CountryRisk(
+        "Ireland",
+        "Ierland",
+        "",
+        "",
+        "IE",
+        "yellow",
+        "pass",
+        isColourCode = true,
+        ruleEngineEnabled = true,
+        isEU = true
+    )
+
+    val LT = CountryRisk(
+        "Lithuania",
+        "Litouwen",
+        "",
+        "",
+        "LT",
+        "green",
+        "pass",
+        isColourCode = true,
+        ruleEngineEnabled = true,
+        isEU = true
+    )
+
+
 }

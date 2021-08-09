@@ -10,7 +10,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
-class DCCQRTestNL {
+class DCCQRTestES {
 
     private lateinit var businessRules: List<Rule>
     private lateinit var vocExtraTestRule: VOCExtraTestRule
@@ -37,58 +37,46 @@ class DCCQRTestNL {
     fun `TR should pass`() = assertPass(DCCQRTestHelper.getDccQr("dcc/TR_pass.json"))
 
     @Test
-    fun `GR-NL-0000 should fail`() = assertFail("GR-NL-0000")
+    fun `TR-ES-0001 should fail`() = assertFail("TR-ES-0001")
 
     @Test
-    fun `GR-NL-0001 should fail`() = assertFail("GR-NL-0001")
+    fun `TR-ES-0002 should fail`() = assertFail("TR-ES-0002")
 
     @Test
-    fun `TR-NL-0000 should fail`() = assertFail("TR-NL-0000")
+    fun `TR-ES-0003 should fail`() = assertFail("TR-ES-0003")
 
     @Test
-    fun `TR-NL-0001 should fail`() = assertFail("TR-NL-0001")
+    fun `TR-ES-0004 should fail`() = assertFail("TR-ES-0004")
 
     @Test
-    fun `TR-NL-0003 should fail`() = assertFail("TR-NL-0003")
+    fun `TR-ES-0005 should fail`() = assertFail("TR-ES-0005")
 
     @Test
-    fun `TR-NL-0004 should fail`() = assertFail("TR-NL-0004")
+    fun `VR-ES-0001 should fail`() = assertFail("VR-ES-0001")
 
     @Test
-    fun `VR-NL-0000 should fail`() = assertFail("VR-NL-0000")
+    fun `VR-ES-0002 should fail`() = assertFail("VR-ES-0002")
 
     @Test
-    fun `VR-NL-0001 should fail`() = assertFail("VR-NL-0001")
+    fun `VR-ES-0003 should fail`() = assertFail("VR-ES-0003")
 
     @Test
-    fun `VR-NL-0002 should fail`() = assertFail("VR-NL-0002")
+    fun `RR-ES-0001 should fail`() = assertFail("RR-ES-0001")
 
     @Test
-    fun `VR-NL-0005 should fail`() = assertFail("VR-NL-0005")
-
-    @Test
-    fun `RR-NL-0000 should fail`() = assertFail("RR-NL-0000")
-
-    @Test
-    fun `RR-NL-0001 should fail`() = assertFail("RR-NL-0001")
-
-    @Test
-    fun `RR-NL-0003 should fail`() = assertFail("RR-NL-0003")
-
-    @Test
-    fun `RR-NL-0004 should fail`() = assertFail("RR-NL-0004")
+    fun `RR-ES-0002 should fail`() = assertFail("RR-ES-0002")
 
     private fun assertPass(dccQR: DCCQR) {
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
-        val to = CountryRiskHelper.NL
+        val to = CountryRiskHelper.ES
         val result = processRules(dccQR, from, to)
         Assert.assertEquals(0, result.size)
     }
 
     private fun assertFail(ruleIdentifier: String) {
-        val dccQR = DCCQRTestHelper.getDccQr("dcc/nl/${ruleIdentifier}_fail.json")
+        val dccQR = DCCQRTestHelper.getDccQr("dcc/es/${ruleIdentifier}_fail.json")
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
-        val to = CountryRiskHelper.NL
+        val to = CountryRiskHelper.ES
         val result = processRules(dccQR, from, to)
         Assert.assertTrue(result.any { it.ruleIdentifier == ruleIdentifier })
     }

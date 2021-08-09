@@ -28,13 +28,13 @@ class DCCQRTestDE {
     }
 
     @Test
-    fun `VR should pass`() = assertPass(getDccQr("VR_pass.json"))
+    fun `VR should pass`() = assertPass(DCCQRTestHelper.getDccQr("dcc/VR_pass.json"))
 
     @Test
-    fun `RR should pass`() = assertPass(getDccQr("RR_pass.json"))
+    fun `RR should pass`() = assertPass(DCCQRTestHelper.getDccQr("dcc/RR_pass.json"))
 
     @Test
-    fun `TR should pass`() = assertPass(getDccQr("TR_pass.json"))
+    fun `TR should pass`() = assertPass(DCCQRTestHelper.getDccQr("dcc/TR_pass.json"))
 
     @Test
     fun `TR-DE-0001 should fail`() = assertFail("TR-DE-0001")
@@ -77,7 +77,7 @@ class DCCQRTestDE {
     }
 
     private fun assertFail(ruleIdentifier: String) {
-        val dccQR = getDccQr("${ruleIdentifier}_fail.json")
+        val dccQR = DCCQRTestHelper.getDccQr("dcc/de/${ruleIdentifier}_fail.json")
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
         val to = CountryRiskHelper.DE
         val result = processRules(dccQR, from, to)
@@ -86,9 +86,5 @@ class DCCQRTestDE {
 
     private fun processRules(dccQR: DCCQR, from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
         return dccQR.processBusinessRules(from, to, vocExtraTestRule, businessRules, valueSets, Gson().toJson(dccQR), validationClock)
-    }
-
-    private fun getDccQr(filename: String) : DCCQR {
-        return DCCQRTestHelper.getDccQr("dcc/de/${filename}")
     }
 }
