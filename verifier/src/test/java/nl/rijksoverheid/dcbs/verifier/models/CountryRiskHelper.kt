@@ -113,4 +113,17 @@ object CountryRiskHelper {
         ruleEngineEnabled = true,
         isEU = true
     )
+
+    val DE = CountryRisk(
+        "Germany",
+        "Duitsland",
+        "",
+        "",
+        "DE",
+        "green",
+        "pass",
+        isColourCode = true,
+        ruleEngineEnabled = true,
+        isEU = true
+    )
 }

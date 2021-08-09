@@ -1,11 +1,7 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.google.gson.Gson
 import dgca.verifier.app.engine.data.Rule
-import dgca.verifier.app.engine.data.source.remote.rules.RuleRemote
-import dgca.verifier.app.engine.data.source.remote.rules.toRules
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import org.junit.Assert
 import org.junit.Before
@@ -14,7 +10,7 @@ import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
-class DCCQRTest {
+class DCCQRTestNL {
 
     private lateinit var businessRules: List<Rule>
     private lateinit var vocExtraTestRule: VOCExtraTestRule
@@ -26,9 +22,9 @@ class DCCQRTest {
 
     @Before
     fun setUp() {
-        businessRules = readBusinessRules()
-        vocExtraTestRule = readVocRules()
-        valueSets = readValueSets()
+        businessRules = DCCQRTestHelper.readBusinessRules()
+        vocExtraTestRule = DCCQRTestHelper.readVocRules()
+        valueSets = DCCQRTestHelper.readValueSets()
     }
 
     @Test
@@ -90,7 +86,7 @@ class DCCQRTest {
     }
 
     private fun assertFail(ruleIdentifier: String) {
-        val dccQR = getDccQr(ruleIdentifier + "_fail.json")
+        val dccQR = getDccQr("${ruleIdentifier}_fail.json")
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
         val to = CountryRiskHelper.NL
         val result = processRules(dccQR, from, to)
@@ -101,30 +97,7 @@ class DCCQRTest {
         return dccQR.processBusinessRules(from, to, vocExtraTestRule, businessRules, valueSets, Gson().toJson(dccQR), validationClock)
     }
 
-    private fun getDccQr(filename: String): DCCQR {
-        val jsonString = readJsonFile("dcc/$filename")
-        return Gson().fromJson(jsonString, DCCQR::class.java)
-    }
-
-    private fun readBusinessRules(): List<Rule> {
-        val jsonString = readJsonFile("business_rules.json")
-        val mapper = ObjectMapper()
-        mapper.findAndRegisterModules()
-        val remoteRules = mapper.readValue(jsonString, object : TypeReference<List<RuleRemote>>() {})
-        return remoteRules.toRules()
-    }
-
-    private fun readValueSets(): String {
-        return readJsonFile("value_sets.json")
-    }
-
-    private fun readVocRules(): VOCExtraTestRule {
-        return Gson().fromJson(readJsonFile("voc_rules.json"), VOCExtraTestRule::class.java)
-    }
-
-    private fun readJsonFile(filename: String): String {
-        return this.javaClass.classLoader?.let { classLoader ->
-            classLoader.getResourceAsStream(filename).bufferedReader().use { it.readText() }
-        } ?: ""
+    private fun getDccQr(filename: String) : DCCQR {
+        return DCCQRTestHelper.getDccQr("dcc/nl/${filename}")
     }
 }
