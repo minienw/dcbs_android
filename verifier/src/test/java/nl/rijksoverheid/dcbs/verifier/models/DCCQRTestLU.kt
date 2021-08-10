@@ -78,6 +78,7 @@ class DCCQRTestLU {
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
         val to = CountryRiskHelper.LU
         val result = processRules(dccQR, from, to)
+        Assert.assertEquals(1, result.size)
         Assert.assertTrue(result.any { it.ruleIdentifier == ruleIdentifier })
     }
 

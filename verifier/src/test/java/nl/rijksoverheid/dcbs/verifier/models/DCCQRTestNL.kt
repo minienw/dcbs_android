@@ -70,10 +70,10 @@ class DCCQRTestNL {
     fun `RR-NL-0000 should fail`() = assertFail("RR-NL-0000")
 
     @Test
-    fun `RR-NL-0001 should fail`() = assertFail("RR-NL-0001")
+    fun `RR-NL-0001 should fail`() = assertFail("RR-NL-0001", false)
 
     @Test
-    fun `RR-NL-0003 should fail`() = assertFail("RR-NL-0003")
+    fun `RR-NL-0003 should fail`() = assertFail("RR-NL-0003", false)
 
     @Test
     fun `RR-NL-0004 should fail`() = assertFail("RR-NL-0004")
@@ -85,11 +85,14 @@ class DCCQRTestNL {
         Assert.assertEquals(0, result.size)
     }
 
-    private fun assertFail(ruleIdentifier: String) {
+    private fun assertFail(ruleIdentifier: String, onlyOneError: Boolean = true) {
         val dccQR = DCCQRTestHelper.getDccQr("dcc/nl/${ruleIdentifier}_fail.json")
         val from = CountryRiskHelper.ORANGE_VERY_HIGH_RISK_VOC
         val to = CountryRiskHelper.NL
         val result = processRules(dccQR, from, to)
+        if (onlyOneError) {
+            Assert.assertEquals(1, result.size)
+        }
         Assert.assertTrue(result.any { it.ruleIdentifier == ruleIdentifier })
     }
 
