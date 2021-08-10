@@ -1,0 +1,26 @@
+{
+  "issuer": "",
+  "issuedAt": 0,
+  "expirationTime": 0,
+  "dcc": {
+    "ver": "1.0.0",
+    "nam": {
+      "fn": "Achternaam",
+      "fnt": "ACHTERNAAM",
+      "gn": "\ud83d\ude00\ud83d\ude03\ud83d\ude04",
+      "gnt": ""
+    },
+    "dob": "2000-01-01",
+    "r": [
+      {
+        "tg": "840539006",
+        "fr": "2021-07-05",
+        "co": "",
+        "is": "Ministry of Health Welfare and Sport",
+        "df": "2021-08-01",
+        "du": "2021-08-05",
+        "ci": "urn:uvci:01:NL:ba2541e6d9da402e9466136c8d21207b"
+      }
+    ]
+  }
+}
