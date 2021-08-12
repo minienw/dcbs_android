@@ -14,7 +14,8 @@ enum class VaccineHolder(val value: String) {
     Gamaleya("Gamaleya-Research-Institute"),
     Vector("Vector-Institute"),
     SinoVac("Sinovac-Biotech"),
-    Bharat("Bharat-Biotech");
+    Bharat("Bharat-Biotech"),
+    SerumInstituteIndia("ORG-100001981");
 
     fun getDisplayName(): String {
         return when (this) {
@@ -32,6 +33,7 @@ enum class VaccineHolder(val value: String) {
             Vector -> "Vector Institute"
             SinoVac -> "Sinovac Biotech"
             Bharat -> "Bharat Biotech"
+            SerumInstituteIndia -> "Serum Institute Of India Private Limited"
         }
     }
 
