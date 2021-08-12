@@ -172,15 +172,26 @@ class DCCQR(
         val failingItems = ArrayList<DCCFailableItem>()
         validationResults.map { validationResult ->
             if (validationResult.result == Result.FAIL) {
-                failingItems.add(
-                    DCCFailableItem(
-                        DCCFailableType.CustomFailure,
-                        customMessage = validationResult.rule.descriptions["en"]
+                var description = getRuleDescription(validationResult.rule.descriptions)
+                    failingItems.add(
+                        DCCFailableItem(
+                            DCCFailableType.CustomFailure,
+                            customMessage = description
+                        )
                     )
-                )
             }
         }
         return failingItems
+    }
+
+    private fun getRuleDescription(descriptions: Map<String,String>): String {
+
+        val language = Locale.getDefault().language.toLowerCase(Locale.getDefault())
+        descriptions[language]?.let {
+            return it
+        } ?: run {
+            return descriptions["en"] ?: ""
+        }
     }
 
 
@@ -229,7 +240,7 @@ class DCCQR(
         return failingItems
     }
 
-    private fun getRequirePCROrAntigenFailingItem(vocRule: VOCExtraTestRule) : DCCFailableItem {
+    private fun getRequirePCROrAntigenFailingItem(vocRule: VOCExtraTestRule): DCCFailableItem {
         return DCCFailableItem(
             DCCFailableType.VocRequirePCROrAntigen, vocRule.singlePCRTestHours,
             vocRule.secondDosePCRMinTestHours, vocRule.secondDoseAntiGenMinTestHours
