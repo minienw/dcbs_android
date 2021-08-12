@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name_test">Scanner (Test)</string>
     <string name="app_name_acc">Scanner (Acc)</string>
+    <string name="app_name_val">Scanner (Val)</string>
     <string name="app_name">Scanner</string>
     <string name="onboarding_title">Onboarding</string>
     <string name="onboarding_screen_1_title">Who should use this app?</string>
