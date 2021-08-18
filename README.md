@@ -1,10 +1,10 @@
-# DCC cross border Scanner NL - iOS
+# DCC cross border Scanner NL - Android
 
 ## Introduction
-This repository contains the iOS prototype of the Dutch Corona verfier project.
+This repository contains the Android prototype of the Dutch Corona verfier project.
 
-* The iOS app is located in the repository you are currently viewing.
-* The Android app can be found here: https://github.com/minienw/dcbs_swift
+* The Android app is located in the repository you are currently viewing.
+* The iOS app can be found here: https://github.com/minienw/dcbs_swift
 
 The project is currently in production.   
 
