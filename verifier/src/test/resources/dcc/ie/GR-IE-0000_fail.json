@@ -1,0 +1,15 @@
+{
+  "issuer": "",
+  "issuedAt": 0,
+  "expirationTime": 0,
+  "dcc": {
+    "dob": "1964-08-12",
+    "nam": {
+      "fn": "Mustermann",
+      "fnt": "MUSTERMANN",
+      "gn": "Erika",
+      "gnt": "ERIKA"
+    },
+    "ver": "1.0.0"
+  }
+}

@@ -1,21 +1,29 @@
 package nl.rijksoverheid.dcbs.verifier
 
+import android.content.ContentValues
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.NavHostFragment
+import com.opencsv.CSVWriter
 import nl.rijksoverheid.ctr.appconfig.AppConfigViewModel
-import nl.rijksoverheid.ctr.appconfig.AppStatusFragment
-import nl.rijksoverheid.ctr.appconfig.models.AppStatus
 import nl.rijksoverheid.ctr.introduction.IntroductionFragment
 import nl.rijksoverheid.ctr.introduction.IntroductionViewModel
 import nl.rijksoverheid.ctr.introduction.ui.status.models.IntroductionStatus
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
-import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
+import nl.rijksoverheid.dcbs.verifier.automator.ValidationAutomatorViewModel
 import nl.rijksoverheid.dcbs.verifier.databinding.ActivityMainBinding
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.io.File
+import java.io.FileWriter
+import java.io.Writer
+import java.text.SimpleDateFormat
 import java.util.*
 
 /*
@@ -29,11 +37,16 @@ class VerifierMainActivity : AppCompatActivity() {
 
     private val introductionViewModel: IntroductionViewModel by viewModel()
     private val appStatusViewModel: AppConfigViewModel by viewModel()
+    private val validationAutomatorViewModel: ValidationAutomatorViewModel by viewModel()
     private val mobileCoreWrapper: MobileCoreWrapper by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+        if (BuildConfig.FLAVOR == "val") {
+            initValidationAutomator()
+            return
+        }
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -94,5 +107,75 @@ class VerifierMainActivity : AppCompatActivity() {
 
     fun checkLastConfigFetchExpired(time: Long): Boolean {
         return appStatusViewModel.checkLastConfigFetchExpired(time)
+    }
+
+    private fun initValidationAutomator() {
+        validationAutomatorViewModel.validatorResultsLiveData.observe(this, {
+            saveCSVFile(it)
+        })
+        appStatusViewModel.appStatusLiveData.observe(this, {
+            validationAutomatorViewModel.runValidation(mobileCoreWrapper)
+        })
+        updateConfig()
+    }
+
+    private fun saveCSVFile(results: List<String>) {
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+        val date = sdf.format(Date())
+        val filename = "Validation Report D${date} V${BuildConfig.VERSION_NAME} B${BuildConfig.VERSION_CODE} Android.csv"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveFileAndroidQ(filename, results)
+        } else {
+            saveFileBelowQ(filename, results)
+        }
+        Toast.makeText(
+            applicationContext,
+            String.format("%s file is exported into your Downloads folder", filename),
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveFileAndroidQ(filename: String, results: List<String>) {
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Downloads.DISPLAY_NAME, filename)
+            put(MediaStore.Downloads.MIME_TYPE, "text/csv")
+        }
+
+        contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+            ?.let { uri ->
+
+                contentResolver.openOutputStream(uri)?.writer()?.use { writer ->
+                    generateCSV(writer, results)
+                }
+            }
+    }
+
+    private fun saveFileBelowQ(filename: String, results: List<String>) {
+
+        val storageDir =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val file = File(storageDir, filename)
+        generateCSV(FileWriter(file), results)
+    }
+
+    private fun generateCSV(writer: Writer, results: List<String>) {
+
+        CSVWriter(
+            writer,
+            CSVWriter.DEFAULT_SEPARATOR,
+            CSVWriter.NO_QUOTE_CHARACTER,
+            CSVWriter.NO_ESCAPE_CHARACTER
+        ).use { csvWriter ->
+
+            val headerRecord = arrayOf("QR", "Result", "Remark")
+            csvWriter.writeNext(headerRecord)
+
+            results.forEach {
+                csvWriter.writeNext(arrayOf(it))
+            }
+        }
+
     }
 }

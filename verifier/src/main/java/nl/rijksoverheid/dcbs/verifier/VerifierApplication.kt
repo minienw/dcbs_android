@@ -6,6 +6,7 @@ import nl.rijksoverheid.ctr.design.designModule
 import nl.rijksoverheid.ctr.introduction.introductionModule
 import nl.rijksoverheid.ctr.shared.SharedApplication
 import nl.rijksoverheid.ctr.shared.sharedModule
+import nl.rijksoverheid.dcbs.verifier.automator.validationAutomatorModule
 import nl.rijksoverheid.dcbs.verifier.modules.*
 import nl.rijksoverheid.dcbs.verifier.modules.verifierIntroductionModule
 import nl.rijksoverheid.dcbs.verifier.modules.verifierMobileCoreModule
@@ -42,7 +43,8 @@ open class VerifierApplication : SharedApplication() {
                 appConfigModule("dcbs", BuildConfig.VERSION_CODE),
                 introductionModule,
                 *getAdditionalModules().toTypedArray(),
-                designModule
+                designModule,
+                validationAutomatorModule()
             )
         }
     }

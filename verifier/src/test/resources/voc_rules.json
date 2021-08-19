@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "singlePCRTestHours": 24,
+  "secondDosePCRMinTestHours": 48,
+  "secondDoseAntiGenMinTestHours": 24
+}
