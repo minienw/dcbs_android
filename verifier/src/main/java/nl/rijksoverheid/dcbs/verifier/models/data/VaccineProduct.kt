@@ -12,7 +12,8 @@ enum class VaccineProduct(val value: String) {
     BbibpCorv("BBIBP-CorV"),
     InActivatedVeroCell("Inactivated-SARS-CoV-2-Vero-Cell"),
     CoronaVac("CoronaVac"),
-    Covaxin("Covaxin");
+    Covaxin("Covaxin"),
+    Covishield("Covishield");
 
     fun getDisplayName(): String {
         return when (this) {
@@ -28,6 +29,7 @@ enum class VaccineProduct(val value: String) {
             InActivatedVeroCell -> "Inactivated SARS-CoV-2 (Vero Cell)"
             CoronaVac -> "CoronaVac"
             Covaxin -> "Covaxin (BBV152 A, B, C)"
+            Covishield -> "Covishield (ChAdOx1_nCoV-19)"
         }
     }
 
