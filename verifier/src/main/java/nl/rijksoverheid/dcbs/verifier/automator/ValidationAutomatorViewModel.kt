@@ -17,6 +17,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
@@ -29,6 +30,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import ru.gildor.coroutines.okhttp.await
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 
 abstract class ValidationAutomatorViewModel : ViewModel() {
@@ -77,13 +79,14 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
     }
 
     fun report(url: String, status: String, remark: String) {
-        val item = url.replace(base, "").replace("/",",")
+        var item = url.replace(base, "")
+        item = item.replaceFirst("/", ",")
+        item = item.replaceFirst("/", ",")
         reports.add("$item,$status,$remark")
     }
 
     private suspend fun decodeQR(bitmap: Bitmap): String? {
 
-        val newBitmap = addWhiteBorder(bitmap, 20F)
         val options = BarcodeScannerOptions.Builder()
             .setBarcodeFormats(
                 Barcode.FORMAT_QR_CODE,
@@ -92,9 +95,24 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
             .build()
 
         val scanner = BarcodeScanning.getClient(options)
-        val image = InputImage.fromBitmap(newBitmap, 0)
-        val results = scanner.process(image).await()
+        var results = processQR(scanner, bitmap)
+
+        // work around for problematic qr codes
+        if (results.isEmpty()) {
+            results = processQR(scanner, addWhiteBorder(bitmap, 5F))
+        }
+        if (results.isEmpty()) {
+            results = processQR(scanner, addWhiteBorder(bitmap, 20F))
+        }
+        if (results.isEmpty()) {
+            results = processQR(scanner, scaleBitmapIfNecessary(bitmap))
+        }
         return results.firstOrNull()?.rawValue
+    }
+
+    private suspend fun processQR(scanner: BarcodeScanner, bitmap: Bitmap?) : List<Barcode> {
+        val image = InputImage.fromBitmap(bitmap, 0)
+        return scanner.process(image).await()
     }
 
     private suspend fun getQR(url: String): Bitmap? {
@@ -114,6 +132,17 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
         canvas.drawColor(Color.WHITE)
         canvas.drawBitmap(bmp, borderSize, borderSize, null)
         return bmpWithBorder
+    }
+
+    private fun scaleBitmapIfNecessary(bitmap: Bitmap) : Bitmap {
+        if (bitmap.width < 350 || bitmap.height < 350) {
+            val aspectRatio: Float = bitmap.width / bitmap.height.toFloat()
+            val width = 350
+            val height = (width / aspectRatio).roundToInt()
+
+            return Bitmap.createScaledBitmap(bitmap, width, height, false)
+        }
+        return bitmap
     }
 
 
