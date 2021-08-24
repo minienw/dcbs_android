@@ -77,7 +77,7 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
     }
 
     fun report(url: String, status: String, remark: String) {
-        val item = url.replace(base, "")
+        val item = url.replace(base, "").replace("/",",")
         reports.add("$item,$status,$remark")
     }
 

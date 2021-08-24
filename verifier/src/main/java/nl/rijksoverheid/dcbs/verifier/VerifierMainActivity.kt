@@ -169,7 +169,7 @@ class VerifierMainActivity : AppCompatActivity() {
             CSVWriter.NO_ESCAPE_CHARACTER
         ).use { csvWriter ->
 
-            val headerRecord = arrayOf("QR", "Result", "Remark")
+            val headerRecord = arrayOf("Country", "Version", "QR", "Result", "Remark")
             csvWriter.writeNext(headerRecord)
 
             results.forEach {
