@@ -148,9 +148,33 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
 
     companion object {
 
-        const val base = "https://raw.githubusercontent.com/eu-digital-green-certificates/dcc-quality-assurance/validation5/"
+        const val base = "https://raw.githubusercontent.com/eu-digital-green-certificates/dcc-quality-assurance/2f66f2cc0c978cfa99003754dede2225ef33055f/"
 
         val qrCodeUrls = listOf(
+            "${base}AD/1.0.0/TEST-3-Test_Negatiu_Valid.png",
+            "${base}AD/1.0.0/TEST-4-Test_Negatiu_Invalid.png",
+            "${base}AD/1.0.0/VAC-1-Pauta_Completa.png",
+            "${base}AD/1.0.0/VAC-2-PautaIncompleta.png",
+            "${base}AD/1.0.0/REC-5-Recovery.png",
+            "${base}AL/1.3.0/TEST.png",
+            "${base}AL/1.3.0/VAC.png",
+            "${base}AL/1.3.0/REC.png",
+            "${base}IL/1.3.0/VAC1.png",
+            "${base}IL/1.3.0/VAC2.png",
+            "${base}IL/1.3.0/VAC3.png",
+            "${base}IL/1.3.0/REC1.png",
+            "${base}IL/1.3.0/REC2.png",
+            "${base}MA/1.3.0/TEST.png",
+            "${base}MA/1.3.0/VAC.png",
+            "${base}MC/1.3.0/TEST.png",
+            "${base}MC/1.3.0/VAC.png",
+            "${base}MC/1.3.0/REC.png",
+            "${base}PA/1.0.0/TEST1.png",
+            "${base}PA/1.0.0/VAC1.png",
+            "${base}PA/1.2.1/REC1.png",
+            "${base}SG/1.3.0/TEST_NAAT.png",
+            "${base}SG/1.3.0/TEST_RAT.png",
+            "${base}SG/1.3.0/VAC.png",
             "${base}AT/1.0.0/TEST.png",
             "${base}AT/1.3.0/TEST.png",
             "${base}AT/1.0.0/VAC.png",
