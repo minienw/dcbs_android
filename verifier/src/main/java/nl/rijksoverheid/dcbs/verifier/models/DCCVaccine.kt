@@ -1,7 +1,6 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.google.gson.annotations.SerializedName
-import nl.rijksoverheid.dcbs.verifier.models.data.*
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -34,27 +33,7 @@ class DCCVaccine(
     val certificateIdentifier: String
 ) {
 
-    fun getVaccine(): VaccineProphylaxis? {
-        return VaccineProphylaxis.fromValue(vaccine)
-    }
-
-    fun getVaccineProduct(): VaccineProduct? {
-        return VaccineProduct.fromValue(vaccineMedicalProduct)
-    }
-
-    fun getTargetedDisease(): TargetedDisease? {
-        return TargetedDisease.fromValue(targetedDisease)
-    }
-
-    fun getMarketingHolder(): VaccineHolder? {
-        return VaccineHolder.fromValue(marketingAuthorizationHolder)
-    }
-
-    fun isFullyVaccinated() : Boolean {
+    fun isFullyVaccinated(): Boolean {
         return doseNumber >= totalSeriesOfDoses
-    }
-
-    fun isCountryValid(countries: List<CountryRisk>) : Boolean {
-        return countries.find {it.code == countryOfVaccination } != null
     }
 }

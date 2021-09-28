@@ -10,4 +10,6 @@ package nl.rijksoverheid.dcbs.verifier.models
 
 class EURules(
     val vocExtraTestRule: VOCExtraTestRule,
+    val testNotDetectedType: String?,
+    val testDetectedType: String?
 )

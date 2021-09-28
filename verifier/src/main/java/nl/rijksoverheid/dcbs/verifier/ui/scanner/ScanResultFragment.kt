@@ -23,6 +23,7 @@ import nl.rijksoverheid.dcbs.verifier.models.DCCTest
 import nl.rijksoverheid.dcbs.verifier.models.DCCVaccine
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
+import nl.rijksoverheid.dcbs.verifier.models.data.ValueSetType
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQr
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.utils.ScannerUtil
@@ -208,8 +209,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.dose2TableTitle.text = getString(R.string.item_dose_x, 2)
         items?.let { vaccines ->
             binding.vaccineLayout.visibility = View.VISIBLE
-            val vaccinMedicalProduct = vaccines[0].getVaccineProduct()?.getDisplayName()
-                ?: vaccines[0].vaccineMedicalProduct
+            val vaccinMedicalProduct = getValueSetDisplayName(vaccines[0].vaccineMedicalProduct, ValueSetType.VaccineProduct)
             binding.dose1BoxTitle.text = getString(
                 R.string.item_vaccin_x_dose_x_x,
                 vaccinMedicalProduct,
@@ -227,16 +227,11 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 oldLabel = getString(R.string.old)
             )
             binding.dose1TableDiseaseVaccineValue.text =
-                "${
-                    vaccines[0].getTargetedDisease()
-                        ?.getDisplayName() ?: vaccines[0].targetedDisease
-                } | ${
-                    vaccines[0].getVaccine()?.getDisplayName() ?: vaccines[0].vaccine
-                }"
+                "${getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)} " +
+                        "| ${getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)}"
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
             binding.dose1TableManufacturerValue.text =
-                vaccines[0].getMarketingHolder()?.getDisplayName()
-                    ?: vaccines[0].marketingAuthorizationHolder
+                getValueSetDisplayName(vaccines[0].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
             binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
             binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
             if (vaccines.size == 2) {
@@ -249,20 +244,14 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     vaccines[1].doseNumber,
                     vaccines[1].totalSeriesOfDoses
                 )
-                binding.dose2BoxName.text = vaccines[1].getVaccineProduct()?.getDisplayName()
-                    ?: vaccines[1].vaccineMedicalProduct
+                binding.dose2BoxName.text = getValueSetDisplayName(vaccines[1].vaccineMedicalProduct, ValueSetType.VaccineProduct)
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
                 binding.dose2TableDiseaseVaccineValue.text =
-                    "${
-                        vaccines[1].getTargetedDisease()
-                            ?.getDisplayName() ?: vaccines[1].targetedDisease
-                    } | ${
-                        vaccines[1].getVaccine()?.getDisplayName() ?: vaccines[1].vaccine
-                    }"
+                    "${getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)} " +
+                            "| ${getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)}"
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
                 binding.dose2TableManufacturerValue.text =
-                    vaccines[1].getMarketingHolder()?.getDisplayName()
-                        ?: vaccines[1].marketingAuthorizationHolder
+                    getValueSetDisplayName(vaccines[1].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
                 binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
                 binding.dose2TableCertificateIdentifierValue.text =
                     vaccines[1].certificateIdentifier
@@ -275,6 +264,11 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         } ?: run {
             binding.vaccineLayout.visibility = View.GONE
         }
+    }
+
+    private fun getValueSetDisplayName(value: String, valueSetType: ValueSetType): String {
+        val valueItem = appConfigUtil.getValueSetContainer(valueSetType)?.find { it.key == value }?.item
+        return valueItem?.display ?: value
     }
 
     private fun getVaccineStatusColour(vaccine: DCCVaccine): Int? {
@@ -298,16 +292,13 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         items?.let { tests ->
             binding.testLayout.visibility = View.VISIBLE
             binding.testBoxTitle.text =
-                tests[0].getTestResult()?.getDisplayName(context) ?: tests[0].testResult
+                tests[0].getTestResult(appConfigUtil.getEuropeanVerificationRules())?.getDisplayName(context) ?: tests[0].testResult
             binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
             binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
-            binding.testTableTargetValue.text =
-                tests[0].getTargetedDisease()?.getDisplayName() ?: tests[0].targetedDisease
-            binding.testTableTypeValue.text =
-                tests[0].getTestType()?.getDisplayName() ?: tests[0].typeOfTest
+            binding.testTableTargetValue.text = getValueSetDisplayName(tests[0].targetedDisease, ValueSetType.TargetedAgent)
+            binding.testTableTypeValue.text = getValueSetDisplayName(tests[0].typeOfTest, ValueSetType.TestType)
             binding.testTableNameValue.text = tests[0].NAATestName
-            binding.testTableManufacturerValue.text =
-                tests[0].getTestManufacturer()?.getDisplayName() ?: tests[0].RATTestNameAndManufac
+            binding.testTableManufacturerValue.text = getValueSetDisplayName(tests[0].RATTestNameAndManufac ?: "", ValueSetType.TestManufacturer)
             binding.testTableCenterValue.text = tests[0].testingCentre
             binding.testTableCountryValue.text = tests[0].countryOfTest
             binding.testTableIssuerValue.text = tests[0].certificateIssuer
@@ -321,8 +312,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initRecovery(items: List<DCCRecovery>?) {
         items?.let { recoveries ->
             binding.recoveryLayout.visibility = View.VISIBLE
-            binding.recoveryBoxName.text = recoveries[0].getTargetedDisease()?.getDisplayName()
-                ?: recoveries[0].targetedDisease
+            binding.recoveryBoxName.text = getValueSetDisplayName(recoveries[0].targetedDisease, ValueSetType.TargetedAgent)
             binding.recoveryTableFirstDateValue.text =
                 recoveries[0].dateOfFirstPositiveTest?.formatDate()
             binding.recoveryTableValidFromValue.text =

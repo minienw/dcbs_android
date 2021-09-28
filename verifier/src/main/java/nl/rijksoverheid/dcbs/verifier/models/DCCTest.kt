@@ -3,10 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.models
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import nl.rijksoverheid.dcbs.verifier.R
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestManufacturer
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestResult
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
-import nl.rijksoverheid.dcbs.verifier.models.data.TargetedDisease
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import java.time.Duration
 import java.time.LocalDateTime
@@ -43,20 +40,20 @@ class DCCTest(
     val certificateIdentifier: String
 ) {
 
-    fun getTargetedDisease(): TargetedDisease? {
-        return TargetedDisease.fromValue(targetedDisease)
+    fun getTestResult(euRules: EURules?): DCCTestResult? {
+        return when {
+            isTestDetected(euRules) -> DCCTestResult.Detected
+            isTestNotDetected(euRules) -> DCCTestResult.NotDetected
+            else -> null
+        }
     }
 
-    fun getTestType(): DCCTestType? {
-        return DCCTestType.fromValue(typeOfTest)
+    private fun isTestDetected(euRules: EURules?) : Boolean {
+        return testResult == (euRules?.testDetectedType ?: DCCTestResult.Detected.value)
     }
 
-    fun getTestResult(): DCCTestResult? {
-        return DCCTestResult.fromValue(testResult)
-    }
-
-    fun getTestManufacturer(): DCCTestManufacturer? {
-        return DCCTestManufacturer.fromValue(RATTestNameAndManufac)
+    private fun isTestNotDetected(euRules: EURules?) : Boolean {
+        return testResult == (euRules?.testNotDetectedType ?: DCCTestResult.NotDetected.value)
     }
 
     fun getTestAge(context: Context): String? {

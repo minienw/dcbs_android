@@ -7,10 +7,12 @@ import dgca.verifier.app.engine.DefaultAffectedFieldsDataRetriever
 import dgca.verifier.app.engine.DefaultCertLogicEngine
 import dgca.verifier.app.engine.DefaultJsonLogicValidator
 import dgca.verifier.app.engine.Result
-import dgca.verifier.app.engine.data.*
+import dgca.verifier.app.engine.data.CertificateType
+import dgca.verifier.app.engine.data.ExternalParameter
+import dgca.verifier.app.engine.data.Rule
+import dgca.verifier.app.engine.data.RuleCertificateType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
-import nl.rijksoverheid.dcbs.verifier.models.data.DCCTestType
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
 import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
 import java.time.Instant
@@ -214,9 +216,10 @@ class DCCQR(
         }
         if (vocRule.enabled && fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
 
-            val pcrTest = dcc?.tests?.find { it.getTestType() == DCCTestType.NucleidAcid }
+            // TODO: remove NL rules
+            val pcrTest: DCCTest? = null // dcc?.tests?.find { it.typeOfTest == DCCTestType.NucleidAcid }
             val pcrTestAge = pcrTest?.getTestAgeInHours()
-            val antigenTest = dcc?.tests?.find { it.getTestType() == DCCTestType.RapidImmune }
+            val antigenTest: DCCTest? = null //dcc?.tests?.find { it.getTestType() == DCCTestType.RapidImmune }
             val antigenTestAge = antigenTest?.getTestAgeInHours()
             if (pcrTest != null && pcrTestAge != null) {
                 if (pcrTestAge <= vocRule.singlePCRTestHours) {

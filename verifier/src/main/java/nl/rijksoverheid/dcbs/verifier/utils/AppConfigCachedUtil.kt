@@ -14,8 +14,11 @@ import nl.rijksoverheid.dcbs.verifier.models.CountryColorCode
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
 import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import nl.rijksoverheid.dcbs.verifier.models.EURules
+import nl.rijksoverheid.dcbs.verifier.models.data.ValueSetItem
+import nl.rijksoverheid.dcbs.verifier.models.data.ValueSetObject
+import nl.rijksoverheid.dcbs.verifier.models.data.ValueSetType
 import org.json.JSONObject
-import java.util.*
+import kotlin.collections.ArrayList
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -29,6 +32,7 @@ interface AppConfigCachedUtil {
     fun getEuropeanVerificationRules(): EURules?
     fun getBusinessRules(): List<Rule>?
     fun getValueSetsRaw(): String?
+    fun getValueSetContainer(valueSetType: ValueSetType) : List<ValueSetObject>?
 }
 
 class AppConfigCachedUtilImpl(
@@ -72,6 +76,19 @@ class AppConfigCachedUtilImpl(
 
     override fun getValueSetsRaw(): String? {
         return cachedAppConfigUseCase.getCachedValueSetsRaw()
+    }
+
+    override fun getValueSetContainer(valueSetType: ValueSetType) : List<ValueSetObject>? {
+        getValueSetsRaw()?.let { rawSet ->
+            val objectList = ArrayList<ValueSetObject>()
+            val containerObject = JSONObject(rawSet).getJSONObject(valueSetType.value)
+            containerObject.keys().forEach { key ->
+                val valueSetItem = Gson().fromJson(containerObject.getString(key), ValueSetItem::class.java)
+                objectList.add(ValueSetObject(key, valueSetItem))
+            }
+            return objectList
+        }
+        return null
     }
 
     private fun getOther(): CountryRisk {
