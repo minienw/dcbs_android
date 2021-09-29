@@ -26,6 +26,10 @@ class DCC(
     val tests: List<DCCTest>?,
     @SerializedName("r")
     val recoveries: List<DCCRecovery>?,
+    /// Extra value for payload processing validations
+    var from: CountryRisk? = null,
+    /// Extra value for payload processing validations
+    var to: CountryRisk? = null
 ) {
     fun getDateOfBirth(): Date? {
         return dateOfBirth.toDate()

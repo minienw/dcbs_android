@@ -79,8 +79,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                                 from,
                                 to,
                                 appConfigUtil.getAllBusinessRules(),
-                                valueSetsRaw,
-                                verifiedQr.data
+                                valueSetsRaw
                             )
                         val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
 

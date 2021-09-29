@@ -1,6 +1,7 @@
 package nl.rijksoverheid.dcbs.verifier.models
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import dgca.verifier.app.engine.DefaultAffectedFieldsDataRetriever
@@ -97,13 +98,15 @@ class DCCQR(
         to: CountryRisk,
         businessRules: List<Rule>,
         valueSets: String,
-        payload: String,
         validationClock: ZonedDateTime = ZonedDateTime.now(ZoneId.of(ZoneOffset.UTC.id))
     ): List<DCCFailableItem> {
         val failingItems = ArrayList<DCCFailableItem>()
+        dcc?.from = from
+        dcc?.to = to
 
         if (to.ruleEngineEnabled != false) {
             dcc?.let { dcc ->
+                val payload = Gson().toJson(dcc)
                 failingItems.addAll(
                     filterByRuleEngine(
                         to = to,
@@ -154,7 +157,6 @@ class DCCQR(
             kid = "",
         )
 
-        val payloadData: String = JsonParser.parseString(payload).asJsonObject.get("dcc").toString()
         val validationResults =
             certLogicEngine.validate(
                 dcc.getEngineCertificateType(),
@@ -165,7 +167,7 @@ class DCCQR(
                     dcc.getEngineCertificateType(),
                 ),
                 externalParameter,
-                payloadData
+                payload
             )
         val failingItems = ArrayList<DCCFailableItem>()
         validationResults.map { validationResult ->

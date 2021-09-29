@@ -21,8 +21,22 @@ object DCCQRTestHelper {
         return Gson().fromJson(jsonString, DCCQR::class.java)
     }
 
-    fun readBusinessRules(): List<Rule> {
+    fun readAllRules(): List<Rule> {
+        val businessRules = readBusinessRules()
+        val customBusinessRules = readCustomBusinessRules()
+        return businessRules + customBusinessRules
+    }
+
+    private fun readBusinessRules(): List<Rule> {
         val jsonString = readJsonFile("business_rules.json")
+        val mapper = ObjectMapper()
+        mapper.findAndRegisterModules()
+        val remoteRules = mapper.readValue(jsonString, object : TypeReference<List<RuleRemote>>() {})
+        return remoteRules.toRules()
+    }
+
+    private fun readCustomBusinessRules(): List<Rule> {
+        val jsonString = readJsonFile("custom_business_rules.json")
         val mapper = ObjectMapper()
         mapper.findAndRegisterModules()
         val remoteRules = mapper.readValue(jsonString, object : TypeReference<List<RuleRemote>>() {})

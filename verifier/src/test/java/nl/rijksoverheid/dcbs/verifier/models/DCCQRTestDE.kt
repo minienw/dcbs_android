@@ -13,7 +13,6 @@ import java.time.ZonedDateTime
 class DCCQRTestDE {
 
     private lateinit var businessRules: List<Rule>
-    private lateinit var vocExtraTestRule: VOCExtraTestRule
     private lateinit var valueSets: String
     private var validationClock: ZonedDateTime = ZonedDateTime.of(
         2021, 8, 6, 0, 0, 0, 0,
@@ -22,8 +21,7 @@ class DCCQRTestDE {
 
     @Before
     fun setUp() {
-        businessRules = DCCQRTestHelper.readBusinessRules()
-        vocExtraTestRule = DCCQRTestHelper.readVocRules()
+        businessRules = DCCQRTestHelper.readAllRules()
         valueSets = DCCQRTestHelper.readValueSets()
     }
 
@@ -86,6 +84,6 @@ class DCCQRTestDE {
     }
 
     private fun processRules(dccQR: DCCQR, from: CountryRisk, to: CountryRisk): List<DCCFailableItem> {
-        return dccQR.processBusinessRules(from, to, vocExtraTestRule, businessRules, valueSets, Gson().toJson(dccQR), validationClock)
+        return dccQR.processBusinessRules(from, to, businessRules, valueSets, validationClock)
     }
 }
