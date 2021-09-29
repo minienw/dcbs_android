@@ -207,5 +207,5 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     - A PCR/NAAT test of no more than %d hours old
     of
     - A PCR/NAAT test of no more than %d hours old AND an antigen test of no more than %d hours old</string>
-
+    <string name="country_not_used">N/A</string>
 </resources>

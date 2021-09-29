@@ -60,7 +60,7 @@ class CountryPickerFragment : Fragment(R.layout.fragment_country_picker) {
     private fun getCountries(query: String): List<CountryRisk>? {
         val countries = appConfigUtil
             .getCountries(false)
-            ?.filter { it.isColourCode != true }
+            ?.filter { it.isColourCode != true }?.sortedBy { it.name() }
 
         return if (query.isNotEmpty()) {
             countries?.filter { it.name().startsWith(query, true) }

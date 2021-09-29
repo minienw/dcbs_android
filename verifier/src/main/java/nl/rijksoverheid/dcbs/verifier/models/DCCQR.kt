@@ -14,7 +14,6 @@ import dgca.verifier.app.engine.data.RuleCertificateType
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.utils.formatDate
-import nl.rijksoverheid.dcbs.verifier.utils.yearDifference
 import java.time.Instant
 import java.time.ZoneId
 import java.time.ZoneOffset
@@ -96,7 +95,6 @@ class DCCQR(
     fun processBusinessRules(
         from: CountryRisk,
         to: CountryRisk,
-        vocRule: VOCExtraTestRule,
         businessRules: List<Rule>,
         valueSets: String,
         payload: String,
@@ -119,12 +117,8 @@ class DCCQR(
             }
         }
 
-        if (from.isIndecisive() || to.isIndecisive()) {
+        if (from.isIndecisive() && to.getPassType() == CountryRiskPass.NLRules || to.isIndecisive()) {
             return listOf(DCCFailableItem(DCCFailableType.UndecidableFrom))
-        }
-
-        if (to.getPassType() == CountryRiskPass.NLRules) {
-            failingItems.addAll(processNLBusinessRules(from, vocRule))
         }
 
         return failingItems
@@ -197,60 +191,6 @@ class DCCQR(
         } ?: run {
             return descriptions["en"] ?: ""
         }
-    }
-
-
-    private fun processNLBusinessRules(from: CountryRisk, vocRule: VOCExtraTestRule): List<DCCFailableItem> {
-        val fromColorCode = from.getColourCode()
-        val failingItems = ArrayList<DCCFailableItem>()
-        val age = dcc?.getDateOfBirth()?.yearDifference() ?: 99
-        if (age <= 11) {
-            return emptyList()
-        }
-        val requireTestInsideEU = fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT && from.isEU == true
-        val requireTestOutsideEU =
-            (fromColorCode == CountryColorCode.ORANGE_HIGH_INCIDENCE || fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) && from.isEU == false
-        val requireTest = requireTestOutsideEU || requireTestInsideEU
-        if (requireTest && (dcc?.tests == null || dcc.tests.isEmpty())) {
-            failingItems.add(DCCFailableItem(DCCFailableType.MissingRequiredTest))
-        }
-        if (vocRule.enabled && fromColorCode == CountryColorCode.ORANGE_SHIPS_FLIGHT) {
-
-            // TODO: remove NL rules
-            val pcrTest: DCCTest? = null // dcc?.tests?.find { it.typeOfTest == DCCTestType.NucleidAcid }
-            val pcrTestAge = pcrTest?.getTestAgeInHours()
-            val antigenTest: DCCTest? = null //dcc?.tests?.find { it.getTestType() == DCCTestType.RapidImmune }
-            val antigenTestAge = antigenTest?.getTestAgeInHours()
-            if (pcrTest != null && pcrTestAge != null) {
-                if (pcrTestAge <= vocRule.singlePCRTestHours) {
-                    /// All good. Pcr test is under 24h
-                } else if (pcrTestAge > vocRule.singlePCRTestHours && pcrTestAge <= vocRule.secondDosePCRMinTestHours) {
-                    /// pcr test not too old, but require antigen test
-                    failingItems.add(DCCFailableItem(DCCFailableType.VocRequireSecondAntigen, vocRule.secondDoseAntiGenMinTestHours))
-                } else {
-                    /// PCR test too old, show full message
-                    failingItems.add(getRequirePCROrAntigenFailingItem(vocRule))
-                }
-            } else if (antigenTest != null && antigenTestAge != null) {
-                // Require PCR test
-                if (antigenTestAge <= vocRule.secondDoseAntiGenMinTestHours) {
-                    failingItems.add(DCCFailableItem(DCCFailableType.VocRequireSecondPCR, vocRule.secondDosePCRMinTestHours))
-                } else {
-                    failingItems.add(getRequirePCROrAntigenFailingItem(vocRule))
-                }
-            } else {
-                // Require PCR test or Antigen test
-                failingItems.add(getRequirePCROrAntigenFailingItem(vocRule))
-            }
-        }
-        return failingItems
-    }
-
-    private fun getRequirePCROrAntigenFailingItem(vocRule: VOCExtraTestRule): DCCFailableItem {
-        return DCCFailableItem(
-            DCCFailableType.VocRequirePCROrAntigen, vocRule.singlePCRTestHours,
-            vocRule.secondDosePCRMinTestHours, vocRule.secondDoseAntiGenMinTestHours
-        )
     }
 
     fun shouldShowGreenOverride(from: CountryRisk, to: CountryRisk): Boolean {

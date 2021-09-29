@@ -17,10 +17,7 @@ import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
-import nl.rijksoverheid.dcbs.verifier.models.DCCQR
-import nl.rijksoverheid.dcbs.verifier.models.DCCRecovery
-import nl.rijksoverheid.dcbs.verifier.models.DCCTest
-import nl.rijksoverheid.dcbs.verifier.models.DCCVaccine
+import nl.rijksoverheid.dcbs.verifier.models.*
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableItem
 import nl.rijksoverheid.dcbs.verifier.models.data.DCCFailableType
 import nl.rijksoverheid.dcbs.verifier.models.data.ValueSetType
@@ -69,48 +66,45 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
         args.data.verifiedQr?.let { verifiedQr ->
             appConfigUtil.getValueSetsRaw()?.let { valueSetsRaw ->
-                appConfigUtil.getBusinessRules()?.let { businessRules ->
-                    appConfigUtil.getCountries(true)?.let { countries ->
-                        appConfigUtil.getEuropeanVerificationRules()?.vocExtraTestRule?.let { vocRule ->
+                appConfigUtil.getCountries(true)?.let { countries ->
+                    val from =
+                        countries.find { it.code == persistenceManager.getDepartureValue() }
+                    val to =
+                        countries.find { it.code == persistenceManager.getDestinationValue() }
+                    if (from != null && to != null) {
+                        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                        val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                        val failedItems =
+                            dccQR.processBusinessRules(
+                                from,
+                                to,
+                                appConfigUtil.getAllBusinessRules(),
+                                valueSetsRaw,
+                                verifiedQr.data
+                            )
+                        val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
 
-                            val from =
-                                countries.find { it.code == persistenceManager.getDepartureValue() }
-                            val to =
-                                countries.find { it.code == persistenceManager.getDestinationValue() }
-                            if (from != null && to != null) {
-                                val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-                                val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-                                val failedItems =
-                                    dccQR.processBusinessRules(
-                                        from,
-                                        to,
-                                        vocRule,
-                                        businessRules,
-                                        valueSetsRaw,
-                                        verifiedQr.data
-                                    )
-                                val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
-
-                                when {
-                                    failedItems.isEmpty() -> setScreenValid()
-                                    failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
-                                        setBusinessErrorMessages(failedItems)
-                                        setScreenUndecided()
-                                    }
-                                    else -> {
-                                        binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                                        setBusinessErrorMessages(failedItems, shouldShowGreenOverride)
-                                        setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
-                                    }
-                                }
-                                binding.informationLayout.visibility = View.VISIBLE
-                                binding.descriptionLayout.visibility = View.GONE
-                                presentPersonalDetails(verifiedQr)
-                            } else {
+                        when {
+                            failedItems.isEmpty() -> setScreenValid()
+                            failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
                                 setScreenUndecided()
-                                presentPersonalDetails(verifiedQr)
+                            }
+                            else -> {
+                                if (!shouldShowGreenOverride) {
+                                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                                    setBusinessErrorMessages(failedItems)
+                                } else {
+                                    binding.recyclerViewBusinessError.visibility = View.GONE
+                                }
+                                setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
                             }
                         }
+                        binding.informationLayout.visibility = View.VISIBLE
+                        binding.descriptionLayout.visibility = View.GONE
+                        presentPersonalDetails(verifiedQr)
+                    } else {
+                        setScreenUndecided()
+                        presentPersonalDetails(verifiedQr)
                     }
                 }
             }
@@ -146,17 +140,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
     }
 
-    private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>, showBlack: Boolean = false) {
+    private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>) {
 
         context?.let { c ->
             GroupAdapter<GroupieViewHolder>()
                 .run {
-                    addAll(failedItems.map {
-                        BusinessErrorAdapterItem(
-                            it.getDisplayName(c),
-                            it.type == DCCFailableType.UndecidableFrom || showBlack
-                        )
-                    })
+                    addAll(failedItems.map { BusinessErrorAdapterItem(it.getDisplayName(c)) })
                     binding.recyclerViewBusinessError.adapter = this
                 }
         }
@@ -179,7 +168,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.black))
         binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.black))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
-        binding.recyclerViewBusinessError.visibility = View.VISIBLE
+        binding.recyclerViewBusinessError.visibility = View.GONE
     }
 
     private fun setScreenInvalid(@DrawableRes iconResId: Int, showGreen: Boolean) {
@@ -333,18 +322,29 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         appConfigUtil.getCountries(true)?.let { countries ->
             val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
             val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
-            val destinationCountry =
-                countries.find { it.code == persistenceManager.getDestinationValue() }?.name()
-                    ?: getString(R.string.pick_country)
-            binding.layoutCountryPicker.departureValue.text = departureCountry
+
+            val destinationCountryRisk = countries.find { it.code == persistenceManager.getDestinationValue() }
+            val isNLDestination = destinationCountryRisk?.getPassType() == CountryRiskPass.NLRules
+            val destinationCountry = destinationCountryRisk?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = if (isNLDestination) departureCountry else getString(R.string.country_not_used)
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
             val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color }?.name()
             val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
             binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
-        }
 
-        binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
+            context?.let {
+                if (isNLDestination) {
+                    binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_white_opacity70)
+                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.primary_blue))
+                    binding.layoutCountryPicker.departureCard.setOnClickListener {
+                        findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
+                    }
+                } else {
+                    binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_inactive_gray_opacity70)
+                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.black))
+                }
+            }
+
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {

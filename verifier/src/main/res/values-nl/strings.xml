@@ -208,5 +208,7 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     - Een PCR/NAAT test van maximaal %d uur oud
     of
     - Een PCR/NAAT test van maximaal %d uur oud &amp; een Antigeen test van maximaal %d uur oud</string>
+    <string name="country_not_used">N.V.T.</string>
+
 
 </resources>

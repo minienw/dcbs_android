@@ -11,6 +11,7 @@ import com.xwray.groupie.Section
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentDestinationPickerBinding
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
+import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.utils.AppConfigCachedUtil
 import org.koin.android.ext.android.inject
@@ -35,6 +36,9 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
                 setOnItemClickListener { item, _ ->
                     countries.find { it.name() == (item as? PickerAdapterItem)?.title }?.let { country ->
                         persistenceManager.saveDestinationValue(country.code ?: "")
+                        if (country.getPassType() == CountryRiskPass.NLRules) {
+                            persistenceManager.saveDepartureValue("")
+                        }
                     }
                     findNavController().popBackStack()
                 }
@@ -60,11 +64,11 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
     }
 
     private fun getCountries(query: String): List<CountryRisk>? {
-        val businessRules = appConfigUtil.getBusinessRules()
+        val businessRules = appConfigUtil.getAllBusinessRules()
         val countries = appConfigUtil
             .getCountries(true)
             ?.filter {
-                businessRules?.find { rule ->
+                businessRules.find { rule ->
                     rule.countryCode.toUpperCase(Locale.getDefault()) == it.code
                 } != null || it.code == context?.getString(R.string.country_other)
             }

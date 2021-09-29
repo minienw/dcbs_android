@@ -16,14 +16,10 @@ import nl.rijksoverheid.dcbs.verifier.databinding.ItemCountryPickerBinding
  *
  */
 class BusinessErrorAdapterItem(
-    val title: String,
-    private val showBlack: Boolean,
+    val title: String
 ) : BindableItem<ItemBusinessErrorBinding>() {
     override fun bind(viewBinding: ItemBusinessErrorBinding, position: Int) {
-        val context = viewBinding.errorMessage.context
         viewBinding.errorMessage.text = title
-        val textColorResId = if (showBlack) R.color.black else R.color.red
-        viewBinding.errorMessage.setTextColor(ContextCompat.getColor(context, textColorResId))
     }
 
     override fun getLayout(): Int {

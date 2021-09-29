@@ -31,6 +31,11 @@ interface AppConfigApi {
     @Streaming
     suspend fun getBusinessRules(): ResponseBody
 
+    @GET("custom_business_rules")
+    @SignedRequest
+    @Streaming
+    suspend fun getCustomBusinessRules(): ResponseBody
+
     @GET("value_sets")
     @SignedRequest
     @Streaming

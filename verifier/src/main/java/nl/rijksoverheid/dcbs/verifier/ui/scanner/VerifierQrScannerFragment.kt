@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.mlkit.vision.barcode.Barcode
 import nl.rijksoverheid.ctr.qrscanner.QrCodeScannerFragment
@@ -11,6 +12,7 @@ import nl.rijksoverheid.ctr.shared.livedata.EventObserver
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
+import nl.rijksoverheid.dcbs.verifier.models.CountryRiskPass
 import nl.rijksoverheid.dcbs.verifier.persistance.PersistenceManager
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.ScanResultData
 import nl.rijksoverheid.dcbs.verifier.ui.scanner.models.VerifiedQrResultState
@@ -98,18 +100,29 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         appConfigUtil.getCountries(true)?.let { countries ->
             val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
             val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
-            val destinationCountry =
-                countries.find { it.code == persistenceManager.getDestinationValue() }?.name() ?: getString(R.string.pick_country)
-            binding.layoutCountryPicker.departureValue.text = departureCountry
+
+            val destinationCountryRisk = countries.find { it.code == persistenceManager.getDestinationValue() }
+            val isNLDestination = destinationCountryRisk?.getPassType() == CountryRiskPass.NLRules
+            val destinationCountry = destinationCountryRisk?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text = if (isNLDestination) departureCountry else getString(R.string.country_not_used)
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
-            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color}?.name()
+            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color }?.name()
             val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
             binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
 
-        }
+            context?.let {
+                if (isNLDestination) {
+                    binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_white_opacity70)
+                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.primary_blue))
+                    binding.layoutCountryPicker.departureCard.setOnClickListener {
+                        findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
+                    }
+                } else {
+                    binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_inactive_gray_opacity70)
+                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.black))
+                }
+            }
 
-        binding.layoutCountryPicker.departureCard.setOnClickListener {
-            findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {

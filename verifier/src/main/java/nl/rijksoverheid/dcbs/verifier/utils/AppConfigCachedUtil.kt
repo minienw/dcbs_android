@@ -30,7 +30,7 @@ import kotlin.collections.ArrayList
 interface AppConfigCachedUtil {
     fun getCountries(isOtherIncluded: Boolean): List<CountryRisk>?
     fun getEuropeanVerificationRules(): EURules?
-    fun getBusinessRules(): List<Rule>?
+    fun getAllBusinessRules(): List<Rule>
     fun getValueSetsRaw(): String?
     fun getValueSetContainer(valueSetType: ValueSetType) : List<ValueSetObject>?
 }
@@ -48,7 +48,7 @@ class AppConfigCachedUtilImpl(
             if (isOtherIncluded) {
                 countries.add(getOther())
             }
-            return countries.sortedBy { it.name() }
+            return countries
         }
         return null
     }
@@ -62,11 +62,34 @@ class AppConfigCachedUtilImpl(
         return null
     }
 
-    override fun getBusinessRules(): List<Rule>? {
+    override fun getAllBusinessRules(): List<Rule> {
+        val rules = ArrayList<Rule>()
+        getBusinessRules()?.let {
+            rules.addAll(it)
+        }
+        getCustomBusinessRules()?.let {
+            rules.addAll(it)
+        }
+        return rules
+    }
+
+    private fun getBusinessRules(): List<Rule>? {
         cachedAppConfigUseCase.getCachedBusinessRulesRaw()?.let { businessRules ->
             val mapper = ObjectMapper()
             mapper.findAndRegisterModules()
             val remoteRules = mapper.readValue(businessRules,
+                object : TypeReference<List<RuleRemote>>() {})
+            return remoteRules.toRules()
+        }
+        return null
+
+    }
+
+    private fun getCustomBusinessRules(): List<Rule>? {
+        cachedAppConfigUseCase.getCachedCustomBusinessRulesRaw()?.let { customBusinessRules ->
+            val mapper = ObjectMapper()
+            mapper.findAndRegisterModules()
+            val remoteRules = mapper.readValue(customBusinessRules,
                 object : TypeReference<List<RuleRemote>>() {})
             return remoteRules.toRules()
         }
