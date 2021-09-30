@@ -2,9 +2,9 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:elevation="5dp"
     android:gravity="center">
 
@@ -12,24 +12,25 @@
         android:id="@+id/departure_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:padding="10dp"
         android:layout_marginStart="20dp"
+        android:layout_weight="1"
         android:background="@drawable/bg_white_opacity70"
-        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp"
+        app:layout_constraintEnd_toStartOf="@id/arrow_icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/arrow_icon">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/departure_title"
             style="@style/Montserrat_Bold_Black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:focusable="true"
             android:text="@string/departure"
             android:textSize="12sp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/departure_arrow"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -37,11 +38,12 @@
             style="@style/Montserrat_Bold_Parliament"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:focusable="true"
             android:text="@string/pick_country"
             android:textSize="14sp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/departure_arrow"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/departure_title" />
 
         <ImageView
@@ -49,9 +51,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_country_down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,37 +61,38 @@
         android:id="@+id/arrow_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:src="@drawable/ic_country_right_arrow"
-        android:layout_gravity="center"
-        app:layout_constraintTop_toTopOf="@id/departure_card"
         app:layout_constraintBottom_toBottomOf="@id/departure_card"
+        app:layout_constraintEnd_toStartOf="@id/destination_card"
         app:layout_constraintStart_toEndOf="@id/departure_card"
-        app:layout_constraintEnd_toStartOf="@id/destination_card"/>
+        app:layout_constraintTop_toTopOf="@id/departure_card" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/destination_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_marginEnd="20dp"
-        android:padding="10dp"
+        android:layout_weight="1"
         android:background="@drawable/bg_white_opacity70"
-        app:layout_constraintTop_toTopOf="parent"
+        android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/arrow_icon">
+        app:layout_constraintStart_toEndOf="@id/arrow_icon"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/destination_title"
             style="@style/Montserrat_Bold_Black"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/destination"
-            android:textSize="12sp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/destination"
+            android:focusable="true"
+            android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/destination_arrow"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -97,11 +100,12 @@
             style="@style/Montserrat_Bold_Parliament"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
             android:text="@string/pick_country"
             android:textSize="14sp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:focusable="true"
             app:layout_constraintEnd_toStartOf="@id/destination_arrow"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/destination_title" />
 
         <ImageView
@@ -109,9 +113,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_country_down_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -120,11 +124,11 @@
         style="@style/Montserrat_Bold_White"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="High Risk"
-        android:textSize="13sp"
         android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textSize="13sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/departure_card" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/departure_card"
+        tools:text="High Risk" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

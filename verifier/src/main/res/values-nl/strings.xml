@@ -102,19 +102,17 @@
     <string name="scan_instructions_1_description">Laat de reiziger een Digital COVID Certificate QR code tonen op een mobiel apparaat of op papier. Houd voldoende afstand bij het richten van de camera en wacht tot de app de QR code heeft herkend. De app gaat automatisch door met controleren.</string>
     <string name="scan_instructions_2_title">2. Groen scherm</string>
     <string name="scan_instructions_2_description">Een groen scherm betekent dat de getoonde QR code geldig is. Controleer of de ID gegevens overeenkomen met het getoonde ID bewijs van de reiziger.</string>
-    <string name="scan_instructions_3_image">Persoon houdt een telefoon vast met een groen scherm en een zwart vinkje.</string>
     <string name="scan_instructions_3_title">3. Controleer de gegevens</string>
     <string name="scan_instructions_3_description">Indien nodig controleert u of volgens de test- vaccinatie- of herstelgegevens die de app weergeeft reizen naar het land van bestemming door de reiziger is toegestaan. Zo ja, dan kunt u de reiziger toegang geven.</string>
-    <string name="scan_instructions_4_image">Persoon houdt een telefoon vast met een rood scherm en een zwart kruis.</string>
     <string name="scan_instructions_4_title">4. Rood scherm</string>
     <string name="scan_instructions_4_description"><![CDATA[Bij een rood scherm is het de QR code <b>ongeldig.</b> Dit betekent  <b>niet</b> dat de reiziger corona heeft of besmettelijk is! <br/><br/>
 Er worden geen gegevens uit het DCC getoond. U vraagt de reiziger om een alternatief bewijs (negatief testresultaat, alternatief bewijs van vaccinatie of herstel), om de controle uit te kunnen voeren.]]></string>
     <string name="scan_instructions_5_title">5. Rood scherm: verklaringen en opties</string>
     <string name="scan_instructions_5_description"><![CDATA[Een rood scherm kan meerdere oorzaken hebben:<br/><br/>
-a. Het certificaat is niet voorzien van een geldige handtekening door een van de daartoe aangewezen instanties.<br/><br/>
-b. De lijst referentie certificaten van handtekeningen is verouderd, en kan momenteel niet worden bijgewerkt. Kies eventueel de functie Bijwerken certificaatlijst in het menu en probeer de scan opnieuw uit te voeren.<br/><br/>
-c. Er is iets mis met de scanner app. Sluit de app helemaal af en start opnieuw om het nog eens te proberen.<br/><br/>
-d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw starten en scan opnieuw.]]></string>
+<ul><li> Het certificaat is niet voorzien van een geldige handtekening door een van de daartoe aangewezen instanties.<br/><br/></li>
+<li> De lijst referentie certificaten van handtekeningen is verouderd, en kan momenteel niet worden bijgewerkt. Kies eventueel de functie Bijwerken certificaatlijst in het menu en probeer de scan opnieuw uit te voeren.<br/><br/></li>
+<li> Er is iets mis met de scanner app. Sluit de app helemaal af en start opnieuw om het nog eens te proberen.<br/><br/></li>
+<li> De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw starten en scan opnieuw.</li></ul>]]></string>
     <string name="scan_instructions_6_title">6. Melding: De certificatenlijst is niet bijgewerkt</string>
     <string name="scan_instructions_6_description">De app laat in bepaalde gevallen de volgende waarschuwing zien in een rode balk: “De certificatenlijst is niet bijgewerkt!” Deze melding betekent dat bij het ophalen van een controlelijst voor de elektronische handtekeningen iets mis is gegaan, bijvoorbeeld door een ontbrekende verbinding. Het gevolg is dat sommige geldige QR codes als ongeldig worden weergegeven in de app. Met de knop Bijwerken in de meldingen balk kunt u het ophalen handmatig forceren. Maak daarvoor eerst verbinding met het internet.</string>
 
@@ -126,7 +124,8 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     <string name="item_dose_x">Vaccin dosis %d</string>
     <string name="item_dose_x_x">Vaccin dosis %d / %d</string>
     <string name="item_vaccin_x_dose_x_x">Vaccin: %s, Dosis %d/%d</string>
-    <string name="item_disease">Ziekte / Vaccin</string>
+    <string name="item_disease">Ziekte</string>
+    <string name="item_vaccine">Vaccin</string>
     <string name="item_country">Lidstaat</string>
     <string name="item_identifier">Certificaat nummer</string>
     <string name="item_date_of_birth_x">Geboortedatum %s</string>
@@ -210,5 +209,9 @@ d. De app van de reiziger werkt niet goed. Laat de reiziger de app opnieuw start
     - Een PCR/NAAT test van maximaal %d uur oud &amp; een Antigeen test van maximaal %d uur oud</string>
     <string name="country_not_used">N.V.T.</string>
 
-
+    <string name="scan_instructions_2_image">QR code with a green check</string>
+    <string name="scan_instructions_4_image">QR code with a red cross</string>
+    <string name="accessibility_close">Close</string>
+    <string name="accessibility_choose_departure_button">Vertrekland kiezen</string>
+    <string name="accessibility_choose_destination_button">Bestemmingsland kiezen</string>
 </resources>

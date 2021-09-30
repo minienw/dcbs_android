@@ -101,19 +101,13 @@
     <string name="scan_instructions_1_description">Ask the traveller to present a Digital COVID Certificate QR code on a mobile device or on paper. Keep your distance while pointing your camera in the app at the QR code and wait for the app to process the QR code. The app will proceed with checking the code automatically.</string>
     <string name="scan_instructions_2_title">2. Green screen</string>
     <string name="scan_instructions_2_description">A green screen indicates that the QR code is valid. Check if the personal information presented in your screen is similar to the information on the ID presented by the traveller.</string>
-    <string name="scan_instructions_3_image">Person is holding a phone with a green screen and a black check mark.</string>
     <string name="scan_instructions_3_title">3. Check Corona status</string>
     <string name="scan_instructions_3_description">If necessary check if the data in the test, vaccination or recovery information that is shown by your app indicates that traveling to the destination country by this traveler is allowed. If so access can be granted to the traveller.</string>
-    <string name="scan_instructions_4_image">Person is holding a phone with a red screen and a black cross.</string>
     <string name="scan_instructions_4_title">4. Red screen</string>
     <string name="scan_instructions_4_description"><![CDATA[A red screen indicates that the QR code is invalid. This does not mean that the traveller is infected with COVID! <br/><br/>
 Data in the QR code will not be shown by the app. The traveller needs to present other proof of negative testing, vaccination or recovery in order to be able to perform the mandatory control.]]></string>
     <string name="scan_instructions_5_title">5. Red screen: causes and options to fix</string>
-    <string name="scan_instructions_5_description"><![CDATA[A red screen can have multiple causes: <br/><br/>
-a. The certificate does not have a valid signature by a designated organization.<br/><br/>
-b. The trustlist of reference certificates for the signatures is expired, and cannot be updated at the moment. Choose ‘update trustlists’ in the menu and try again to scan the QR code.<br/><br/>
-c. Something is wrong with the scanner app. Close it entirely and restart to try scanning the QR code again.<br/><br/>
-d. Something is wrong with the app of the traveler. Ask the traveler to restart the app and try again.
+    <string name="scan_instructions_5_description"><![CDATA[A red screen can have multiple causes: <br/><br/> <ul><li>The certificate does not have a valid signature by a designated organization.<br/><br/></li><li>The trustlist of reference certificates for the signatures is expired, and cannot be updated at the moment. Choose ‘update trustlists’ in the menu and try again to scan the QR code.<br/><br/></li><li> Something is wrong with the scanner app. Close it entirely and restart to try scanning the QR code again.<br/><br/></li><li>Something is wrong with the app of the traveler. Ask the traveler to restart the app and try again.</li></ul>
 ]]></string>
     <string name="scan_instructions_6_title">6. Message: Trust list was not updated</string>
     <string name="scan_instructions_6_description">Certain conditions result in a message in a red bar on top of your screen: “Trust list was not updated”. This message indicates that something went wrong while fetching the list of trusted issuers of the electronic signatures, possibly due to connection issues. This leads to certain valid QR codes will show as invalid in the app. Using the “Update lists” button you can manually retry the fetching operation. First make sure you are connected to the Internet.</string>
@@ -125,7 +119,8 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     <string name="item_dose_x">Vaccine dose %d</string>
     <string name="item_dose_x_x">Vaccine dose %d / %d</string>
     <string name="item_vaccin_x_dose_x_x">Vaccine: %s, Dose %d/%d</string>
-    <string name="item_disease">Disease / Vaccine</string>
+    <string name="item_disease">Disease</string>
+    <string name="item_vaccine">Vaccine</string>
     <string name="item_country">Country</string>
     <string name="item_identifier">Certificate number</string>
     <string name="item_date_of_birth_x">Date of birth %s</string>
@@ -208,4 +203,11 @@ d. Something is wrong with the app of the traveler. Ask the traveler to restart 
     of
     - A PCR/NAAT test of no more than %d hours old AND an antigen test of no more than %d hours old</string>
     <string name="country_not_used">N/A</string>
+
+
+    <string name="scan_instructions_2_image">QR code with a green check</string>
+    <string name="scan_instructions_4_image">QR code with a red cross</string>
+    <string name="accessibility_close">Close</string>
+    <string name="accessibility_choose_departure_button">Vertrekland kiezen</string>
+    <string name="accessibility_choose_destination_button">Bestemmingsland kiezen</string>
 </resources>

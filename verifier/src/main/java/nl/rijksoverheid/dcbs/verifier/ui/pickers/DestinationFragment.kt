@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Section
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityHeading
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentDestinationPickerBinding
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
@@ -27,6 +28,7 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = FragmentDestinationPickerBinding.bind(view)
+        binding.toolbar.setAsAccessibilityHeading(true)
 
         getCountries("")?.let { countries ->
             adapter.run {

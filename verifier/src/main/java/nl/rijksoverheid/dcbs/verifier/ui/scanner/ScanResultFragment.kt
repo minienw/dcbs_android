@@ -1,10 +1,13 @@
 package nl.rijksoverheid.dcbs.verifier.ui.scanner
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -15,6 +18,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import nl.rijksoverheid.ctr.design.ext.enableCustomLinks
 import nl.rijksoverheid.ctr.shared.ext.findNavControllerSafety
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentScanResultBinding
 import nl.rijksoverheid.dcbs.verifier.models.*
@@ -30,6 +34,7 @@ import nl.rijksoverheid.dcbs.verifier.utils.timeAgo
 import nl.rijksoverheid.dcbs.verifier.utils.toDate
 import org.koin.android.ext.android.inject
 import java.util.concurrent.TimeUnit
+
 
 /*
  *  Copyright (c) 2021 De Staat der Nederlanden, Ministerie van Volksgezondheid, Welzijn en Sport.
@@ -139,6 +144,17 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         }
     }
 
+    private fun playAccessibilityMessage(message: String) {
+        (activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager)?.let { manager ->
+            if (manager.isEnabled) {
+                val e = AccessibilityEvent.obtain()
+                e.eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                e.text.add(message)
+                manager.sendAccessibilityEvent(e)
+            }
+        }
+    }
+
     private fun setBusinessErrorMessages(failedItems: List<DCCFailableItem>) {
 
         context?.let { c ->
@@ -158,6 +174,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.GONE
+        playAccessibilityMessage(getString(R.string.scan_result_valid_title))
     }
 
     private fun setScreenUndecided() {
@@ -168,6 +185,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.black))
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.GONE
+        playAccessibilityMessage(getString(R.string.scan_result_valid_title))
     }
 
     private fun setScreenInvalid(@DrawableRes iconResId: Int, showGreen: Boolean) {
@@ -177,6 +195,7 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
         binding.image.setImageResource(iconResId)
+        playAccessibilityMessage(getString(R.string.scan_result_invalid_title))
     }
 
     private fun presentPersonalDetails(verifiedQr: VerifiedQr) {
@@ -214,9 +233,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 dayLabel = getString(R.string.x_day),
                 oldLabel = getString(R.string.old)
             )
-            binding.dose1TableDiseaseVaccineValue.text =
-                "${getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)} " +
-                        "| ${getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)}"
+            binding.dose1TableDiseaseValue.text = getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)
+            binding.dose1TableVaccineValue.text = getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)
             binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
             binding.dose1TableManufacturerValue.text =
                 getValueSetDisplayName(vaccines[0].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
@@ -234,9 +252,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                 )
                 binding.dose2BoxName.text = getValueSetDisplayName(vaccines[1].vaccineMedicalProduct, ValueSetType.VaccineProduct)
                 binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
-                binding.dose2TableDiseaseVaccineValue.text =
-                    "${getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)} " +
-                            "| ${getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)}"
+                binding.dose2TableDiseaseValue.text = getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)
+                binding.dose2TableVaccineValue.text = getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)
                 binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
                 binding.dose2TableManufacturerValue.text =
                     getValueSetDisplayName(vaccines[1].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
@@ -343,8 +360,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.black))
                 }
             }
-
         }
+
+        binding.layoutCountryPicker.departureCard.setAsAccessibilityButton(true)
+        binding.layoutCountryPicker.departureCard.contentDescription = getString(R.string.accessibility_choose_departure_button)
+        binding.layoutCountryPicker.destinationCard.setAsAccessibilityButton(true)
+        binding.layoutCountryPicker.destinationCard.contentDescription = getString(R.string.accessibility_choose_destination_button)
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
             findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())

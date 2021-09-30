@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.mlkit.vision.barcode.Barcode
 import nl.rijksoverheid.ctr.qrscanner.QrCodeScannerFragment
 import nl.rijksoverheid.ctr.shared.livedata.EventObserver
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
 import nl.rijksoverheid.dcbs.verifier.BuildConfig
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.VerifierMainActivity
@@ -123,6 +124,10 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
                 }
             }
 
+            binding.layoutCountryPicker.departureCard.setAsAccessibilityButton(true)
+            binding.layoutCountryPicker.departureCard.contentDescription = getString(R.string.accessibility_choose_departure_button)
+            binding.layoutCountryPicker.destinationCard.setAsAccessibilityButton(true)
+            binding.layoutCountryPicker.destinationCard.contentDescription = getString(R.string.accessibility_choose_destination_button)
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {

@@ -25,6 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:navigationContentDescription="@string/accessibility_close"
             app:navigationIcon="@drawable/ic_close" />
 
         <LinearLayout
@@ -40,12 +41,13 @@
             <TextView
                 android:id="@+id/pause_value"
                 style="@style/Montserrat_Bold_White"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_black_circle"
                 android:gravity="center"
-                android:padding="2dp"
+                android:padding="8dp"
                 android:textSize="15sp"
+                android:minWidth="36dp"
                 tools:text="59" />
 
             <TextView
@@ -83,12 +85,12 @@
                         android:id="@+id/image"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="32dp"
                         android:src="@drawable/ic_valid_qr_code"
                         app:layout_constraintEnd_toStartOf="@id/title"
+                        app:layout_constraintBottom_toBottomOf="@id/title"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="@id/title" />
 
                     <TextView
                         android:id="@+id/title"
@@ -99,10 +101,10 @@
                         android:text="@string/result_inconclusive_title"
                         android:textAlignment="textStart"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="@id/image"
+                        android:layout_marginTop="32dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/image"
-                        app:layout_constraintTop_toTopOf="@id/image" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <include
                         android:id="@+id/layout_country_picker"
@@ -113,7 +115,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/image" />
+                        app:layout_constraintTop_toBottomOf="@id/title" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -134,7 +136,7 @@
                     android:layout_weight="1"
                     android:background="@color/white">
 
-                    <TextView
+                    <nl.rijksoverheid.ctr.design.views.AccessibilityHeaderWidget
                         android:id="@+id/name"
                         style="@style/Montserrat_Bold_Black"
                         android:layout_width="0dp"
@@ -290,24 +292,44 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/dose1_table_disease_vaccine_label"
+                                android:id="@+id/dose1_table_disease_label"
                                 style="@style/ValidQrLabel"
                                 android:text="@string/item_disease"
-                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_disease_vaccine_value"
-                                app:layout_constraintEnd_toStartOf="@id/dose1_table_disease_vaccine_value"
-                                app:layout_constraintTop_toTopOf="@id/dose1_table_disease_vaccine_value" />
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_disease_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_disease_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_disease_value" />
 
                             <TextView
-                                android:id="@+id/dose1_table_disease_vaccine_value"
+                                android:id="@+id/dose1_table_disease_value"
                                 style="@style/ValidQrValue"
-                                app:layout_constraintStart_toEndOf="@id/dose1_table_disease_vaccine_label"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_disease_label"
                                 app:layout_constraintTop_toBottomOf="@id/dose1_table_title"
-                                tools:text="Covid-19 | mrna" />
+                                tools:text="Covid-19" />
 
                             <View
-                                android:id="@+id/dose1_table_disease_vaccine_separator"
+                                android:id="@+id/dose1_table_disease_separator"
                                 style="@style/ValidQrSeparator"
-                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_vaccine_value" />
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_vaccine_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_vaccine"
+                                app:layout_constraintBottom_toBottomOf="@id/dose1_table_vaccine_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose1_table_vaccine_value"
+                                app:layout_constraintTop_toTopOf="@id/dose1_table_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose1_table_vaccine_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose1_table_vaccine_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_separator"
+                                tools:text="mRNA" />
+
+                            <View
+                                android:id="@+id/dose1_table_vaccine_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_vaccine_value" />
 
                             <TextView
                                 android:id="@+id/dose1_table_member_state_label"
@@ -321,7 +343,7 @@
                                 android:id="@+id/dose1_table_member_state_value"
                                 style="@style/ValidQrValue"
                                 app:layout_constraintStart_toEndOf="@id/dose1_table_member_state_label"
-                                app:layout_constraintTop_toBottomOf="@id/dose1_table_disease_vaccine_separator"
+                                app:layout_constraintTop_toBottomOf="@id/dose1_table_vaccine_separator"
                                 tools:text="The Netherlands Ministry of Health" />
 
                             <View
@@ -412,24 +434,44 @@
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/dose2_table_disease_vaccine_label"
+                                android:id="@+id/dose2_table_disease_label"
                                 style="@style/ValidQrLabel"
                                 android:text="@string/item_disease"
-                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_disease_vaccine_value"
-                                app:layout_constraintEnd_toStartOf="@id/dose2_table_disease_vaccine_value"
-                                app:layout_constraintTop_toTopOf="@id/dose2_table_disease_vaccine_value" />
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_disease_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_disease_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_disease_value" />
 
                             <TextView
-                                android:id="@+id/dose2_table_disease_vaccine_value"
+                                android:id="@+id/dose2_table_disease_value"
                                 style="@style/ValidQrValue"
-                                app:layout_constraintStart_toEndOf="@id/dose2_table_disease_vaccine_label"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_disease_label"
                                 app:layout_constraintTop_toBottomOf="@id/dose2_table_title"
-                                tools:text="Covid-19 | mrna" />
+                                tools:text="Covid-19" />
 
                             <View
-                                android:id="@+id/dose2_table_disease_vaccine_separator"
+                                android:id="@+id/dose2_table_disease_separator"
                                 style="@style/ValidQrSeparator"
-                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_vaccine_value" />
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_vaccine_label"
+                                style="@style/ValidQrLabel"
+                                android:text="@string/item_vaccine"
+                                app:layout_constraintBottom_toBottomOf="@id/dose2_table_vaccine_value"
+                                app:layout_constraintEnd_toStartOf="@id/dose2_table_vaccine_value"
+                                app:layout_constraintTop_toTopOf="@id/dose2_table_vaccine_value" />
+
+                            <TextView
+                                android:id="@+id/dose2_table_vaccine_value"
+                                style="@style/ValidQrValue"
+                                app:layout_constraintStart_toEndOf="@id/dose2_table_vaccine_label"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_separator"
+                                tools:text="mRNA" />
+
+                            <View
+                                android:id="@+id/dose2_table_vaccine_separator"
+                                style="@style/ValidQrSeparator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_vaccine_value" />
 
                             <TextView
                                 android:id="@+id/dose2_table_member_state_label"
@@ -443,7 +485,7 @@
                                 android:id="@+id/dose2_table_member_state_value"
                                 style="@style/ValidQrValue"
                                 app:layout_constraintStart_toEndOf="@id/dose2_table_member_state_label"
-                                app:layout_constraintTop_toBottomOf="@id/dose2_table_disease_vaccine_separator"
+                                app:layout_constraintTop_toBottomOf="@id/dose2_table_vaccine_separator"
                                 tools:text="The Netherlands Ministry of Health" />
 
                             <View

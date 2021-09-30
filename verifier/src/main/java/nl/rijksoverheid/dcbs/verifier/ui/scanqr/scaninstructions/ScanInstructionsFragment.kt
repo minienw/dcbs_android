@@ -45,6 +45,7 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
                         ),
                         ScanInstructionAdapterItem(
                             image = R.drawable.ic_scan_success,
+                            imageDescription = getString(R.string.scan_instructions_2_image),
                             title = R.string.scan_instructions_2_title,
                             description = getString(R.string.scan_instructions_2_description),
                         ),
@@ -56,7 +57,7 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
                             image = R.drawable.ic_scan_fail,
                             imageDescription = getString(R.string.scan_instructions_4_image),
                             title = R.string.scan_instructions_4_title,
-                            description = appConfigUtil.getStringWithTestValidity(R.string.scan_instructions_4_description)
+                            description = getString(R.string.scan_instructions_4_description)
                         ),
                         ScanInstructionAdapterItem(
                             title = R.string.scan_instructions_5_title,

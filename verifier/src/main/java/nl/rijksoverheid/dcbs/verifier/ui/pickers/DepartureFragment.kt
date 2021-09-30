@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import nl.rijksoverheid.ctr.appconfig.AppConfigViewModel
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityHeading
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentDeparturePickerBinding
 import nl.rijksoverheid.dcbs.verifier.models.CountryRisk
@@ -30,6 +31,7 @@ class DepartureFragment : Fragment(R.layout.fragment_departure_picker) {
 
         countryFragment = CountryPickerFragment()
         colorCodeFragment = ColorCodePickerFragment()
+        binding.toolbar.setAsAccessibilityHeading(true)
 
         binding.btnCountry.setOnClickListener {
             context?.let {
