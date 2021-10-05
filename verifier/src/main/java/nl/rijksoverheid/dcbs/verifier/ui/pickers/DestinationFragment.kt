@@ -38,7 +38,7 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
                 setOnItemClickListener { item, _ ->
                     countries.find { it.name() == (item as? PickerAdapterItem)?.title }?.let { country ->
                         persistenceManager.saveDestinationValue(country.code ?: "")
-                        if (country.getPassType() == CountryRiskPass.NLRules) {
+                        if (country.getPassType() != CountryRiskPass.NLRules) {
                             persistenceManager.saveDepartureValue("")
                         }
                     }
@@ -68,7 +68,7 @@ class DestinationFragment : Fragment(R.layout.fragment_destination_picker) {
     private fun getCountries(query: String): List<CountryRisk>? {
         val businessRules = appConfigUtil.getAllBusinessRules()
         val countries = appConfigUtil
-            .getCountries(true)
+            .getCountries(true)?.sortedBy { it.name() }
             ?.filter {
                 businessRules.find { rule ->
                     rule.countryCode.toUpperCase(Locale.getDefault()) == it.code

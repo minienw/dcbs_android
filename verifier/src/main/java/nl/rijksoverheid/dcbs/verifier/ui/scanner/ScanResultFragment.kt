@@ -344,9 +344,14 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             val destinationCountry = destinationCountryRisk?.name() ?: getString(R.string.pick_country)
             binding.layoutCountryPicker.departureValue.text = if (isNLDestination) departureCountry else getString(R.string.country_not_used)
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
-            val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk?.color }?.name()
-            val euLabel = if (departureCountryRisk?.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
-            binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
+
+            departureCountryRisk?.let {
+                val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk.color }?.name()
+                val euLabel = if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
+                binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
+            } ?: run {
+                binding.layoutCountryPicker.riskLabel.text = ""
+            }
 
             context?.let {
                 if (isNLDestination) {
