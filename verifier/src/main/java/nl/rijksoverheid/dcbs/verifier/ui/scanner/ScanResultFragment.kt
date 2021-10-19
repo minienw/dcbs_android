@@ -215,57 +215,60 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.dose1TableTitle.text = getString(R.string.item_dose_x, 1)
         binding.dose2TableTitle.text = getString(R.string.item_dose_x, 2)
         items?.let { vaccines ->
-            binding.vaccineLayout.visibility = View.VISIBLE
-            val vaccinMedicalProduct = getValueSetDisplayName(vaccines[0].vaccineMedicalProduct, ValueSetType.VaccineProduct)
-            binding.dose1BoxTitle.text = getString(
-                R.string.item_vaccin_x_dose_x_x,
-                vaccinMedicalProduct,
-                vaccines[0].doseNumber,
-                vaccines[0].totalSeriesOfDoses
-            )
-            binding.dose1Status.text = getVaccineStatusText(vaccines[0])
-            getVaccineStatusColour(vaccines[0])?.let { textColor ->
-                binding.dose1Status.setTextColor(textColor)
-            }
-            binding.dose1BoxDate.text = vaccines[0].dateOfVaccination?.formatDate()
-            binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination?.toDate()?.timeAgo(
-                daysLabel = getString(R.string.x_days),
-                dayLabel = getString(R.string.x_day),
-                oldLabel = getString(R.string.old)
-            )
-            binding.dose1TableDiseaseValue.text = getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)
-            binding.dose1TableVaccineValue.text = getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)
-            binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
-            binding.dose1TableManufacturerValue.text =
-                getValueSetDisplayName(vaccines[0].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
-            binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
-            binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
-            if (vaccines.size == 2) {
-                binding.dose1TableTitle.visibility = View.VISIBLE
-                binding.dose2BoxLayout.visibility = View.VISIBLE
-                binding.dose2TableLayout.visibility = View.VISIBLE
-                binding.dose2BoxTitle.text = getString(
+            if (vaccines.isNotEmpty()) {
+                binding.vaccineLayout.visibility = View.VISIBLE
+                val vaccinMedicalProduct = getValueSetDisplayName(vaccines[0].vaccineMedicalProduct, ValueSetType.VaccineProduct)
+                binding.dose1BoxTitle.text = getString(
                     R.string.item_vaccin_x_dose_x_x,
-                    vaccines[1].vaccine,
-                    vaccines[1].doseNumber,
-                    vaccines[1].totalSeriesOfDoses
+                    vaccinMedicalProduct,
+                    vaccines[0].doseNumber,
+                    vaccines[0].totalSeriesOfDoses
                 )
-                binding.dose2BoxName.text = getValueSetDisplayName(vaccines[1].vaccineMedicalProduct, ValueSetType.VaccineProduct)
-                binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
-                binding.dose2TableDiseaseValue.text = getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)
-                binding.dose2TableVaccineValue.text = getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)
-                binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
-                binding.dose2TableManufacturerValue.text =
-                    getValueSetDisplayName(vaccines[1].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
-                binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
-                binding.dose2TableCertificateIdentifierValue.text =
-                    vaccines[1].certificateIdentifier
+                binding.dose1Status.text = getVaccineStatusText(vaccines[0])
+                getVaccineStatusColour(vaccines[0])?.let { textColor ->
+                    binding.dose1Status.setTextColor(textColor)
+                }
+                binding.dose1BoxDate.text = vaccines[0].dateOfVaccination?.formatDate()
+                binding.dose1BoxTimeAgo.text = vaccines[0].dateOfVaccination?.toDate()?.timeAgo(
+                    daysLabel = getString(R.string.x_days),
+                    dayLabel = getString(R.string.x_day),
+                    oldLabel = getString(R.string.old)
+                )
+                binding.dose1TableDiseaseValue.text = getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.dose1TableVaccineValue.text = getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)
+                binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
+                binding.dose1TableManufacturerValue.text =
+                    getValueSetDisplayName(vaccines[0].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
+                binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
+                binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
+                if (vaccines.size == 2) {
+                    binding.dose1TableTitle.visibility = View.VISIBLE
+                    binding.dose2BoxLayout.visibility = View.VISIBLE
+                    binding.dose2TableLayout.visibility = View.VISIBLE
+                    binding.dose2BoxTitle.text = getString(
+                        R.string.item_vaccin_x_dose_x_x,
+                        vaccines[1].vaccine,
+                        vaccines[1].doseNumber,
+                        vaccines[1].totalSeriesOfDoses
+                    )
+                    binding.dose2BoxName.text = getValueSetDisplayName(vaccines[1].vaccineMedicalProduct, ValueSetType.VaccineProduct)
+                    binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
+                    binding.dose2TableDiseaseValue.text = getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)
+                    binding.dose2TableVaccineValue.text = getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)
+                    binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
+                    binding.dose2TableManufacturerValue.text =
+                        getValueSetDisplayName(vaccines[1].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
+                    binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
+                    binding.dose2TableCertificateIdentifierValue.text =
+                        vaccines[1].certificateIdentifier
+                } else {
+                    binding.dose1TableTitle.visibility = View.GONE
+                    binding.dose2BoxLayout.visibility = View.GONE
+                    binding.dose2TableLayout.visibility = View.GONE
+                }
             } else {
-                binding.dose1TableTitle.visibility = View.GONE
-                binding.dose2BoxLayout.visibility = View.GONE
-                binding.dose2TableLayout.visibility = View.GONE
+                binding.vaccineLayout.visibility = View.GONE
             }
-
         } ?: run {
             binding.vaccineLayout.visibility = View.GONE
         }
@@ -295,20 +298,23 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initTest(items: List<DCCTest>?) {
         val context = context ?: return
         items?.let { tests ->
-            binding.testLayout.visibility = View.VISIBLE
-            binding.testBoxTitle.text =
-                tests[0].getTestResult(appConfigUtil.getEuropeanVerificationRules())?.getDisplayName(context) ?: tests[0].testResult
-            binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
-            binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
-            binding.testTableTargetValue.text = getValueSetDisplayName(tests[0].targetedDisease, ValueSetType.TargetedAgent)
-            binding.testTableTypeValue.text = getValueSetDisplayName(tests[0].typeOfTest, ValueSetType.TestType)
-            binding.testTableNameValue.text = tests[0].NAATestName
-            binding.testTableManufacturerValue.text = getValueSetDisplayName(tests[0].RATTestNameAndManufac ?: "", ValueSetType.TestManufacturer)
-            binding.testTableCenterValue.text = tests[0].testingCentre
-            binding.testTableCountryValue.text = tests[0].countryOfTest
-            binding.testTableIssuerValue.text = tests[0].certificateIssuer
-            binding.testTableIdentifierValue.text = tests[0].certificateIdentifier
-
+            if (tests.isNotEmpty()) {
+                binding.testLayout.visibility = View.VISIBLE
+                binding.testBoxTitle.text =
+                    tests[0].getTestResult(appConfigUtil.getEuropeanVerificationRules())?.getDisplayName(context) ?: tests[0].testResult
+                binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
+                binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
+                binding.testTableTargetValue.text = getValueSetDisplayName(tests[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.testTableTypeValue.text = getValueSetDisplayName(tests[0].typeOfTest, ValueSetType.TestType)
+                binding.testTableNameValue.text = tests[0].NAATestName
+                binding.testTableManufacturerValue.text = getValueSetDisplayName(tests[0].RATTestNameAndManufac ?: "", ValueSetType.TestManufacturer)
+                binding.testTableCenterValue.text = tests[0].testingCentre
+                binding.testTableCountryValue.text = tests[0].countryOfTest
+                binding.testTableIssuerValue.text = tests[0].certificateIssuer
+                binding.testTableIdentifierValue.text = tests[0].certificateIdentifier
+            } else {
+                binding.testLayout.visibility = View.GONE
+            }
         } ?: run {
             binding.testLayout.visibility = View.GONE
         }
@@ -316,22 +322,24 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
 
     private fun initRecovery(items: List<DCCRecovery>?) {
         items?.let { recoveries ->
-            binding.recoveryLayout.visibility = View.VISIBLE
-            binding.recoveryBoxName.text = getValueSetDisplayName(recoveries[0].targetedDisease, ValueSetType.TargetedAgent)
-            binding.recoveryTableFirstDateValue.text =
-                recoveries[0].dateOfFirstPositiveTest?.formatDate()
-            binding.recoveryTableValidFromValue.text =
-                recoveries[0].certificateValidFrom?.formatDate()
-            binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo?.formatDate()
-            binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
-            binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
-            binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
-
+            if (recoveries.isNotEmpty()) {
+                binding.recoveryLayout.visibility = View.VISIBLE
+                binding.recoveryBoxName.text = getValueSetDisplayName(recoveries[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.recoveryTableFirstDateValue.text =
+                    recoveries[0].dateOfFirstPositiveTest?.formatDate()
+                binding.recoveryTableValidFromValue.text =
+                    recoveries[0].certificateValidFrom?.formatDate()
+                binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo?.formatDate()
+                binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
+                binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
+                binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
+            } else {
+                binding.recoveryLayout.visibility = View.GONE
+            }
         } ?: run {
             binding.recoveryLayout.visibility = View.GONE
         }
     }
-
 
     private fun initCountries() {
 

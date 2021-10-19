@@ -17,7 +17,6 @@ import nl.rijksoverheid.ctr.appconfig.models.ConfigResult
 import nl.rijksoverheid.ctr.appconfig.persistence.AppConfigStorageManager
 import nl.rijksoverheid.ctr.appconfig.usecases.AppConfigUseCase
 import nl.rijksoverheid.ctr.appconfig.usecases.AppStatusUseCase
-import nl.rijksoverheid.ctr.appconfig.usecases.LoadPublicKeysUseCase
 import nl.rijksoverheid.ctr.appconfig.usecases.PersistConfigUseCase
 import nl.rijksoverheid.ctr.shared.MobileCoreWrapper
 import nl.rijksoverheid.ctr.shared.ext.ClmobileVerifyException
@@ -35,9 +34,7 @@ class AppConfigViewModelImpl(
     private val appConfigUseCase: AppConfigUseCase,
     private val appStatusUseCase: AppStatusUseCase,
     private val persistConfigUseCase: PersistConfigUseCase,
-    private val loadPublicKeysUseCase: LoadPublicKeysUseCase,
     private val appConfigStorageManager: AppConfigStorageManager,
-    private val cachedAppConfigUseCase: CachedAppConfigUseCase,
     private val cacheDirPath: String,
     private val isVerifierApp: Boolean,
     private val versionCode: Int
@@ -55,9 +52,6 @@ class AppConfigViewModelImpl(
                     customBusinessRulesContent = configResult.customBusinessRules,
                     valueSetsContent = configResult.valueSets,
                 )
-                cachedAppConfigUseCase.getCachedPublicKeys()?.let {
-                    loadPublicKeysUseCase.load(it)
-                }
             }
 
             if (isVerifierApp) {
