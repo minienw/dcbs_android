@@ -8,10 +8,13 @@
 
 package nl.rijksoverheid.dcbs.verifier
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -64,6 +67,18 @@ class VerifierMainFragment :
             }
         }
     }
+
+    private fun playAccessibilityMessage(message: String) {
+        (activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager)?.let { manager ->
+            if (manager.isEnabled) {
+                val e = AccessibilityEvent.obtain()
+                e.eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                e.text.add(message)
+                manager.sendAccessibilityEvent(e)
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -127,6 +142,10 @@ class VerifierMainFragment :
             (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(expiredLayoutDuration)
         binding.layoutCertificateExpired.root.visibility =
             if (shouldShowExpiredLayout == true) View.VISIBLE else View.GONE
+        if (shouldShowExpiredLayout == true) {
+            playAccessibilityMessage(getString(R.string.certificates_outdated_title))
+            playAccessibilityMessage(getString(R.string.certificates_outdated_desc))
+        }
         autoConfigCheckHandler.postDelayed(autoConfigCheckRunnable, TimeUnit.SECONDS.toMillis(10))
     }
 }

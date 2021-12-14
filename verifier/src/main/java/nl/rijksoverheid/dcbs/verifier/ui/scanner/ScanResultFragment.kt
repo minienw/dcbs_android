@@ -388,6 +388,9 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun setPauseTimer() {
         countDownTime -= 1
         binding.pauseValue.text = countDownTime.toString()
+        if (countDownTime.toString().toList().last() == '0') {
+            playAccessibilityMessage(countDownTime.toString())
+        }
         if (countDownTime <= 0) {
             findNavControllerSafety(R.id.nav_scan_result)?.navigate(
                 ScanResultFragmentDirections.actionNavMain()

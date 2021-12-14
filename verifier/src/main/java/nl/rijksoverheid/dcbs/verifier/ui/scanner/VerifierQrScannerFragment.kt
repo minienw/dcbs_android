@@ -1,9 +1,12 @@
 package nl.rijksoverheid.dcbs.verifier.ui.scanner
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.google.mlkit.vision.barcode.Barcode
@@ -150,6 +153,18 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         autoConfigCheckHandler.removeCallbacks(autoConfigCheckRunnable)
     }
 
+    private fun playAccessibilityMessage(message: String) {
+        (activity?.getSystemService(Context.ACCESSIBILITY_SERVICE) as? AccessibilityManager)?.let { manager ->
+            if (manager.isEnabled) {
+                val e = AccessibilityEvent.obtain()
+                e.eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
+                e.text.add(message)
+                manager.sendAccessibilityEvent(e)
+            }
+        }
+    }
+
+
     private fun checkLastConfigFetchExpired() {
         val refreshCheckDuration = if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(2) else TimeUnit.MINUTES.toSeconds(60)
         val expiredLayoutDuration = if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(1) else TimeUnit.DAYS.toSeconds(1)
@@ -161,6 +176,10 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
         val shouldShowExpiredLayout = (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(expiredLayoutDuration)
         binding.layoutCertificateExpired.root.visibility = if (shouldShowExpiredLayout == true) View.VISIBLE else View.GONE
+        if (shouldShowExpiredLayout == true) {
+            playAccessibilityMessage(getString(R.string.certificates_outdated_title))
+            playAccessibilityMessage(getString(R.string.certificates_outdated_desc))
+        }
         autoConfigCheckHandler.postDelayed(autoConfigCheckRunnable, TimeUnit.SECONDS.toMillis(10))
     }
 }
