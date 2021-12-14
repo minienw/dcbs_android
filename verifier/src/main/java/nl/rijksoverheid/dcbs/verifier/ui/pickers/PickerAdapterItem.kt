@@ -2,6 +2,7 @@ package nl.rijksoverheid.dcbs.verifier.ui.pickers
 
 import android.view.View
 import com.xwray.groupie.viewbinding.BindableItem
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
 import nl.rijksoverheid.dcbs.verifier.R
 import nl.rijksoverheid.dcbs.verifier.databinding.ItemCountryPickerBinding
 
@@ -18,6 +19,7 @@ class PickerAdapterItem(
 ) : BindableItem<ItemCountryPickerBinding>() {
     override fun bind(viewBinding: ItemCountryPickerBinding, position: Int) {
         viewBinding.title.text = title
+        viewBinding.title.setAsAccessibilityButton()
         viewBinding.separator.visibility = if (isLast) View.GONE else View.VISIBLE
     }
 

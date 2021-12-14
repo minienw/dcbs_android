@@ -9,6 +9,7 @@ import android.text.style.BulletSpan
 import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.core.text.HtmlCompat
 import androidx.core.text.getSpans
 import androidx.core.text.parseAsHtml
@@ -16,6 +17,7 @@ import com.google.android.material.textview.MaterialTextView
 import nl.rijksoverheid.ctr.design.R
 import nl.rijksoverheid.ctr.design.ext.enableHtmlLinks
 import nl.rijksoverheid.ctr.design.spans.BulletPointSpan
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
 
 class HtmlTextViewWidget @JvmOverloads constructor(
     context: Context,
@@ -49,6 +51,7 @@ class HtmlTextViewWidget @JvmOverloads constructor(
                     )
 
                 }
+                setAsAccessibilityButton(true)
             } finally {
                 recycle()
             }

@@ -18,8 +18,8 @@ import androidx.navigation.ui.setupWithNavController
 import nl.rijksoverheid.ctr.design.BaseMainFragment
 import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppData
 import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppFragment
+import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentMainBinding
-import java.util.*
 import java.util.concurrent.TimeUnit
 
 class VerifierMainFragment :
@@ -50,7 +50,6 @@ class VerifierMainFragment :
             }
             return@setOnMenuItemClickListener true
         }
-
         binding.layoutCertificateExpired.btnUpdate.setOnClickListener {
             (activity as? VerifierMainActivity)?.updateConfig()
             binding.layoutCertificateExpired.root.visibility = View.GONE
