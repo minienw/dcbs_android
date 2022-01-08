@@ -3,6 +3,7 @@ package nl.rijksoverheid.dcbs.verifier.ui.scanqr.scaninstructions
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
@@ -33,6 +34,7 @@ class ScanInstructionsFragment : Fragment(R.layout.fragment_scan_instructions) {
         binding.toolbar.visibility = if (args.showInvalidItem) View.VISIBLE else View.GONE
         binding.button.setOnClickListener {
             scannerUtil.launchScanner(requireActivity())
+            findNavController().popBackStack()
         }
 
         GroupAdapter<GroupieViewHolder>()

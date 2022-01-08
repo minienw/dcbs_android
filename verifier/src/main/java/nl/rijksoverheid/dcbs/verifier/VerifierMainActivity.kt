@@ -89,13 +89,13 @@ class VerifierMainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-        navController.setGraph(R.navigation.verifier_nav_graph_root)
-        super.onStop()
-    }
+//    override fun onStop() {
+//        val navHostFragment =
+//            supportFragmentManager.findFragmentById(R.id.main_nav_host_fragment) as NavHostFragment
+//        val navController = navHostFragment.navController
+//        navController.setGraph(R.navigation.verifier_nav_graph_root)
+//        super.onStop()
+//    }
 
     fun updateConfig() {
         appStatusViewModel.refresh(mobileCoreWrapper)
