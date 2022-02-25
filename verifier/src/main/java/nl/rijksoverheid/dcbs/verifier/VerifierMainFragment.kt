@@ -19,9 +19,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import nl.rijksoverheid.ctr.design.BaseMainFragment
-import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppData
-import nl.rijksoverheid.ctr.design.menu.about.AboutThisAppFragment
-import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
+import nl.rijksoverheid.dcbs.verifier.ui.about.AboutThisAppData
+import nl.rijksoverheid.dcbs.verifier.ui.about.AboutThisAppFragment
 import nl.rijksoverheid.dcbs.verifier.databinding.FragmentMainBinding
 import java.util.concurrent.TimeUnit
 

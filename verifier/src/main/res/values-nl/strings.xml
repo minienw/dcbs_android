@@ -214,4 +214,10 @@ Er worden geen gegevens uit het DCC getoond. U vraagt de reiziger om een alterna
     <string name="accessibility_close">Close</string>
     <string name="accessibility_choose_departure_button">Vertrekland kiezen</string>
     <string name="accessibility_choose_destination_button">Bestemmingsland kiezen</string>
+
+    <string name="report_problem_item">Een probleem melden</string>
+    <string name="report_problem_title">Probleem melden</string>
+    <string name="describe_your_problem">Omschrijf het probleem</string>
+    <string name="describe_your_problem_hint">Omschrijving</string>
+    <string name="send">Verstuur</string>
 </resources>

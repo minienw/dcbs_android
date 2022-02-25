@@ -37,9 +37,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_parliament_rounded_opacity10"
             android:orientation="vertical"
             android:padding="10dp"
-            android:background="@drawable/bg_parliament_rounded_opacity10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/description">
@@ -50,8 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:textSize="13sp"
                 android:text="@string/last_trustlist_update"
+                android:textSize="13sp"
                 tools:text="The last trustlist update" />
 
             <TextView
@@ -76,6 +76,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/trust_list_box_layout" />
 
+        <include
+            android:id="@+id/report_problem"
+            layout="@layout/about_this_app_row"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/read_more_items" />
+
         <TextView
             android:id="@+id/app_version"
             style="@style/App.TextAppearance.MaterialComponents.Body2.Secondary"
@@ -85,7 +94,7 @@
             android:layout_marginBottom="16dp"
             app:layout_constraintEnd_toEndOf="@+id/description"
             app:layout_constraintStart_toStartOf="@+id/description"
-            app:layout_constraintTop_toBottomOf="@+id/read_more_items"
+            app:layout_constraintTop_toBottomOf="@+id/report_problem"
             tools:text="App versie 1.1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

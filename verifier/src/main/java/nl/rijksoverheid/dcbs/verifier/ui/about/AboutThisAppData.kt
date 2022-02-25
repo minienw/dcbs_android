@@ -1,4 +1,4 @@
-package nl.rijksoverheid.ctr.design.menu.about
+package nl.rijksoverheid.dcbs.verifier.ui.about
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

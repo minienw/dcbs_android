@@ -6,20 +6,17 @@
  *
  */
 
-package nl.rijksoverheid.ctr.design.menu.about
+package nl.rijksoverheid.dcbs.verifier.ui.about
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
 import androidx.fragment.app.Fragment
-import nl.rijksoverheid.ctr.design.R
-import nl.rijksoverheid.ctr.design.databinding.AboutThisAppRowBinding
-import nl.rijksoverheid.ctr.design.databinding.FragmentAboutAppBinding
 import nl.rijksoverheid.ctr.shared.ext.launchUrl
 import nl.rijksoverheid.ctr.shared.utils.Accessibility.setAsAccessibilityButton
+import nl.rijksoverheid.dcbs.verifier.R
+import nl.rijksoverheid.dcbs.verifier.databinding.AboutThisAppRowBinding
+import nl.rijksoverheid.dcbs.verifier.databinding.FragmentAboutAppBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -61,6 +58,11 @@ class AboutThisAppFragment : Fragment(R.layout.fragment_about_app) {
             view.root.setOnClickListener {
                 item.url.launchUrl(requireContext())
             }
+        }
+
+        binding.reportProblem.title.text = getString(R.string.report_problem_title)
+        binding.reportProblem.root.setOnClickListener {
+            SupportActivity.start(context)
         }
 
         binding.appVersion.text = getString(

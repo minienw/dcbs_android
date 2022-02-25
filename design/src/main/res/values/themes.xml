@@ -61,4 +61,15 @@
         <item name="colorControlNormal">@color/white</item>
     </style>
 
+    <style name="SimpleAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorSecondary">@color/primary_blue</item>
+        <item name="colorAccent">@color/primary_blue</item>
+        <item name="colorSurface">@color/white</item>
+
+        <!--This line will remove the default toolbar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
