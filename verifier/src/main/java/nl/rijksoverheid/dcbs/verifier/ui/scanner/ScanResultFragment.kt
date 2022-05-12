@@ -72,44 +72,42 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         args.data.verifiedQr?.let { verifiedQr ->
             appConfigUtil.getValueSetsRaw()?.let { valueSetsRaw ->
                 appConfigUtil.getCountries(true)?.let { countries ->
-                    val from =
-                        countries.find { it.code == persistenceManager.getDepartureValue() }
-                    val to =
-                        countries.find { it.code == persistenceManager.getDestinationValue() }
-                    if (from != null && to != null) {
-                        val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
-                        val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
-                        val failedItems =
-                            dccQR.processBusinessRules(
-                                from,
-                                to,
-                                appConfigUtil.getAllBusinessRules(),
-                                valueSetsRaw
-                            )
-                        val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
+                    val from = countries.find { it.code == persistenceManager.getDepartureValue() }
+                        ?: CountryRisk.getUnselected(context)
+                    val to = countries.find { it.code == persistenceManager.getDestinationValue() }
+                        ?: CountryRisk.getUnselected(context)
+                    val gson = GsonBuilder().setDateFormat("yyyy-MM-dd").create()
+                    val dccQR = gson.fromJson(verifiedQr.data, DCCQR::class.java)
+                    val failedItems =
+                        dccQR.processBusinessRules(
+                            from,
+                            to,
+                            appConfigUtil.getAllBusinessRules(),
+                            valueSetsRaw
+                        )
+                    val shouldShowGreenOverride = dccQR.shouldShowGreenOverride(from, to)
 
-                        when {
-                            failedItems.isEmpty() -> setScreenValid()
-                            failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
-                                setScreenUndecided()
-                            }
-                            else -> {
-                                if (!shouldShowGreenOverride) {
-                                    binding.recyclerViewBusinessError.visibility = View.VISIBLE
-                                    setBusinessErrorMessages(failedItems)
-                                } else {
-                                    binding.recyclerViewBusinessError.visibility = View.GONE
-                                }
-                                setScreenInvalid(R.drawable.ic_valid_qr_code, shouldShowGreenOverride)
-                            }
+                    when {
+                        failedItems.isEmpty() -> setScreenValid()
+                        failedItems.any { it.type == DCCFailableType.UndecidableFrom } -> {
+                            setScreenUndecided()
                         }
-                        binding.informationLayout.visibility = View.VISIBLE
-                        binding.descriptionLayout.visibility = View.GONE
-                        presentPersonalDetails(verifiedQr)
-                    } else {
-                        setScreenUndecided()
-                        presentPersonalDetails(verifiedQr)
+                        else -> {
+                            if (!shouldShowGreenOverride) {
+                                binding.recyclerViewBusinessError.visibility = View.VISIBLE
+                                setBusinessErrorMessages(failedItems)
+                            } else {
+                                binding.recyclerViewBusinessError.visibility = View.GONE
+                            }
+                            setScreenInvalid(
+                                R.drawable.ic_valid_qr_code,
+                                shouldShowGreenOverride
+                            )
+                        }
                     }
+                    binding.informationLayout.visibility = View.VISIBLE
+                    binding.descriptionLayout.visibility = View.GONE
+                    presentPersonalDetails(verifiedQr)
                 }
             }
 
@@ -171,7 +169,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.root.setBackgroundResource(R.color.secondary_green)
         binding.title.text = getString(R.string.valid_for_journey)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
-        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.layoutCountryPicker.riskLabel.setTextColor(
+            ContextCompat.getColor(
+                context,
+                R.color.white
+            )
+        )
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.GONE
         playAccessibilityMessage(getString(R.string.scan_result_valid_title))
@@ -182,7 +185,12 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         binding.root.setBackgroundResource(R.color.undecided_gray)
         binding.title.text = getString(R.string.result_inconclusive_title)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.black))
-        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.black))
+        binding.layoutCountryPicker.riskLabel.setTextColor(
+            ContextCompat.getColor(
+                context,
+                R.color.black
+            )
+        )
         binding.image.setImageResource(R.drawable.ic_valid_qr_code)
         binding.recyclerViewBusinessError.visibility = View.GONE
         playAccessibilityMessage(getString(R.string.scan_result_valid_title))
@@ -191,9 +199,15 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun setScreenInvalid(@DrawableRes iconResId: Int, showGreen: Boolean) {
         val context = context ?: return
         binding.root.setBackgroundResource(if (showGreen) R.color.secondary_green else R.color.red)
-        binding.title.text = if (showGreen) getString(R.string.valid_for_journey) else getString(R.string.invalid_for_journey)
+        binding.title.text =
+            if (showGreen) getString(R.string.valid_for_journey) else getString(R.string.invalid_for_journey)
         binding.title.setTextColor(ContextCompat.getColor(context, R.color.white))
-        binding.layoutCountryPicker.riskLabel.setTextColor(ContextCompat.getColor(context, R.color.white))
+        binding.layoutCountryPicker.riskLabel.setTextColor(
+            ContextCompat.getColor(
+                context,
+                R.color.white
+            )
+        )
         binding.image.setImageResource(iconResId)
         playAccessibilityMessage(getString(R.string.scan_result_invalid_title))
     }
@@ -217,7 +231,10 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         items?.let { vaccines ->
             if (vaccines.isNotEmpty()) {
                 binding.vaccineLayout.visibility = View.VISIBLE
-                val vaccinMedicalProduct = getValueSetDisplayName(vaccines[0].vaccineMedicalProduct, ValueSetType.VaccineProduct)
+                val vaccinMedicalProduct = getValueSetDisplayName(
+                    vaccines[0].vaccineMedicalProduct,
+                    ValueSetType.VaccineProduct
+                )
                 binding.dose1BoxTitle.text = getString(
                     R.string.item_vaccin_x_dose_x_x,
                     vaccinMedicalProduct,
@@ -234,13 +251,19 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                     dayLabel = getString(R.string.x_day),
                     oldLabel = getString(R.string.old)
                 )
-                binding.dose1TableDiseaseValue.text = getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)
-                binding.dose1TableVaccineValue.text = getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)
+                binding.dose1TableDiseaseValue.text =
+                    getValueSetDisplayName(vaccines[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.dose1TableVaccineValue.text =
+                    getValueSetDisplayName(vaccines[0].vaccine, ValueSetType.VaccineType)
                 binding.dose1TableMemberStateValue.text = vaccines[0].countryOfVaccination
                 binding.dose1TableManufacturerValue.text =
-                    getValueSetDisplayName(vaccines[0].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
+                    getValueSetDisplayName(
+                        vaccines[0].marketingAuthorizationHolder,
+                        ValueSetType.VaccineAuthHolder
+                    )
                 binding.dose1TableIssuerValue.text = vaccines[0].certificateIssuer
-                binding.dose1TableCertificateIdentifierValue.text = vaccines[0].certificateIdentifier
+                binding.dose1TableCertificateIdentifierValue.text =
+                    vaccines[0].certificateIdentifier
                 if (vaccines.size == 2) {
                     binding.dose1TableTitle.visibility = View.VISIBLE
                     binding.dose2BoxLayout.visibility = View.VISIBLE
@@ -251,13 +274,23 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
                         vaccines[1].doseNumber,
                         vaccines[1].totalSeriesOfDoses
                     )
-                    binding.dose2BoxName.text = getValueSetDisplayName(vaccines[1].vaccineMedicalProduct, ValueSetType.VaccineProduct)
+                    binding.dose2BoxName.text = getValueSetDisplayName(
+                        vaccines[1].vaccineMedicalProduct,
+                        ValueSetType.VaccineProduct
+                    )
                     binding.dose2BoxDate.text = vaccines[1].dateOfVaccination?.formatDate()
-                    binding.dose2TableDiseaseValue.text = getValueSetDisplayName(vaccines[1].targetedDisease, ValueSetType.TargetedAgent)
-                    binding.dose2TableVaccineValue.text = getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)
+                    binding.dose2TableDiseaseValue.text = getValueSetDisplayName(
+                        vaccines[1].targetedDisease,
+                        ValueSetType.TargetedAgent
+                    )
+                    binding.dose2TableVaccineValue.text =
+                        getValueSetDisplayName(vaccines[1].vaccine, ValueSetType.VaccineType)
                     binding.dose2TableMemberStateValue.text = vaccines[1].countryOfVaccination
                     binding.dose2TableManufacturerValue.text =
-                        getValueSetDisplayName(vaccines[1].marketingAuthorizationHolder, ValueSetType.VaccineAuthHolder)
+                        getValueSetDisplayName(
+                            vaccines[1].marketingAuthorizationHolder,
+                            ValueSetType.VaccineAuthHolder
+                        )
                     binding.dose2TableIssuerValue.text = vaccines[1].certificateIssuer
                     binding.dose2TableCertificateIdentifierValue.text =
                         vaccines[1].certificateIdentifier
@@ -275,7 +308,8 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     }
 
     private fun getValueSetDisplayName(value: String, valueSetType: ValueSetType): String {
-        val valueItem = appConfigUtil.getValueSetContainer(valueSetType)?.find { it.key == value }?.item
+        val valueItem =
+            appConfigUtil.getValueSetContainer(valueSetType)?.find { it.key == value }?.item
         return valueItem?.display ?: value
     }
 
@@ -301,13 +335,19 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             if (tests.isNotEmpty()) {
                 binding.testLayout.visibility = View.VISIBLE
                 binding.testBoxTitle.text =
-                    tests[0].getTestResult(appConfigUtil.getEuropeanVerificationRules())?.getDisplayName(context) ?: tests[0].testResult
+                    tests[0].getTestResult(appConfigUtil.getEuropeanVerificationRules())
+                        ?.getDisplayName(context) ?: tests[0].testResult
                 binding.testBoxDate.text = tests[0].dateOfSampleCollection?.formatDate()
                 binding.testBoxAge.text = tests[0].getTestAge(context) ?: ""
-                binding.testTableTargetValue.text = getValueSetDisplayName(tests[0].targetedDisease, ValueSetType.TargetedAgent)
-                binding.testTableTypeValue.text = getValueSetDisplayName(tests[0].typeOfTest, ValueSetType.TestType)
+                binding.testTableTargetValue.text =
+                    getValueSetDisplayName(tests[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.testTableTypeValue.text =
+                    getValueSetDisplayName(tests[0].typeOfTest, ValueSetType.TestType)
                 binding.testTableNameValue.text = tests[0].NAATestName
-                binding.testTableManufacturerValue.text = getValueSetDisplayName(tests[0].RATTestNameAndManufac ?: "", ValueSetType.TestManufacturer)
+                binding.testTableManufacturerValue.text = getValueSetDisplayName(
+                    tests[0].RATTestNameAndManufac ?: "",
+                    ValueSetType.TestManufacturer
+                )
                 binding.testTableCenterValue.text = tests[0].testingCentre
                 binding.testTableCountryValue.text = tests[0].countryOfTest
                 binding.testTableIssuerValue.text = tests[0].certificateIssuer
@@ -324,12 +364,16 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
         items?.let { recoveries ->
             if (recoveries.isNotEmpty()) {
                 binding.recoveryLayout.visibility = View.VISIBLE
-                binding.recoveryBoxName.text = getValueSetDisplayName(recoveries[0].targetedDisease, ValueSetType.TargetedAgent)
+                binding.recoveryBoxName.text = getValueSetDisplayName(
+                    recoveries[0].targetedDisease,
+                    ValueSetType.TargetedAgent
+                )
                 binding.recoveryTableFirstDateValue.text =
                     recoveries[0].dateOfFirstPositiveTest?.formatDate()
                 binding.recoveryTableValidFromValue.text =
                     recoveries[0].certificateValidFrom?.formatDate()
-                binding.recoveryTableValidToValue.text = recoveries[0].certificateValidTo?.formatDate()
+                binding.recoveryTableValidToValue.text =
+                    recoveries[0].certificateValidTo?.formatDate()
                 binding.recoveryTableCountryValue.text = recoveries[0].countryOfTest
                 binding.recoveryTableIssuerValue.text = recoveries[0].certificateIssuer
                 binding.recoveryTableIdentifierValue.text = recoveries[0].certificateIdentifier
@@ -344,18 +388,27 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
     private fun initCountries() {
 
         appConfigUtil.getCountries(true)?.let { countries ->
-            val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
+            val departureCountryRisk =
+                countries.find { it.code == persistenceManager.getDepartureValue() }
             val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
 
-            val destinationCountryRisk = countries.find { it.code == persistenceManager.getDestinationValue() }
+            val destinationCountryRisk =
+                countries.find { it.code == persistenceManager.getDestinationValue() }
             val isNLDestination = destinationCountryRisk?.getPassType() == CountryRiskPass.NLRules
-            val destinationCountry = destinationCountryRisk?.name() ?: getString(R.string.pick_country)
-            binding.layoutCountryPicker.departureValue.text = if (isNLDestination) departureCountry else getString(R.string.country_not_used)
+            val destinationCountry =
+                destinationCountryRisk?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text =
+                if (isNLDestination) departureCountry else getString(R.string.country_not_used)
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
             departureCountryRisk?.let {
-                val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk.color }?.name()
-                val euLabel = if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
+                val riskColor =
+                    countries.find { it.isColourCode == true && it.color == departureCountryRisk.color }
+                        ?.name()
+                val euLabel =
+                    if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(
+                        R.string.item_not_eu
+                    )
                 binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
             } ?: run {
                 binding.layoutCountryPicker.riskLabel.text = ""
@@ -364,21 +417,33 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             context?.let {
                 if (isNLDestination) {
                     binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_white_opacity70)
-                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.primary_blue))
+                    binding.layoutCountryPicker.departureValue.setTextColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.primary_blue
+                        )
+                    )
                     binding.layoutCountryPicker.departureCard.setOnClickListener {
                         findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
                     }
                 } else {
                     binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_inactive_gray_opacity70)
-                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.black))
+                    binding.layoutCountryPicker.departureValue.setTextColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.black
+                        )
+                    )
                 }
             }
         }
 
         binding.layoutCountryPicker.departureCard.setAsAccessibilityButton(true)
-        binding.layoutCountryPicker.departureCard.contentDescription = getString(R.string.accessibility_choose_departure_button)
+        binding.layoutCountryPicker.departureCard.contentDescription =
+            getString(R.string.accessibility_choose_departure_button)
         binding.layoutCountryPicker.destinationCard.setAsAccessibilityButton(true)
-        binding.layoutCountryPicker.destinationCard.contentDescription = getString(R.string.accessibility_choose_destination_button)
+        binding.layoutCountryPicker.destinationCard.contentDescription =
+            getString(R.string.accessibility_choose_destination_button)
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
             findNavController().navigate(VerifierQrScannerFragmentDirections.actionDestinationPicker())

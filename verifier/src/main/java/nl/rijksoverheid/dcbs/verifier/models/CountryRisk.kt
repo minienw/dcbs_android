@@ -34,22 +34,6 @@ class CountryRisk(
     val isEU: Boolean?
 ) {
 
-    fun getUnselected(context: Context): CountryRisk {
-        val unselected = context.getString(R.string.country_unselected)
-        return CountryRisk(
-            unselected,
-            unselected,
-            unselected,
-            unselected,
-            unselected,
-            CountryColorCode.GREEN.value,
-            CountryRiskPass.Inconclusive.value,
-            isColourCode = false,
-            ruleEngineEnabled = false,
-            isEU = false,
-        )
-    }
-
     fun isIndecisive(): Boolean {
         if (getColourCode() == null) {
             return true
@@ -82,5 +66,23 @@ class CountryRisk(
 
     fun section(): String? {
         return name().firstOrNull()?.toString()
+    }
+
+    companion object {
+        fun getUnselected(context: Context?): CountryRisk {
+            val unselected = context?.getString(R.string.country_unselected)
+            return CountryRisk(
+                unselected,
+                unselected,
+                unselected,
+                unselected,
+                unselected,
+                CountryColorCode.GREEN.value,
+                CountryRiskPass.Inconclusive.value,
+                isColourCode = false,
+                ruleEngineEnabled = false,
+                isEU = false,
+            )
+        }
     }
 }
