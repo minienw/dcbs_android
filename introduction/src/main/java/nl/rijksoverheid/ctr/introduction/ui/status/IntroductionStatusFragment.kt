@@ -54,6 +54,9 @@ class IntroductionStatusFragment : Fragment() {
             is IntroductionStatus.IntroductionFinished.NoActionRequired -> {
 
             }
+            else -> {
+
+            }
         }
     }
 }
