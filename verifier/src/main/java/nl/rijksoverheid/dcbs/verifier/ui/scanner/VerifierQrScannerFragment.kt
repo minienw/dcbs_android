@@ -82,16 +82,32 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             when (it) {
                 is VerifiedQrResultState.Error -> {
                     (activity as? VerifierMainActivity)?.updateConfig()
-                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(null)))
+                    findNavController().navigate(
+                        VerifierQrScannerFragmentDirections.actionScanResult(
+                            ScanResultData(null)
+                        )
+                    )
                 }
                 is VerifiedQrResultState.Demo -> {
-                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
+                    findNavController().navigate(
+                        VerifierQrScannerFragmentDirections.actionScanResult(
+                            ScanResultData(it.verifiedQr)
+                        )
+                    )
                 }
                 is VerifiedQrResultState.Valid -> {
-                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
+                    findNavController().navigate(
+                        VerifierQrScannerFragmentDirections.actionScanResult(
+                            ScanResultData(it.verifiedQr)
+                        )
+                    )
                 }
                 is VerifiedQrResultState.Invalid -> {
-                    findNavController().navigate(VerifierQrScannerFragmentDirections.actionScanResult(ScanResultData(it.verifiedQr)))
+                    findNavController().navigate(
+                        VerifierQrScannerFragmentDirections.actionScanResult(
+                            ScanResultData(it.verifiedQr)
+                        )
+                    )
                 }
             }
         })
@@ -102,17 +118,28 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
         }
 
         appConfigUtil.getCountries(true)?.let { countries ->
-            val departureCountryRisk = countries.find { it.code == persistenceManager.getDepartureValue() }
+            val departureCountryRisk =
+                countries.find { it.code == persistenceManager.getDepartureValue() }
             val departureCountry = departureCountryRisk?.name() ?: getString(R.string.pick_country)
 
-            val destinationCountryRisk = countries.find { it.code == persistenceManager.getDestinationValue() }
+            val destinationCountryRisk =
+                countries.find { it.code == persistenceManager.getDestinationValue() }
             val isNLDestination = destinationCountryRisk?.getPassType() == CountryRiskPass.NLRules
-            val destinationCountry = destinationCountryRisk?.name() ?: getString(R.string.pick_country)
-            binding.layoutCountryPicker.departureValue.text = if (isNLDestination) departureCountry else getString(R.string.country_not_used)
+            val destinationCountry =
+                destinationCountryRisk?.name() ?: getString(R.string.pick_country)
+            binding.layoutCountryPicker.departureValue.text =
+                if (isNLDestination) departureCountry else getString(R.string.country_not_used)
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
             departureCountryRisk?.let {
-                val riskColor = countries.find { it.isColourCode == true && it.color == departureCountryRisk.color }?.name()
-                val euLabel = if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(R.string.item_not_eu)
+                val riskColor = countries.find {
+                    it.isColourCode == true
+                            && it.color == departureCountryRisk.color
+                            && it.isEU == departureCountryRisk.isEU
+                }?.name()
+                val euLabel =
+                    if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(
+                        R.string.item_not_eu
+                    )
                 binding.layoutCountryPicker.riskLabel.text = "${riskColor ?: ""} | $euLabel"
             } ?: run {
                 binding.layoutCountryPicker.riskLabel.text = ""
@@ -121,20 +148,32 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
             context?.let {
                 if (isNLDestination) {
                     binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_white_opacity70)
-                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.primary_blue))
+                    binding.layoutCountryPicker.departureValue.setTextColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.primary_blue
+                        )
+                    )
                     binding.layoutCountryPicker.departureCard.setOnClickListener {
                         findNavController().navigate(VerifierQrScannerFragmentDirections.actionDeparturePicker())
                     }
                 } else {
                     binding.layoutCountryPicker.departureCard.setBackgroundResource(R.drawable.bg_inactive_gray_opacity70)
-                    binding.layoutCountryPicker.departureValue.setTextColor(ContextCompat.getColor(it, R.color.black))
+                    binding.layoutCountryPicker.departureValue.setTextColor(
+                        ContextCompat.getColor(
+                            it,
+                            R.color.black
+                        )
+                    )
                 }
             }
 
             binding.layoutCountryPicker.departureCard.setAsAccessibilityButton(true)
-            binding.layoutCountryPicker.departureCard.contentDescription = getString(R.string.accessibility_choose_departure_button)
+            binding.layoutCountryPicker.departureCard.contentDescription =
+                getString(R.string.accessibility_choose_departure_button)
             binding.layoutCountryPicker.destinationCard.setAsAccessibilityButton(true)
-            binding.layoutCountryPicker.destinationCard.contentDescription = getString(R.string.accessibility_choose_destination_button)
+            binding.layoutCountryPicker.destinationCard.contentDescription =
+                getString(R.string.accessibility_choose_destination_button)
         }
 
         binding.layoutCountryPicker.destinationCard.setOnClickListener {
@@ -166,16 +205,25 @@ class VerifierQrScannerFragment : QrCodeScannerFragment() {
 
 
     private fun checkLastConfigFetchExpired() {
-        val refreshCheckDuration = if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(2) else TimeUnit.MINUTES.toSeconds(60)
-        val expiredLayoutDuration = if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(1) else TimeUnit.DAYS.toSeconds(1)
+        val refreshCheckDuration =
+            if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(2) else TimeUnit.MINUTES.toSeconds(
+                60
+            )
+        val expiredLayoutDuration =
+            if (BuildConfig.FLAVOR == "acc") TimeUnit.MINUTES.toSeconds(1) else TimeUnit.DAYS.toSeconds(
+                1
+            )
 
-        val needsConfigRefresh = (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(refreshCheckDuration)
+        val needsConfigRefresh =
+            (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(refreshCheckDuration)
         if (needsConfigRefresh == true) {
             (activity as? VerifierMainActivity)?.updateConfig()
         }
 
-        val shouldShowExpiredLayout = (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(expiredLayoutDuration)
-        binding.layoutCertificateExpired.root.visibility = if (shouldShowExpiredLayout == true) View.VISIBLE else View.GONE
+        val shouldShowExpiredLayout =
+            (activity as? VerifierMainActivity)?.checkLastConfigFetchExpired(expiredLayoutDuration)
+        binding.layoutCertificateExpired.root.visibility =
+            if (shouldShowExpiredLayout == true) View.VISIBLE else View.GONE
         if (shouldShowExpiredLayout == true) {
             playAccessibilityMessage(getString(R.string.certificates_outdated_title))
             playAccessibilityMessage(getString(R.string.certificates_outdated_desc))

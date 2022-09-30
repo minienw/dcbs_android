@@ -402,9 +402,11 @@ class ScanResultFragment : Fragment(R.layout.fragment_scan_result) {
             binding.layoutCountryPicker.destinationValue.text = destinationCountry
 
             departureCountryRisk?.let {
-                val riskColor =
-                    countries.find { it.isColourCode == true && it.color == departureCountryRisk.color }
-                        ?.name()
+                val riskColor = countries.find {
+                    it.isColourCode == true
+                            && it.color == departureCountryRisk.color
+                            && it.isEU == departureCountryRisk.isEU
+                }?.name()
                 val euLabel =
                     if (departureCountryRisk.isEU == true) getString(R.string.item_eu) else getString(
                         R.string.item_not_eu
