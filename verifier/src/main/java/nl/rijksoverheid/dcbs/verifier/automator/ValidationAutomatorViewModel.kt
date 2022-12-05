@@ -16,10 +16,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -111,6 +111,9 @@ class ValidationAutomatorViewModelImpl : ValidationAutomatorViewModel() {
     }
 
     private suspend fun processQR(scanner: BarcodeScanner, bitmap: Bitmap?) : List<Barcode> {
+        if (bitmap == null) {
+            return emptyList()
+        }
         val image = InputImage.fromBitmap(bitmap, 0)
         return scanner.process(image).await()
     }

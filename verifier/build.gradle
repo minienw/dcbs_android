@@ -6,8 +6,8 @@ plugins {
     id "androidx.navigation.safeargs.kotlin"
 }
 
-def appVersionCode = 35
-version = "1.1.6"
+def appVersionCode = 36
+version = "1.1.7"
 archivesBaseName = "verifier-v${version}-${appVersionCode}"
 
 android {
@@ -141,7 +141,7 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jackson_datatype_jsr310"
 
     implementation("ru.gildor.coroutines:kotlin-coroutines-okhttp:1.0")
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.3.9"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
     implementation 'com.opencsv:opencsv:4.0'
 
 }
